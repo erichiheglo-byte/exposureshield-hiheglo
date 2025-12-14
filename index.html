@@ -3,59 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExposureShield — Secure your digital life, today and tomorrow</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>ExposureShield — Secure Your Digital Life</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Critical inline styles for immediate loading */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; min-height: 100vh; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        header { padding: 30px 0; text-align: center; }
-        h1 { font-size: 3em; background: linear-gradient(90deg, #667eea, #764ba2); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; }
-        .tagline { font-size: 1.4em; color: #cbd5e1; margin-bottom: 5px; }
-        .subtitle { color: #94a3b8; }
-        .scanner { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; margin: 40px 0; border: 1px solid rgba(255,255,255,0.1); }
-        .scan-form { display: flex; gap: 10px; margin: 25px 0; }
-        #emailInput { flex: 1; padding: 15px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; font-size: 16px; }
-        button { background: linear-gradient(90deg, #667eea, #764ba2); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
-        #results { margin-top: 30px; min-height: 50px; }
+        * { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>ExposureShield 🚀</h1>
-            <p class="tagline">Secure your digital life, today and tomorrow.</p>
-            <p class="subtitle">Monitor data breaches. Plan your digital legacy.</p>
-        </header>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-shield-alt text-purple-600 text-2xl"></i>
+                <span class="text-xl font-bold text-gray-800">ExposureShield</span>
+            </div>
+            <div class="space-x-6 hidden md:flex">
+                <a href="#" class="text-gray-600 hover:text-purple-600 font-medium">Features</a>
+                <a href="#" class="text-gray-600 hover:text-purple-600 font-medium">How It Works</a>
+                <a href="#" class="text-gray-600 hover:text-purple-600 font-medium">Pricing</a>
+                <a href="#" class="bg-purple-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-purple-700">Login</a>
+            </div>
+        </div>
+    </nav>
 
-        <main>
-            <section class="scanner">
-                <h2 style="margin-bottom: 20px; color: white;">Check Your Exposure</h2>
-                <p style="color: #cbd5e1; margin-bottom: 20px;">Scan safely to see if your email appears in known data breaches.</p>
-                
-                <div class="scan-form">
-                    <input type="email" id="emailInput" placeholder="you@example.com">
-                    <button onclick="checkEmail()">🔍 Start Scan</button>
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                Secure your digital life,<br><span class="text-yellow-300">today and tomorrow.</span>
+            </h1>
+            <p class="text-xl opacity-90 mb-10 max-w-2xl mx-auto">
+                Monitor data breaches. Plan your digital legacy. All in one secure platform.
+            </p>
+            <div class="flex flex-col md:flex-row justify-center gap-4 max-w-2xl mx-auto">
+                <input type="email" placeholder="your.email@example.com" 
+                       class="flex-grow px-6 py-4 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <button class="bg-white text-purple-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition">
+                    <i class="fas fa-search mr-2"></i>Check Your Exposure
+                </button>
+            </div>
+            <p class="mt-4 text-sm opacity-80"><i class="fas fa-lock mr-1"></i>Your email is never stored. We only check against public breach databases.</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">How ExposureShield Protects You</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-database"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Real‑Time Breach Monitoring</h3>
+                    <p class="text-gray-600">Continuous scanning of 4.5B+ records across 780+ data breaches.</p>
                 </div>
-                
-                <div id="results"></div>
-            </section>
+                <!-- Feature 2 -->
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-user-shield"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Privacy‑First Design</h3>
+                    <p class="text-gray-600">Your data never leaves your device. Military‑grade encryption.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="card-hover bg-gray-50 p-8 rounded-2xl border border-gray-200">
+                    <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-history"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">Digital Legacy Planning</h3>
+                    <p class="text-gray-600">Automatically share access with heirs. No legal paperwork needed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <section style="background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%); padding: 40px; border-radius: 20px; margin: 40px 0;">
-                <h3 style="text-align: center; margin-bottom: 20px;">🚀 Coming Soon: LegacyShield</h3>
-                <p style="text-align: center; color: #cbd5e1;">Digital inheritance and legacy planning. Join the waitlist for early access.</p>
-            </section>
-        </main>
+    <!-- Waitlist CTA -->
+    <section class="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div class="container mx-auto px-6 text-center">
+            <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                🚀 COMING SOON
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">LegacyShield: Your Digital Inheritance</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">Don't let photos, crypto, and memories get lost forever. Join the waitlist for early access + <strong>50% launch discount</strong>.</p>
+            <button class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-4 rounded-lg font-bold text-lg hover:opacity-90 transition">
+                Join Priority Waitlist <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </section>
 
-        <footer style="text-align: center; padding: 40px 0; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px;">
-            <p>© 2025 ExposureShield. All rights reserved.</p>
-        </footer>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-lg mb-2">ExposureShield</p>
+            <p class="mb-8">Secure your digital life, today and tomorrow.</p>
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="hover:text-white"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="hover:text-white"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="text-sm">© 2025 ExposureShield. All rights reserved. | <a href="#" class="underline hover:text-white">Privacy Policy</a> | <a href="#" class="underline hover:text-white">Terms of Service</a></p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
