@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExposureShield — Secure your digital life, today and tomorrow</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Critical inline styles for immediate loading */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        header { padding: 30px 0; text-align: center; }
+        h1 { font-size: 3em; background: linear-gradient(90deg, #667eea, #764ba2); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 10px; }
+        .tagline { font-size: 1.4em; color: #cbd5e1; margin-bottom: 5px; }
+        .subtitle { color: #94a3b8; }
+        .scanner { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; margin: 40px 0; border: 1px solid rgba(255,255,255,0.1); }
+        .scan-form { display: flex; gap: 10px; margin: 25px 0; }
+        #emailInput { flex: 1; padding: 15px; background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); border-radius: 10px; color: white; font-size: 16px; }
+        button { background: linear-gradient(90deg, #667eea, #764ba2); color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        #results { margin-top: 30px; min-height: 50px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ExposureShield</h1>
+            <p class="tagline">Secure your digital life, today and tomorrow.</p>
+            <p class="subtitle">Monitor data breaches. Plan your digital legacy.</p>
+        </header>
+
+        <main>
+            <section class="scanner">
+                <h2 style="margin-bottom: 20px; color: white;">Check Your Exposure</h2>
+                <p style="color: #cbd5e1; margin-bottom: 20px;">Scan safely to see if your email appears in known data breaches.</p>
+                
+                <div class="scan-form">
+                    <input type="email" id="emailInput" placeholder="you@example.com">
+                    <button onclick="checkEmail()">🔍 Start Scan</button>
+                </div>
+                
+                <div id="results"></div>
+            </section>
+
+            <section style="background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%); padding: 40px; border-radius: 20px; margin: 40px 0;">
+                <h3 style="text-align: center; margin-bottom: 20px;">🚀 Coming Soon: LegacyShield</h3>
+                <p style="text-align: center; color: #cbd5e1;">Digital inheritance and legacy planning. Join the waitlist for early access.</p>
+            </section>
+        </main>
+
+        <footer style="text-align: center; padding: 40px 0; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px;">
+            <p>© 2025 ExposureShield. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
