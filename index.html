@@ -79,6 +79,110 @@
     </section>
 
     <!-- Waitlist CTA -->
+     <!-- Add this inside your waitlist section -->
+<div class="max-w-2xl mx-auto bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">Join the LegacyShield Waitlist</h3>
+    
+    <form id="waitlistForm" class="space-y-6">
+        <div>
+            <label class="block text-gray-700 font-medium mb-2" for="waitlistEmail">
+                Email Address *
+            </label>
+            <input 
+                type="email" 
+                id="waitlistEmail" 
+                required
+                placeholder="your.name@example.com"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 font-medium mb-3">
+                Which digital assets concern you most? *
+            </label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="assets" value="photos" class="mr-3">
+                    <span>📸 Photos & Videos</span>
+                </label>
+                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="assets" value="crypto" class="mr-3">
+                    <span>₿ Cryptocurrency</span>
+                </label>
+                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="assets" value="documents" class="mr-3">
+                    <span>📄 Important Documents</span>
+                </label>
+                <label class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="assets" value="accounts" class="mr-3">
+                    <span>🔐 Online Accounts</span>
+                </label>
+            </div>
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 font-medium mb-2" for="priority">
+                How soon are you looking for a solution? *
+            </label>
+            <select 
+                id="priority" 
+                required
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+                <option value="">Select your timeframe</option>
+                <option value="urgent">Urgently - within 1 month</option>
+                <option value="soon">Soon - within 3 months</option>
+                <option value="planning">Planning for the future</option>
+                <option value="curious">Just curious</option>
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 font-medium mb-2" for="comments">
+                Any specific concerns? (Optional)
+            </label>
+            <textarea 
+                id="comments" 
+                rows="3"
+                placeholder="e.g., 'I have Bitcoin for my kids...' or 'My dad lost access to family photos...'"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            ></textarea>
+        </div>
+        
+        <div class="flex items-start">
+            <input type="checkbox" id="consent" required class="mt-1 mr-3">
+            <label for="consent" class="text-gray-600">
+                Yes, I want to receive updates about LegacyShield and get the free 
+                <strong>"Digital Legacy Checklist" PDF</strong>. I understand I can unsubscribe anytime.
+            </label>
+        </div>
+        
+        <button 
+            type="submit" 
+            class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-lg font-bold text-lg hover:opacity-90 transition"
+        >
+            <i class="fas fa-paper-plane mr-2"></i> Join Waitlist
+        </button>
+        
+        <p class="text-center text-gray-500 text-sm">
+            <i class="fas fa-lock mr-1"></i> Your information is 100% private. No spam, ever.
+        </p>
+    </form>
+    
+    <!-- Success Message (hidden by default) -->
+    <div id="successMessage" class="hidden text-center p-8 bg-green-50 rounded-xl border border-green-200">
+        <i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">You're on the list! 🎉</h3>
+        <p class="text-gray-600 mb-6">Thank you for joining. We'll email you early access details.</p>
+        <button 
+            onclick="resetWaitlistForm()"
+            class="px-6 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-900"
+        >
+            Add Another Email
+        </button>
+    </div>
+</div>
     <section class="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
         <div class="container mx-auto px-6 text-center">
             <div class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
