@@ -206,3 +206,477 @@ footer {
         width: 100%;
     }
 }
+/* ============================================
+   ANIMATIONS & TRANSITIONS
+============================================ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.bounce-in {
+    animation: bounceIn 0.6s ease-out;
+}
+
+.scanning-text {
+    animation: pulse 1.5s infinite;
+}
+
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   RESULT CARDS
+============================================ */
+.result-card {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.safe-card {
+    border-left: 4px solid #10b981;
+}
+
+.breach-card {
+    border-left: 4px solid #ef4444;
+}
+
+.card-header {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.card-header.alert {
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+}
+
+.status-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.status-icon.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.card-subtitle {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.email-display {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.email-display .label {
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.email-value {
+    background: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.875rem;
+    border: 1px solid #d1d5db;
+}
+
+.email-value.warning {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #fca5a5;
+}
+
+/* ============================================
+   BREACH ITEMS
+============================================ */
+.breach-item {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.breach-item:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.breach-item.latest-breach {
+    border: 2px solid #ef4444;
+    background: #fef2f2;
+}
+
+.breach-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.breach-title h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+}
+
+.breach-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.breach-severity {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.breach-description {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.breach-data {
+    margin-bottom: 1rem;
+}
+
+.data-label {
+    font-weight: 600;
+    color: #4b5563;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.data-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.data-tag {
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.breach-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.breach-actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.details-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.details-button:hover {
+    background: #2563eb;
+}
+
+.remediate-button {
+    background: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.remediate-button:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+/* ============================================
+   LOADING OVERLAY
+============================================ */
+#scanningOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+#scanningOverlay > div {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 24rem;
+    width: 90%;
+    text-align: center;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* ============================================
+   NOTIFICATIONS
+============================================ */
+.notification {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: white;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 10000;
+    animation: fadeInUp 0.3s ease-out;
+    border-left: 4px solid #3b82f6;
+    max-width: 24rem;
+}
+
+.notification-error {
+    border-left-color: #ef4444;
+}
+
+.notification-warning {
+    border-left-color: #f59e0b;
+}
+
+.notification-success {
+    border-left-color: #10b981;
+}
+
+.notification-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+}
+
+.notification-close:hover {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+/* ============================================
+   DEMO NOTICE
+============================================ */
+.demo-notice {
+    background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+    border: 1px solid #93c5fd;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-top: 1.5rem;
+}
+
+.notice-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.notice-content i {
+    font-size: 1.25rem;
+    margin-top: 0.125rem;
+}
+
+.notice-title {
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0 0 0.25rem 0;
+}
+
+.notice-text {
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.notice-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.notice-link:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   ACTION BUTTONS
+============================================ */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 10rem;
+    transition: all 0.2s ease;
+}
+
+.share-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+}
+
+.share-button:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+}
+
+.rescan-button {
+    background: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.rescan-button:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.report-button {
+    background: #1e40af;
+    color: white;
+    border: none;
+}
+
+.guide-button {
+    background: white;
+    color: #1e40af;
+    border: 2px solid #1e40af;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+============================================ */
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+    }
+    
+    .breach-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .breach-severity {
+        align-self: flex-start;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons button {
+        min-width: 100%;
+    }
+    
+    .notification {
+        left: 1.5rem;
+        right: 1.5rem;
+        max-width: none;
+    }
+}
