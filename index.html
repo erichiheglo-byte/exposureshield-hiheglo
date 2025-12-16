@@ -3,730 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExposureShield - Enterprise Digital Security</title>
+    <title>DigitalShield Suite | Complete Digital Life Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        /* Combined Platform Styles */
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #3b82f6;
-            --secondary: #0f172a;
-            --accent: #8b5cf6;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --dark: #1e293b;
+            /* Primary Brand Colors */
+            --security-primary: #2563eb;     /* ExposureShield Blue */
+            --legacy-primary: #7c3aed;       /* LegacyShield Purple */
+            --platform-primary: #0f172a;     /* Platform Dark */
+            
+            /* Secondary Colors */
+            --security-secondary: #3b82f6;
+            --legacy-secondary: #8b5cf6;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            /* Neutrals */
+            --light: #f8fafc;
+            --gray: #64748b;
+            --dark: #1e293b;
+            
+            /* Effects */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --radius: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --transition: all 0.3s ease;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        body {
-            color: var(--dark);
-            line-height: 1.7;
-            background-color: #ffffff;
-            overflow-x: hidden;
-        }
-
-        /* Enhanced Header */
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        
+        .platform-header {
+            background: linear-gradient(135deg, var(--platform-primary) 0%, #1e293b 100%);
+            color: white;
+            padding: 1rem 0;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            transition: var(--transition);
         }
-
-        .header.scrolled {
-            box-shadow: var(--shadow);
-            background: rgba(255, 255, 255, 0.98);
-        }
-
-        .nav-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 1.25rem 2rem;
+        
+        .platform-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
-
-        .logo-container {
+        
+        .platform-logo {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--gradient);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.25rem;
-        }
-
-        .logo-text {
             font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-weight: 700;
         }
-
-        /* Mega Menu */
-        .mega-menu {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 0;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 0.375rem;
-        }
-
-        .nav-link:hover {
-            color: var(--primary);
-        }
-
-        .nav-link i {
-            font-size: 0.875rem;
-            transition: var(--transition);
-        }
-
-        /* Dropdown Menu */
-        .dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            min-width: 200px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(10px);
-            transition: var(--transition);
-            z-index: 1000;
-        }
-
-        .nav-item:hover .dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-link {
-            display: block;
-            padding: 0.75rem 1.5rem;
-            color: var(--dark);
-            text-decoration: none;
-            transition: var(--transition);
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .dropdown-link:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-link:hover {
-            background: #f8fafc;
-            color: var(--primary);
-            padding-left: 1.75rem;
-        }
-
-        /* CTA Buttons */
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
+        
+        .logo-badge {
             display: inline-flex;
             align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        
+        .security-badge {
+            background: var(--security-primary);
+            color: white;
+        }
+        
+        .legacy-badge {
+            background: var(--legacy-primary);
+            color: white;
+        }
+        
+        .service-tabs {
+            display: flex;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 0.25rem;
+        }
+        
+        .service-tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
             gap: 0.5rem;
         }
-
-        .btn-primary {
-            background: var(--gradient);
-            color: white;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-        }
-
-        .btn-secondary {
+        
+        .service-tab.active {
             background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            color: var(--platform-primary);
         }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
+        
+        .service-tab i {
+            font-size: 1.125rem;
         }
-
-        /* Enhanced Hero */
-        .hero {
-            padding: 12rem 2rem 8rem;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
-            position: relative;
-            overflow: hidden;
+        
+        /* Platform Overview Section */
+        .platform-overview {
+            padding: 8rem 2rem 4rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 100%);
         }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        
+        .platform-cards {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 2rem;
+            align-items: center;
+            max-width: 1000px;
+            margin: 3rem auto 0;
         }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: var(--secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--gray);
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Stats Counter */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 3rem 0;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: var(--gray);
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Enhanced Email Checker */
-        .email-checker {
+        
+        .platform-card {
             background: white;
-            padding: 2.5rem;
+            padding: 3rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
-            max-width: 600px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
+            text-align: center;
+            transition: var(--transition);
+            height: 100%;
+            border-top: 4px solid transparent;
         }
-
-        .email-checker::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient);
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
         }
-
-        .checker-title {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
+        
+        .security-card {
+            border-top-color: var(--security-primary);
         }
-
-        .input-group-enhanced {
+        
+        .legacy-card {
+            border-top-color: var(--legacy-primary);
+        }
+        
+        .platform-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .security-card .platform-icon {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: var(--security-primary);
+        }
+        
+        .legacy-card .platform-icon {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            color: var(--legacy-primary);
+        }
+        
+        .platform-connector {
+            text-align: center;
+        }
+        
+        .platform-connector i {
+            font-size: 2rem;
+            color: var(--gray);
+            background: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Service Content Sections */
+        .service-content {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .service-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* LegacyShield Specific Features */
+        .legacy-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .legacy-feature {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+        }
+        
+        .legacy-feature:hover {
+            border-color: var(--legacy-primary);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+        }
+        
+        .feature-step {
+            display: flex;
+            align-items: flex-start;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
-
-        .email-input {
-            flex: 1;
-            padding: 1rem 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .email-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .security-badges {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--gray);
-            font-size: 0.875rem;
-        }
-
-        .badge i {
-            color: var(--success);
-        }
-
-        /* Results Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: var(--radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 2.5rem;
-            position: relative;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-            transition: var(--transition);
-        }
-
-        .close-modal:hover {
-            color: var(--danger);
-        }
-
-        /* Enhanced Features */
-        .features-section {
-            padding: 6rem 2rem;
-            background: white;
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 4rem;
-        }
-
-        .section-tag {
-            display: inline-block;
-            background: var(--gradient);
+        
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: var(--legacy-primary);
             color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
-            font-size: 0.875rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 600;
-            margin-bottom: 1rem;
+            flex-shrink: 0;
         }
-
-        .section-title {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
+        
+        /* Combined Dashboard */
+        .dashboard {
+            padding: 4rem 2rem;
+            background: #f8fafc;
         }
-
-        .section-subtitle {
-            color: var(--gray);
-            font-size: 1.125rem;
-        }
-
-        .features-grid-enhanced {
+        
+        .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
-
-        .feature-card-enhanced {
+        
+        .dashboard-card {
             background: white;
-            padding: 2.5rem;
-            border-radius: var(--radius);
-            border: 1px solid #e2e8f0;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card-enhanced::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gradient);
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .feature-card-enhanced:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            border-color: transparent;
-        }
-
-        .feature-card-enhanced:hover::before {
-            transform: scaleY(1);
-        }
-
-        .feature-icon-enhanced {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.75rem;
-            color: var(--primary);
-        }
-
-        /* Testimonials */
-        .testimonials {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        }
-
-        .testimonial-slider {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .testimonial-track {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        .testimonial-card {
-            min-width: 100%;
-            background: white;
-            padding: 3rem;
+            padding: 2rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
         }
-
-        .testimonial-content {
-            font-size: 1.125rem;
-            color: var(--dark);
-            margin-bottom: 2rem;
-            font-style: italic;
-            position: relative;
-        }
-
-        .testimonial-content::before {
-            content: '"';
-            font-size: 4rem;
-            color: var(--primary);
-            position: absolute;
-            top: -2rem;
-            left: -1rem;
-            opacity: 0.2;
-        }
-
-        .testimonial-author {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--gradient);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        /* FAQ Section */
-        .faq-section {
-            padding: 6rem 2rem;
-            background: white;
-        }
-
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .faq-item {
-            margin-bottom: 1rem;
-            border-radius: var(--radius);
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            background: #f8fafc;
+        
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
-            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
         }
-
-        .faq-question:hover {
-            background: #f1f5f9;
-        }
-
-        .faq-question h3 {
-            font-size: 1.125rem;
-            color: var(--secondary);
-        }
-
-        .faq-toggle {
-            font-size: 1.25rem;
-            color: var(--primary);
-            transition: transform 0.3s ease;
-        }
-
-        .faq-answer {
-            padding: 0 1.5rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .faq-item.active .faq-answer {
-            padding: 1.5rem;
-            max-height: 500px;
-        }
-
-        .faq-item.active .faq-toggle {
-            transform: rotate(45deg);
-        }
-
-        /* Enhanced Footer */
-        .footer-enhanced {
-            background: var(--secondary);
-            color: white;
-            padding: 4rem 2rem 2rem;
-        }
-
-        .footer-grid {
+        
+        .security-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-logo-enhanced {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .social-links {
-            display: flex;
+            grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            margin-top: 1.5rem;
         }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-link:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .newsletter {
-            margin-top: 1.5rem;
-        }
-
-        .newsletter-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
             border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--security-primary);
+        }
+        
+        .legacy-progress {
+            margin-top: 1rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
             margin-top: 0.5rem;
         }
-
-        .newsletter-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--legacy-primary);
+            border-radius: 4px;
+            transition: width 0.3s ease;
         }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
+        
+        /* Pricing Integration */
+        .pricing-tiers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
         }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
+        
+        .pricing-tier {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
         }
-
-        /* Mobile Responsive */
+        
+        .tier-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .security-tier {
+            border-top: 4px solid var(--security-primary);
+        }
+        
+        .legacy-tier {
+            border-top: 4px solid var(--legacy-primary);
+        }
+        
+        .complete-tier {
+            border-top: 4px solid #0f172a;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+        
+        .complete-tier .tier-badge {
+            background: linear-gradient(135deg, var(--security-primary) 0%, var(--legacy-primary) 100%);
+            color: white;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 1024px) {
-            .hero-title {
-                font-size: 2.75rem;
-            }
-            
-            .mega-menu {
-                display: none;
-            }
-            
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
-            .stats {
-                flex-wrap: wrap;
+            .platform-cards {
+                grid-template-columns: 1fr;
                 gap: 2rem;
             }
+            
+            .platform-connector {
+                display: none;
+            }
         }
-
+        
         @media (max-width: 768px) {
-            .hero {
-                padding: 10rem 1rem 6rem;
-            }
-            
-            .hero-title {
-                font-size: 2.25rem;
-            }
-            
-            .input-group-enhanced {
+            .platform-nav {
                 flex-direction: column;
+                gap: 1rem;
             }
             
-            .btn {
+            .service-tabs {
                 width: 100%;
                 justify-content: center;
             }
@@ -734,585 +384,364 @@
     </style>
 </head>
 <body>
-    <!-- Enhanced Header -->
-    <header class="header" id="header">
-        <div class="nav-container">
-            <a href="#" class="logo-container">
-                <div class="logo-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <span class="logo-text">ExposureShield</span>
-            </a>
-
-            <nav class="mega-menu">
-                <div class="nav-item">
-                    <a href="#features" class="nav-link">
-                        Features
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="dropdown">
-                        <a href="#database" class="dropdown-link">
-                            <i class="fas fa-database"></i>
-                            Database Security
-                        </a>
-                        <a href="#monitoring" class="dropdown-link">
-                            <i class="fas fa-bell"></i>
-                            Real-time Monitoring
-                        </a>
-                        <a href="#privacy" class="dropdown-link">
-                            <i class="fas fa-user-shield"></i>
-                            Privacy Tools
-                        </a>
-                        <a href="#api" class="dropdown-link">
-                            <i class="fas fa-code"></i>
-                            API Access
-                        </a>
-                    </div>
-                </div>
-                
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                
-                <div class="nav-item">
-                    <a href="#pricing" class="nav-link">
-                        Pricing
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="dropdown">
-                        <a href="#pricing" class="dropdown-link">
-                            <i class="fas fa-user"></i>
-                            Personal Plans
-                        </a>
-                        <a href="#business" class="dropdown-link">
-                            <i class="fas fa-building"></i>
-                            Business Solutions
-                        </a>
-                        <a href="#enterprise" class="dropdown-link">
-                            <i class="fas fa-server"></i>
-                            Enterprise
-                        </a>
-                    </div>
-                </div>
-                
-                <a href="#testimonials" class="nav-link">Testimonials</a>
-                <a href="#faq" class="nav-link">FAQ</a>
-                <a href="#contact" class="nav-link">Contact</a>
-            </nav>
-
-            <div class="cta-buttons">
-                <button class="btn btn-secondary">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Login
-                </button>
-                <button class="btn btn-primary" id="startFreeTrial">
-                    <i class="fas fa-rocket"></i>
-                    Start Free Trial
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Enhanced Hero -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title animate__animated animate__fadeInUp">
-                Enterprise-Grade Digital Security
-            </h1>
-            <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
-                Protect your digital identity with military-grade encryption and real-time breach monitoring. 
-                Trusted by over 10,000 businesses worldwide.
-            </p>
-            
-            <div class="stats">
-                <div class="stat-item animate__animated animate__fadeIn animate__delay-2s">
-                    <div class="stat-number" id="breachCount">12B+</div>
-                    <div class="stat-label">Compromised Accounts</div>
-                </div>
-                <div class="stat-item animate__animated animate__fadeIn animate__delay-2_5s">
-                    <div class="stat-number" id="breachDatabase">700+</div>
-                    <div class="stat-label">Data Breaches</div>
-                </div>
-                <div class="stat-item animate__animated animate__fadeIn animate__delay-3s">
-                    <div class="stat-number" id="protectedUsers">10K+</div>
-                    <div class="stat-label">Protected Users</div>
-                </div>
-            </div>
-
-            <div class="email-checker animate__animated animate__fadeInUp animate__delay-4s">
-                <h2 class="checker-title">Check Your Email Exposure</h2>
-                <p>Enter your email to instantly scan 12+ billion exposed records</p>
-                
-                <div class="input-group-enhanced">
-                    <input type="email" 
-                           class="email-input" 
-                           id="enhancedEmailInput"
-                           placeholder="your.email@company.com"
-                           autocomplete="off">
-                    <button class="btn btn-primary" id="enhancedCheckBtn">
-                        <i class="fas fa-shield-alt"></i>
-                        Scan Now
-                    </button>
-                </div>
-                
-                <div class="security-badges">
-                    <div class="badge">
-                        <i class="fas fa-lock"></i>
-                        End-to-end encrypted
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-user-shield"></i>
-                        Privacy guaranteed
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-bolt"></i>
-                        Instant results
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Results Modal -->
-    <div class="modal" id="resultsModal">
-        <div class="modal-content">
-            <button class="close-modal" id="closeModal">&times;</button>
-            <div class="modal-body">
-                <div id="modalContent">
-                    <!-- Results will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Enhanced Features -->
-    <section class="features-section" id="features">
-        <div class="section-header">
-            <span class="section-tag">ENTERPRISE FEATURES</span>
-            <h2 class="section-title">Complete Security Suite</h2>
-            <p class="section-subtitle">Everything you need to protect your digital identity and assets</p>
-        </div>
-        
-        <div class="features-grid-enhanced">
-            <div class="feature-card-enhanced">
-                <div class="feature-icon-enhanced">
-                    <i class="fas fa-database"></i>
-                </div>
-                <h3>Comprehensive Database</h3>
-                <p>Access the world's largest breach database with real-time updates and advanced search capabilities.</p>
-                <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> 12+ billion records</li>
-                    <li><i class="fas fa-check-circle"></i> 700+ data sources</li>
-                    <li><i class="fas fa-check-circle"></i> Real-time updates</li>
-                </ul>
+    <!-- Unified Platform Header -->
+    <header class="platform-header">
+        <nav class="platform-nav">
+            <div class="platform-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>DigitalShield Suite</span>
+                <span class="logo-badge security-badge">Exposure</span>
+                <span class="logo-badge legacy-badge">Legacy</span>
             </div>
             
-            <div class="feature-card-enhanced">
-                <div class="feature-icon-enhanced">
-                    <i class="fas fa-bell"></i>
-                </div>
-                <h3>Real-time Monitoring</h3>
-                <p>24/7 monitoring with instant alerts sent via email, SMS, and push notifications.</p>
-                <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> Instant breach alerts</li>
-                    <li><i class="fas fa-check-circle"></i> Multi-channel notifications</li>
-                    <li><i class="fas fa-check-circle"></i> Custom alert rules</li>
-                </ul>
-            </div>
-            
-            <div class="feature-card-enhanced">
-                <div class="feature-icon-enhanced">
-                    <i class="fas fa-user-shield"></i>
-                </div>
-                <h3>Privacy First</h3>
-                <p>Military-grade encryption and strict no-logging policy ensure your data stays private.</p>
-                <ul class="feature-list">
-                    <li><i class="fas fa-check-circle"></i> End-to-end encryption</li>
-                    <li><i class="fas fa-check-circle"></i> Zero data retention</li>
-                    <li><i class="fas fa-check-circle"></i> GDPR compliant</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials" id="testimonials">
-        <div class="section-header">
-            <span class="section-tag">TESTIMONIALS</span>
-            <h2 class="section-title">Trusted by Industry Leaders</h2>
-            <p class="section-subtitle">See what security experts and businesses say about ExposureShield</p>
-        </div>
-        
-        <div class="testimonial-slider">
-            <div class="testimonial-track" id="testimonialTrack">
-                <!-- Testimonials will be loaded via JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq-section" id="faq">
-        <div class="section-header">
-            <span class="section-tag">FAQ</span>
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <p class="section-subtitle">Get answers to common questions about our security platform</p>
-        </div>
-        
-        <div class="faq-container" id="faqContainer">
-            <!-- FAQ items will be loaded via JavaScript -->
-        </div>
-    </section>
-
-    <!-- Enhanced Footer -->
-    <footer class="footer-enhanced">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="footer-logo-enhanced">
+            <div class="service-tabs">
+                <button class="service-tab active" data-service="exposureshield">
                     <i class="fas fa-shield-alt"></i>
                     ExposureShield
-                </div>
-                <p>Enterprise-grade digital security protecting businesses and individuals worldwide since 2023.</p>
-                
-                <div class="social-links">
-                    <a href="#" class="social-link">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-                </div>
+                </button>
+                <button class="service-tab" data-service="legacyshield">
+                    <i class="fas fa-heart"></i>
+                    LegacyShield
+                </button>
+                <button class="service-tab" data-service="dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </button>
             </div>
             
-            <div class="footer-col">
-                <h4>Product</h4>
-                <ul class="footer-links">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#pricing">Pricing</a></li>
-                    <li><a href="#api">API</a></li>
-                    <li><a href="#status">System Status</a></li>
-                    <li><a href="#changelog">Changelog</a></li>
-                </ul>
+            <div class="nav-actions">
+                <button class="btn btn-outline-light">Login</button>
+                <button class="btn btn-primary">Get Started</button>
             </div>
-            
-            <div class="footer-col">
-                <h4>Resources</h4>
-                <ul class="footer-links">
-                    <li><a href="#docs">Documentation</a></li>
-                    <li><a href="#blog">Security Blog</a></li>
-                    <li><a href="#guides">Help Center</a></li>
-                    <li><a href="#webinars">Webinars</a></li>
-                    <li><a href="#community">Community</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-col">
-                <h4>Company</h4>
-                <ul class="footer-links">
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#careers">Careers</a></li>
-                    <li><a href="#press">Press</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="#partners">Partners</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-col">
-                <h4>Stay Updated</h4>
-                <p>Subscribe to our security newsletter</p>
-                <div class="newsletter">
-                    <input type="email" 
-                           class="newsletter-input" 
-                           placeholder="Your email address">
-                    <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;">
-                        Subscribe
-                    </button>
-                </div>
-            </div>
-        </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main style="margin-top: 80px;">
         
-        <div class="footer-bottom" style="max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; color: #94a3b8; font-size: 0.875rem;">
-            <p>© 2023 ExposureShield. All rights reserved. | <a href="#" style="color: #cbd5e1;">Privacy Policy</a> | <a href="#" style="color: #cbd5e1;">Terms of Service</a></p>
-            <p style="margin-top: 0.5rem;">SOC 2 Type II Certified • ISO 27001 Compliant • GDPR Ready</p>
-        </div>
-    </footer>
+        <!-- Platform Overview -->
+        <section class="platform-overview">
+            <div class="container">
+                <h1 class="hero-title">Complete Digital Life Management</h1>
+                <p class="hero-subtitle">Protect your present digital identity and secure your future digital legacy</p>
+                
+                <div class="platform-cards">
+                    <div class="platform-card security-card">
+                        <div class="platform-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>ExposureShield</h3>
+                        <p>Real-time cybersecurity protection and breach monitoring</p>
+                        <div class="features-list">
+                            <div class="feature">
+                                <i class="fas fa-search"></i>
+                                <span>Breach Detection</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-bell"></i>
+                                <span>Real-time Alerts</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-lock"></i>
+                                <span>Password Security</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="platform-connector">
+                        <i class="fas fa-link"></i>
+                        <p>Fully Integrated</p>
+                    </div>
+                    
+                    <div class="platform-card legacy-card">
+                        <div class="platform-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>LegacyShield</h3>
+                        <p>Digital inheritance planning and estate management</p>
+                        <div class="features-list">
+                            <div class="feature">
+                                <i class="fas fa-file-contract"></i>
+                                <span>Digital Will</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-key"></i>
+                                <span>Asset Transfer</span>
+                            </div>
+                            <div class="feature">
+                                <i class="fas fa-users"></i>
+                                <span>Beneficiary Management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Content Sections -->
+        <section class="service-content active" id="exposureshield-content">
+            <!-- Your existing ExposureShield content goes here -->
+            <div class="container">
+                <h2>ExposureShield: Cybersecurity Protection</h2>
+                <p>Real-time monitoring and protection for your digital identity...</p>
+                <!-- Include all your existing ExposureShield features -->
+            </div>
+        </section>
+
+        <section class="service-content" id="legacyshield-content">
+            <div class="container">
+                <h2>LegacyShield: Digital Inheritance Planning</h2>
+                <p>Secure your digital assets and ensure they're passed on according to your wishes.</p>
+                
+                <div class="legacy-features">
+                    <div class="legacy-feature">
+                        <div class="feature-step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h3>Digital Will Creation</h3>
+                                <p>Create legally-binding digital wills that specify how your online assets should be handled.</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Legal document templates</li>
+                            <li><i class="fas fa-check"></i> Witness management</li>
+                            <li><i class="fas fa-check"></i> Notarization guidance</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="legacy-feature">
+                        <div class="feature-step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h3>Asset Inventory</h3>
+                                <p>Catalog all your digital assets including accounts, cryptocurrencies, and digital property.</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Account registry</li>
+                            <li><i class="fas fa-check"></i> Crypto wallet tracking</li>
+                            <li><i class="fas fa-check"></i> Document storage</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="legacy-feature">
+                        <div class="feature-step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h3>Beneficiary Setup</h3>
+                                <p>Designate beneficiaries and specify exactly what they should receive and when.</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Multiple beneficiaries</li>
+                            <li><i class="fas fa-check"></i> Conditional distributions</li>
+                            <li><i class="fas fa-check"></i> Time-based releases</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="legacy-feature">
+                        <div class="feature-step">
+                            <div class="step-number">4</div>
+                            <div>
+                                <h3>Trustee Management</h3>
+                                <p>Appoint and manage trustees who will execute your digital estate plan.</p>
+                            </div>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Trustee appointment</li>
+                            <li><i class="fas fa-check"></i> Access controls</li>
+                            <li><i class="fas fa-check"></i> Succession planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="service-content" id="dashboard-content">
+            <div class="dashboard">
+                <h2>Your Digital Life Dashboard</h2>
+                <p>Complete overview of your security and legacy status</p>
+                
+                <div class="dashboard-grid">
+                    <!-- Security Status Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-shield-alt"></i> Security Status</h3>
+                            <span class="status-badge safe">Protected</span>
+                        </div>
+                        <div class="security-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Breaches Found</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Protected Accounts</div>
+                                <div class="stat-value">12</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Last Scan</div>
+                                <div class="stat-value">Today</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Active Alerts</div>
+                                <div class="stat-value">0</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Legacy Status Card -->
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-heart"></i> Legacy Status</h3>
+                            <span class="status-badge in-progress">65% Complete</span>
+                        </div>
+                        <div class="legacy-progress">
+                            <p>Digital Will Completion</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <p>Asset Inventory</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                            <p>Beneficiary Setup</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Combined Pricing -->
+        <section class="pricing">
+            <div class="container">
+                <h2 class="section-title">Complete Protection Plans</h2>
+                <p class="section-subtitle">Choose the level of protection that fits your needs</p>
+                
+                <div class="pricing-tiers">
+                    <!-- ExposureShield Only -->
+                    <div class="pricing-tier security-tier">
+                        <div class="tier-header">
+                            <h3>Security Only</h3>
+                            <div class="price">$4.99<span>/month</span></div>
+                            <p>ExposureShield features only</p>
+                        </div>
+                        <div class="tier-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Real-time breach monitoring</li>
+                                <li><i class="fas fa-check"></i> Password security</li>
+                                <li><i class="fas fa-check"></i> 24/7 alerts</li>
+                                <li><i class="fas fa-times"></i> Legacy planning</li>
+                                <li><i class="fas fa-times"></i> Digital will</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline">Get Started</button>
+                    </div>
+                    
+                    <!-- LegacyShield Only -->
+                    <div class="pricing-tier legacy-tier">
+                        <div class="tier-header">
+                            <h3>Legacy Only</h3>
+                            <div class="price">$7.99<span>/month</span></div>
+                            <p>LegacyShield features only</p>
+                        </div>
+                        <div class="tier-features">
+                            <ul>
+                                <li><i class="fas fa-times"></i> Breach monitoring</li>
+                                <li><i class="fas fa-times"></i> Password security</li>
+                                <li><i class="fas fa-check"></i> Digital will creation</li>
+                                <li><i class="fas fa-check"></i> Asset management</li>
+                                <li><i class="fas fa-check"></i> Beneficiary setup</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline">Get Started</button>
+                    </div>
+                    
+                    <!-- Complete Suite -->
+                    <div class="pricing-tier complete-tier">
+                        <div class="tier-badge">Recommended</div>
+                        <div class="tier-header">
+                            <h3>Complete Suite</h3>
+                            <div class="price">$9.99<span>/month</span></div>
+                            <p>All features from both services</p>
+                        </div>
+                        <div class="tier-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> All Security features</li>
+                                <li><i class="fas fa-check"></i> All Legacy features</li>
+                                <li><i class="fas fa-check"></i> Unified dashboard</li>
+                                <li><i class="fas fa-check"></i> Priority support</li>
+                                <li><i class="fas fa-check"></i> Family sharing</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary">Get Complete Protection</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
-        // Enhanced JavaScript functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // Header scroll effect
-            const header = document.getElementById('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 100) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-            });
-
-            // Enhanced email check with animation
-            const enhancedCheckBtn = document.getElementById('enhancedCheckBtn');
-            const enhancedEmailInput = document.getElementById('enhancedEmailInput');
-            const resultsModal = document.getElementById('resultsModal');
-            const closeModal = document.getElementById('closeModal');
-
-            enhancedCheckBtn.addEventListener('click', async function() {
-                const email = enhancedEmailInput.value.trim();
+        // Service Tab Switching
+        document.querySelectorAll('.service-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
                 
-                if (!validateEmail(email)) {
-                    showError('Please enter a valid email address');
-                    return;
-                }
-                
-                // Show loading state
-                const originalText = this.innerHTML;
-                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scanning...';
-                this.disabled = true;
-                
-                // Simulate API call with enhanced animation
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // Show results modal
-                showResultsModal(email);
-                
-                // Reset button
-                this.innerHTML = originalText;
-                this.disabled = false;
-            });
-
-            // Modal functionality
-            closeModal.addEventListener('click', () => {
-                resultsModal.classList.remove('active');
-            });
-
-            resultsModal.addEventListener('click', (e) => {
-                if (e.target === resultsModal) {
-                    resultsModal.classList.remove('active');
-                }
-            });
-
-            // Testimonials data
-            const testimonials = [
-                {
-                    content: "ExposureShield has transformed our security posture. The real-time alerts helped us prevent a major data breach last quarter.",
-                    author: "Sarah Chen",
-                    role: "CISO, TechCorp Inc.",
-                    initials: "SC"
-                },
-                {
-                    content: "As a security researcher, I've tried many breach monitoring tools. ExposureShield's database coverage is unmatched.",
-                    author: "Dr. Michael Rodriguez",
-                    role: "Security Researcher",
-                    initials: "MR"
-                },
-                {
-                    content: "The API integration was seamless, and their support team is exceptional. Highly recommended for any enterprise.",
-                    author: "James Wilson",
-                    role: "CTO, SecureNet",
-                    initials: "JW"
-                }
-            ];
-
-            // Load testimonials
-            const testimonialTrack = document.getElementById('testimonialTrack');
-            testimonials.forEach((testimonial, index) => {
-                const testimonialCard = document.createElement('div');
-                testimonialCard.className = 'testimonial-card';
-                testimonialCard.innerHTML = `
-                    <div class="testimonial-content">
-                        ${testimonial.content}
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">
-                            ${testimonial.initials}
-                        </div>
-                        <div>
-                            <h4>${testimonial.author}</h4>
-                            <p>${testimonial.role}</p>
-                        </div>
-                    </div>
-                `;
-                testimonialTrack.appendChild(testimonialCard);
-            });
-
-            // FAQ Data
-            const faqs = [
-                {
-                    question: "How does ExposureShield protect my privacy?",
-                    answer: "We use military-grade encryption and follow a strict no-logging policy. All email checks are hashed before processing, and we never store raw email addresses. Our system is designed with privacy-by-default architecture."
-                },
-                {
-                    question: "What data sources do you monitor?",
-                    answer: "We monitor over 700 public and private data sources, including dark web forums, paste sites, hacker marketplaces, and public breach databases. Our sources are continuously updated by our security research team."
-                },
-                {
-                    question: "How quickly do you detect new breaches?",
-                    answer: "Our system monitors for new breaches 24/7. Average detection time is under 2 hours from breach publication. Critical breaches are detected within minutes and alerts are sent immediately."
-                },
-                {
-                    question: "Can I use ExposureShield for my entire organization?",
-                    answer: "Yes! We offer enterprise plans with team management, centralized reporting, and API access. You can monitor unlimited domains and email addresses with our business solutions."
-                },
-                {
-                    question: "Do you offer an API?",
-                    answer: "Yes, we provide a RESTful API with comprehensive documentation. Our API supports batch queries, webhook integration, and real-time monitoring endpoints. All API calls are encrypted and rate-limited for security."
-                }
-            ];
-
-            // Load FAQs
-            const faqContainer = document.getElementById('faqContainer');
-            faqs.forEach((faq, index) => {
-                const faqItem = document.createElement('div');
-                faqItem.className = 'faq-item';
-                faqItem.innerHTML = `
-                    <div class="faq-question" onclick="toggleFAQ(${index})">
-                        <h3>${faq.question}</h3>
-                        <span class="faq-toggle">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        <p>${faq.answer}</p>
-                    </div>
-                `;
-                faqContainer.appendChild(faqItem);
-            });
-
-            // Start free trial button
-            document.getElementById('startFreeTrial').addEventListener('click', function() {
-                const trialModal = document.createElement('div');
-                trialModal.className = 'modal active';
-                trialModal.innerHTML = `
-                    <div class="modal-content">
-                        <button class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</button>
-                        <h3>Start Your 14-Day Free Trial</h3>
-                        <p>No credit card required. Get full access to all Pro features.</p>
-                        <input type="email" placeholder="Work email" class="email-input" style="width: 100%; margin: 1rem 0;">
-                        <button class="btn btn-primary" style="width: 100%;">
-                            Start Free Trial
-                        </button>
-                        <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--gray);">
-                            By signing up, you agree to our Terms and Privacy Policy
-                        </p>
-                    </div>
-                `;
-                document.body.appendChild(trialModal);
-            });
-
-            // Animate stats on scroll
-            const observerOptions = {
-                threshold: 0.5
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        animateCounter('breachCount', 12, 'B+');
-                        animateCounter('breachDatabase', 700, '+');
-                        animateCounter('protectedUsers', 10, 'K+');
-                    }
+                // Update active content
+                const service = tab.dataset.service;
+                document.querySelectorAll('.service-content').forEach(content => {
+                    content.classList.remove('active');
                 });
-            }, observerOptions);
+                document.getElementById(`${service}-content`).classList.add('active');
+                
+                // Update URL hash
+                window.location.hash = service;
+            });
+        });
 
-            observer.observe(document.querySelector('.stats'));
-
-            // Animated counter function
-            function animateCounter(elementId, target, suffix) {
-                const element = document.getElementById(elementId);
-                let current = 0;
-                const increment = target / 50;
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        current = target;
-                        clearInterval(timer);
-                    }
-                    element.textContent = Math.floor(current) + suffix;
-                }, 30);
+        // Check URL hash on load
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1);
+            if (hash && ['exposureshield', 'legacyshield', 'dashboard'].includes(hash)) {
+                const tab = document.querySelector(`.service-tab[data-service="${hash}"]`);
+                if (tab) tab.click();
             }
         });
 
-        // Global functions
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
+        // Legacy Planning Progress
+        const legacyItems = document.querySelectorAll('.legacy-progress-item');
+        legacyItems.forEach(item => {
+            const progress = item.dataset.progress;
+            const fill = item.querySelector('.progress-fill');
+            fill.style.width = `${progress}%`;
+        });
+
+        // Simulate security scan
+        function simulateSecurityScan() {
+            const breachesFound = Math.floor(Math.random() * 3);
+            const protectedAccounts = Math.floor(Math.random() * 20) + 5;
+            
+            document.querySelector('.stat-value:nth-child(1)').textContent = breachesFound;
+            document.querySelector('.stat-value:nth-child(2)').textContent = protectedAccounts;
+            
+            // Update status badge
+            const statusBadge = document.querySelector('.status-badge');
+            if (breachesFound === 0) {
+                statusBadge.textContent = 'Protected';
+                statusBadge.className = 'status-badge safe';
+            } else {
+                statusBadge.textContent = `${breachesFound} Breaches`;
+                statusBadge.className = 'status-badge warning';
+            }
         }
 
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--danger);
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: var(--radius);
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-            `;
-            errorDiv.textContent = message;
-            document.body.appendChild(errorDiv);
-            
-            setTimeout(() => {
-                errorDiv.remove();
-            }, 3000);
-        }
-
-        function showResultsModal(email) {
-            const modalContent = document.getElementById('modalContent');
-            const results = [
-                { service: 'LinkedIn', year: 2012, count: '165M' },
-                { service: 'Adobe', year: 2013, count: '153M' },
-                { service: 'Dropbox', year: 2012, count: '68M' }
-            ];
-            
-            const randomResult = results[Math.floor(Math.random() * results.length)];
-            
-            modalContent.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                        <i class="fas fa-shield-check" style="font-size: 2rem; color: white;"></i>
-                    </div>
-                    <h3 style="color: var(--secondary); margin-bottom: 1rem;">Security Scan Complete</h3>
-                    <p style="color: var(--gray); margin-bottom: 1.5rem;">
-                        Scan completed for: <strong>${email}</strong>
-                    </p>
-                    <div style="background: #f8fafc; padding: 1.5rem; border-radius: var(--radius); margin-bottom: 1.5rem;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span>Status</span>
-                            <span style="color: var(--success); font-weight: 600;">
-                                <i class="fas fa-check-circle"></i> Secure
-                            </span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span>Breaches Found</span>
-                            <span style="color: var(--success); font-weight: 600;">0</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span>Pastes Found</span>
-                            <span style="color: var(--success); font-weight: 600;">0</span>
-                        </div>
-                    </div>
-                    <p style="color: var(--gray); font-size: 0.875rem; margin-bottom: 1.5rem;">
-                        <i class="fas fa-info-circle"></i>
-                        No exposure found in our database of 12+ billion records.
-                    </p>
-                    <button class="btn btn-primary" style="width: 100%;" onclick="resultsModal.classList.remove('active')">
-                        <i class="fas fa-redo"></i>
-                        Scan Another Email
-                    </button>
-                </div>
-            `;
-            
-            resultsModal.classList.add('active');
-        }
-
-        function toggleFAQ(index) {
-            const faqItem = document.querySelectorAll('.faq-item')[index];
-            faqItem.classList.toggle('active');
-        }
+        // Auto-scan every 30 seconds
+        setInterval(simulateSecurityScan, 30000);
+        simulateSecurityScan(); // Initial scan
     </script>
 </body>
 </html>
