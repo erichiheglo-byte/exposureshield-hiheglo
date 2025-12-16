@@ -1,11 +1,10 @@
 {
-  "version": 2,
-  "builds": [
-    {"src": "*.html", "use": "@vercel/static"},
-    {"src": "*.css", "use": "@vercel/static"},
-    {"src": "*.js", "use": "@vercel/static"}
-  ],
-  "routes": [
-    {"src": "/(.*)", "dest": "/index.html"}
+  "functions": {
+    "api/check-email.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/api/check-email", "destination": "/api/check-email.js" }
   ]
 }

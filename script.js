@@ -1,801 +1,684 @@
-﻿// ============================================
-// EXPOSURESHIELD v4.0 - Professional Production
-// ============================================
+﻿// Exposure Shield - Professional JavaScript
+// Updated to work with new HTML structure
 
-// CONFIGURATION
-const CONFIG = {
-    APP_NAME: 'ExposureShield',
-    VERSION: '4.0',
-    BACKEND_LIVE: true, // Set to true - your API key is in Vercel
-    API_ENDPOINT: '/api/check-email', // Your secure Vercel endpoint
-    DEMO_BREACHES: [
-        {
-            name: 'Endgame',
-            date: '2023-11-13',
-            dataClasses: ['Email addresses', 'Passwords', 'Usernames'],
-            description: 'A coordinated takedown of major cybercrime infrastructure affecting millions of users worldwide.'
+// Configuration
+const EXPOSURE_SHIELD = {
+    config: {
+        APP_NAME: 'Exposure Shield',
+        VERSION: '5.0.0',
+        API_ENDPOINT: '/api/check-email'
+    },
+
+    utils: {
+        formatNumber: (num) => {
+            if (num === undefined || num === null || num === 0) return 'Unknown';
+            return num.toLocaleString();
         },
-        {
-            name: 'Collection #1',
-            date: '2019-01-07',
-            dataClasses: ['Email addresses', 'Passwords'],
-            description: 'One of the largest collections of breached data found circulating on hacking forums.'
-        }
-    ],
-    MAX_RETRIES: 2,
-    REQUEST_TIMEOUT: 10000 // 10 seconds
-};
-
-// DOM Elements Cache
-const elements = {
-    emailInput: document.getElementById('emailInput'),
-    scanButton: document.getElementById('scanButton'),
-    resultsContainer: document.getElementById('resultsContainer'),
-    loadingOverlay: document.getElementById('scanningOverlay'),
-    breachCount: document.getElementById('breachCount'),
-    userCount: document.getElementById('userCount'),
-    statsUpdated: document.getElementById('statsUpdated'),
-    waitlistForm: document.getElementById('waitlistForm'),
-    successMessage: document.getElementById('successMessage')
-};
-
-// State Management
-let currentScanState = {
-    isScanning: false,
-    lastEmail: '',
-    scanHistory: []
-};
-
-// ============================================
-// INITIALIZATION
-// ============================================
-
-document.addEventListener('DOMContentLoaded', function() {
-    console.log(`${CONFIG.APP_NAME} v${CONFIG.VERSION} initialized`);
-    
-    initializeScanner();
-    initializeWaitlist();
-    updateStatistics();
-    setupEventListeners();
-    
-    // Add subtle animation to CTA button
-    if (elements.scanButton) {
-        elements.scanButton.classList.add('hover-lift');
-    }
-});
-
-// ============================================
-// EMAIL SCANNER - CORE FUNCTIONALITY
-// ============================================
-
-function initializeScanner() {
-    if (!elements.emailInput || !elements.scanButton) return;
-    
-    // Load previous scan if exists
-    const lastScan = localStorage.getItem('lastScan');
-    if (lastScan) {
-        try {
-            const scanData = JSON.parse(lastScan);
-            if (scanData.email && scanData.results) {
-                elements.emailInput.value = scanData.email;
-                setTimeout(() => {
-                    displayResults(scanData.email, scanData.results, false);
-                }, 500);
+        
+        formatDate: (dateString) => {
+            if (!dateString) return 'Date unknown';
+            try {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays < 30) return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short'
+                });
+            } catch {
+                return 'Date unknown';
             }
-        } catch (e) {
-            console.log('No previous scan found');
+        },
+        
+        escapeHtml: (text) => {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
-    }
-}
+    },
 
-function setupEventListeners() {
-    // Scan button click
-    if (elements.scanButton) {
-        elements.scanButton.addEventListener('click', performScan);
-    }
-    
-    // Enter key in email field
-    if (elements.emailInput) {
-        elements.emailInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performScan();
+    state: {
+        isChecking: false
+    },
+
+    // Initialize everything
+    init: function() {
+        console.log(`🚀 ${this.config.APP_NAME} v${this.config.VERSION} starting...`);
+        
+        // Set up the scan button
+        this.setupScanButton();
+        
+        // Set up mobile menu
+        this.setupMobileMenu();
+        
+        // Set up form submission
+        this.setupContactForm();
+        
+        console.log('✅ Exposure Shield initialized');
+    },
+
+    // Set up the main scan button
+    setupScanButton: function() {
+        const button = document.getElementById('checkExposureBtn');
+        if (!button) {
+            console.error('❌ Scan button not found');
+            return;
+        }
+        
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.handleScan(button);
         });
         
-        // Clear results when user starts typing new email
-        elements.emailInput.addEventListener('input', () => {
-            if (currentScanState.lastEmail && 
-                elements.emailInput.value !== currentScanState.lastEmail &&
-                elements.resultsContainer) {
-                elements.resultsContainer.innerHTML = '';
-            }
-        });
-    }
-}
-
-// ============================================
-// EMAIL VALIDATION
-// ============================================
-
-function validateEmail(email) {
-    if (!email) return { valid: false, message: 'Please enter an email address' };
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        return { valid: false, message: 'Please enter a valid email address' };
-    }
-    
-    // Basic disposable email check
-    const disposableDomains = ['tempmail.com', 'mailinator.com', 'guerrillamail.com'];
-    const domain = email.split('@')[1];
-    if (disposableDomains.some(d => domain.includes(d))) {
-        return { valid: true, message: 'Note: Disposable email detected', warning: true };
-    }
-    
-    return { valid: true, message: '' };
-}
-
-// ============================================
-// LOADING STATES
-// ============================================
-
-function showLoadingState() {
-    currentScanState.isScanning = true;
-    
-    if (elements.scanButton) {
-        elements.scanButton.disabled = true;
-        elements.scanButton.innerHTML = `
-            <i class="fas fa-spinner fa-spin mr-2"></i>
-            <span class="scanning-text">Scanning Databases...</span>
-        `;
-    }
-    
-    if (elements.loadingOverlay) {
-        elements.loadingOverlay.classList.remove('hidden');
-        // Add pulsing animation
-        elements.loadingOverlay.classList.add('fade-in');
-    }
-    
-    // Disable form during scan
-    if (elements.emailInput) elements.emailInput.disabled = true;
-}
-
-function hideLoadingState() {
-    currentScanState.isScanning = false;
-    
-    if (elements.scanButton) {
-        elements.scanButton.disabled = false;
-        elements.scanButton.innerHTML = `
-            <i class="fas fa-search mr-2"></i>
-            <span>Check Exposure</span>
-        `;
-    }
-    
-    if (elements.loadingOverlay) {
-        elements.loadingOverlay.classList.add('hidden');
-        elements.loadingOverlay.classList.remove('fade-in');
-    }
-    
-    if (elements.emailInput) elements.emailInput.disabled = false;
-}
-
-// ============================================
-// API CALL - SECURE VERCEL PROXY
-// ============================================
-
-async function callBreachAPI(email, retryCount = 0) {
-    if (!CONFIG.BACKEND_LIVE) {
-        // Demo mode - simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1200));
-        const hasBreaches = Math.random() > 0.5;
-        return {
-            email: email,
-            breaches: hasBreaches ? CONFIG.DEMO_BREACHES : [],
-            source: 'demo',
-            timestamp: new Date().toISOString()
-        };
-    }
-    
-    try {
-        // Call your secure Vercel endpoint
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-        
-        const response = await fetch(
-            `${CONFIG.API_ENDPOINT}?email=${encodeURIComponent(email)}`,
-            {
-                signal: controller.signal,
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'ExposureShield'
+        // Also handle Enter key in email input
+        const emailInput = document.querySelector('.email-input');
+        if (emailInput) {
+            emailInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.handleScan(button);
                 }
-            }
-        );
+            });
+        }
         
-        clearTimeout(timeoutId);
+        console.log('✅ Scan button ready');
+    },
+
+    // Set up mobile menu toggle
+    setupMobileMenu: function() {
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (menuBtn && navLinks) {
+            menuBtn.addEventListener('click', () => {
+                navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+                menuBtn.innerHTML = navLinks.style.display === 'flex' ? 
+                    '<i class="fas fa-times"></i>' : 
+                    '<i class="fas fa-bars"></i>';
+            });
+            
+            // Make responsive
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    navLinks.style.display = 'flex';
+                    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                } else {
+                    navLinks.style.display = 'none';
+                }
+            });
+        }
+    },
+
+    // Set up contact form
+    setupContactForm: function() {
+        const form = document.querySelector('.contact-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                
+                if (name && email && message) {
+                    // In a real app, you would send this to your backend
+                    alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+                    form.reset();
+                } else {
+                    alert('Please fill in all fields.');
+                }
+            });
+        }
+    },
+
+    // Handle scan button click
+    async handleScan(button) {
+        if (this.state.isChecking) return;
+        
+        this.state.isChecking = true;
+        
+        // Get email
+        const emailInput = document.querySelector('.email-input');
+        const email = emailInput ? emailInput.value.trim() : '';
+        
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email address.');
+            this.state.isChecking = false;
+            return;
+        }
+        
+        // Update button state
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+        button.disabled = true;
+        
+        try {
+            // Call API
+            const breaches = await this.checkEmail(email);
+            
+            // Show results
+            this.showResults(email, breaches);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            this.showError(error.message || 'Unable to check email');
+            
+        } finally {
+            // Restore button
+            button.innerHTML = originalHTML;
+            button.disabled = false;
+            this.state.isChecking = false;
+        }
+    },
+
+    // Check email via API
+    async checkEmail(email) {
+        const url = `${this.config.API_ENDPOINT}?email=${encodeURIComponent(email)}`;
+        console.log(`🌐 Checking: ${url}`);
+        
+        const response = await fetch(url);
         
         if (!response.ok) {
-            if (response.status === 429) {
-                throw new Error('Too many requests. Please wait a moment.');
-            }
+            if (response.status === 404) return [];
             throw new Error(`API error: ${response.status}`);
         }
         
-        const breaches = await response.json();
-        
-        return {
-            email: email,
-            breaches: breaches,
-            source: 'hibp',
-            timestamp: new Date().toISOString()
-        };
-        
-    } catch (error) {
-        console.error('API call failed:', error);
-        
-        // Retry logic
-        if (retryCount < CONFIG.MAX_RETRIES) {
-            console.log(`Retrying... (${retryCount + 1}/${CONFIG.MAX_RETRIES})`);
-            await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
-            return callBreachAPI(email, retryCount + 1);
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+    },
+
+    // Remove existing results
+    removeResults: function() {
+        const container = document.getElementById('resultsContainer');
+        if (container) {
+            container.innerHTML = '';
         }
+    },
+
+    // Show results
+    showResults: function(email, breaches) {
+        this.removeResults();
         
-        // Fallback to demo mode if API fails
-        return {
-            email: email,
-            breaches: CONFIG.DEMO_BREACHES.slice(0, 1),
-            source: 'fallback',
-            timestamp: new Date().toISOString(),
-            error: error.message
-        };
-    }
-}
-
-// ============================================
-// MAIN SCAN FUNCTION
-// ============================================
-
-async function performScan() {
-    const email = elements.emailInput ? elements.emailInput.value.trim() : '';
-    
-    // Validation
-    const validation = validateEmail(email);
-    if (!validation.valid) {
-        showNotification(validation.message, 'error');
-        return;
-    }
-    
-    if (validation.warning) {
-        showNotification(validation.message, 'warning');
-    }
-    
-    // Don't rescan same email immediately
-    if (currentScanState.lastEmail === email && currentScanState.isScanning) {
-        return;
-    }
-    
-    currentScanState.lastEmail = email;
-    
-    // Clear previous results
-    if (elements.resultsContainer) {
-        elements.resultsContainer.innerHTML = '';
-    }
-    
-    // Show loading
-    showLoadingState();
-    
-    try {
-        // Perform the scan
-        const result = await callBreachAPI(email);
+        const container = document.getElementById('resultsContainer');
+        if (!container) return;
         
-        // Store in history
-        currentScanState.scanHistory.unshift({
-            email: result.email,
-            breachCount: result.breaches.length,
-            timestamp: result.timestamp
-        });
+        // Add CSS for results if not already added
+        this.injectResultsStyles();
         
-        // Keep only last 10 scans
-        if (currentScanState.scanHistory.length > 10) {
-            currentScanState.scanHistory.pop();
-        }
-        
-        // Save to localStorage
-        localStorage.setItem('lastScan', JSON.stringify({
-            email: result.email,
-            results: result.breaches,
-            timestamp: result.timestamp
-        }));
-        
-        // Display results
-        displayResults(result.email, result.breaches, result.source !== 'hibp');
-        
-        // Update statistics
-        updateStatistics();
-        
-        // Track successful scan
-        trackScan(result);
-        
-    } catch (error) {
-        console.error('Scan failed:', error);
-        
-        // Show error to user
-        if (elements.resultsContainer) {
-            elements.resultsContainer.innerHTML = `
-                <div class="error-card">
-                    <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Service Temporarily Unavailable</h3>
-                    <p class="text-gray-600">Please try again in a few moments.</p>
-                    <button onclick="performScan()" class="retry-button">
-                        <i class="fas fa-redo mr-2"></i>Retry Scan
-                    </button>
-                </div>
-            `;
-        }
-        
-    } finally {
-        hideLoadingState();
-    }
-}
-
-// ============================================
-// RESULTS DISPLAY
-// ============================================
-
-function displayResults(email, breaches, isDemo = false) {
-    if (!elements.resultsContainer) return;
-    
-    let resultsHTML;
-    const breachCount = breaches.length;
-    
-    if (breachCount === 0) {
-        // No breaches found
-        resultsHTML = createSafeResult(email, isDemo);
-    } else {
-        // Breaches found
-        resultsHTML = createBreachResult(email, breaches, isDemo);
-    }
-    
-    // Add demo notice if needed
-    if (isDemo) {
-        resultsHTML += createDemoNotice();
-    }
-    
-    elements.resultsContainer.innerHTML = resultsHTML;
-    
-    // Smooth scroll to results
-    setTimeout(() => {
-        elements.resultsContainer.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'start' 
-        });
-    }, 100);
-    
-    // Add animations
-    setTimeout(() => {
-        const cards = elements.resultsContainer.querySelectorAll('.result-card');
-        cards.forEach((card, index) => {
-            card.style.animationDelay = `${index * 100}ms`;
-            card.classList.add('fade-in-up');
-        });
-    }, 50);
-}
-
-function createSafeResult(email, isDemo) {
-    return `
-        <div class="result-card safe-card">
-            <div class="card-header">
-                <div class="status-icon">
-                    <i class="fas fa-shield-check"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">✅ No Breaches Found</h3>
-                    <p class="card-subtitle">Your email appears secure in our database</p>
-                </div>
-            </div>
-            
-            <div class="card-body">
-                <div class="email-display">
-                    <span class="label">Email checked:</span>
-                    <code class="email-value">${email}</code>
-                </div>
-                
-                <div class="success-message">
-                    <i class="fas fa-check-circle text-green-500"></i>
-                    <span>Good news! No security breaches found for this email address.</span>
-                </div>
-                
-                <div class="recommendations">
-                    <h4>🔒 Keep Your Data Secure:</h4>
-                    <div class="recommendations-grid">
-                        <div class="recommendation-item">
-                            <i class="fas fa-key text-blue-500"></i>
-                            <h5>Use Strong Passwords</h5>
-                            <p>Create unique passwords for every account</p>
-                        </div>
-                        <div class="recommendation-item">
-                            <i class="fas fa-user-shield text-blue-500"></i>
-                            <h5>Enable 2FA</h5>
-                            <p>Add an extra layer of security</p>
-                        </div>
-                        <div class="recommendation-item">
-                            <i class="fas fa-sync-alt text-blue-500"></i>
-                            <h5>Regular Checks</h5>
-                            <p>Scan periodically for new breaches</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button onclick="shareResult('${email}', 0)" class="share-button">
-                        <i class="fas fa-share-alt"></i> Share Result
-                    </button>
-                    <button onclick="performScan()" class="rescan-button">
-                        <i class="fas fa-redo"></i> Scan Another Email
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function createBreachResult(email, breaches, isDemo) {
-    const breachList = breaches.map((breach, index) => `
-        <div class="breach-item ${index === 0 ? 'latest-breach' : ''}">
-            <div class="breach-header">
-                <div class="breach-title">
-                    <h4>${breach.name}</h4>
-                    <span class="breach-date">${formatDate(breach.date)}</span>
-                </div>
-                <span class="breach-severity">${getSeverityLevel(breach.dataClasses)}</span>
-            </div>
-            
-            <p class="breach-description">${breach.description}</p>
-            
-            <div class="breach-data">
-                <span class="data-label">Compromised Data:</span>
-                <div class="data-tags">
-                    ${breach.dataClasses.map(data => `
-                        <span class="data-tag">${data}</span>
-                    `).join('')}
-                </div>
-            </div>
-            
-            <div class="breach-actions">
-                <button onclick="showBreachDetails(${index})" class="details-button">
-                    <i class="fas fa-info-circle"></i> Details
-                </button>
-                <button onclick="getRemediation('${breach.name}')" class="remediate-button">
-                    <i class="fas fa-tools"></i> Fix It
-                </button>
-            </div>
-        </div>
-    `).join('');
-
-    return `
-        <div class="result-card breach-card">
-            <div class="card-header alert">
-                <div class="status-icon warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div>
-                    <h3 class="card-title">⚠️ Security Alert: ${breaches.length} Breach${breaches.length > 1 ? 'es' : ''} Found</h3>
-                    <p class="card-subtitle">Immediate action recommended</p>
-                </div>
-            </div>
-            
-            <div class="card-body">
-                <div class="email-display">
-                    <span class="label">Compromised Email:</span>
-                    <code class="email-value warning">${email}</code>
-                </div>
-                
-                <div class="alert-banner">
-                    <i class="fas fa-clock"></i>
-                    <span>This email was exposed. Change passwords immediately.</span>
-                </div>
-                
-                <div class="breaches-list">
-                    <h4>📋 Detected Breaches:</h4>
-                    ${breachList}
-                </div>
-                
-                <div class="critical-actions">
-                    <h4>🚨 Immediate Actions Required:</h4>
-                    <ol class="action-list">
-                        <li><strong>Change passwords</strong> for any account using this email</li>
-                        <li><strong>Enable Two-Factor Authentication</strong> on all important accounts</li>
-                        <li><strong>Use a password manager</strong> to create strong, unique passwords</li>
-                        <li><strong>Monitor accounts</strong> for suspicious activity</li>
-                    </ol>
-                </div>
-                
-                <div class="protection-tips">
-                    <h4>🛡️ Enhanced Protection:</h4>
-                    <div class="tips-grid">
-                        <div class="tip">
-                            <i class="fas fa-lock"></i>
-                            <p>Consider identity theft protection service</p>
-                        </div>
-                        <div class="tip">
-                            <i class="fas fa-bell"></i>
-                            <p>Set up breach alerts for this email</p>
-                        </div>
-                        <div class="tip">
-                            <i class="fas fa-file-contract"></i>
-                            <p>Review privacy settings on all accounts</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button onclick="generateReport('${email}')" class="report-button">
-                        <i class="fas fa-file-pdf"></i> Download Report
-                    </button>
-                    <button onclick="showRemediationGuide()" class="guide-button">
-                        <i class="fas fa-book"></i> Remediation Guide
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-function createDemoNotice() {
-    return `
-        <div class="demo-notice">
-            <div class="notice-content">
-                <i class="fas fa-info-circle text-blue-500"></i>
-                <div>
-                    <p class="notice-title">Demo Mode Active</p>
-                    <p class="notice-text">
-                        Showing simulated breach data. Your HIBP API key is securely configured in Vercel.
-                        <a href="#" onclick="toggleAPIMode()" class="notice-link">Switch to live mode</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// ============================================
-// WAITLIST FUNCTIONALITY
-// ============================================
-
-function initializeWaitlist() {
-    if (!elements.waitlistForm) return;
-    
-    elements.waitlistForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const submitButton = this.querySelector('button[type="submit"]');
-        const originalText = submitButton.innerHTML;
-        
-        // Get form data
-        const formData = {
-            email: document.getElementById('waitlistEmail').value.trim(),
-            assets: Array.from(document.querySelectorAll('input[name="assets"]:checked'))
-                .map(cb => cb.value),
-            priority: document.getElementById('priority').value,
-            comments: document.getElementById('comments').value.trim(),
-            timestamp: new Date().toISOString(),
-            source: 'exposureshield.com',
-            campaign: 'legacyshield-launch'
-        };
-        
-        // Validation
-        const emailValidation = validateEmail(formData.email);
-        if (!emailValidation.valid) {
-            showNotification(emailValidation.message, 'error');
-            return;
-        }
-        
-        if (formData.assets.length === 0) {
-            showNotification('Please select at least one digital asset type', 'error');
-            return;
-        }
-        
-        if (!formData.priority) {
-            showNotification('Please select your timeframe', 'error');
-            return;
-        }
-        
-        // Show loading
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-        
-        try {
-            // In production, you would send to your backend
-            // const response = await fetch('/api/waitlist', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(formData)
-            // });
-            
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 800));
-            
-            // Show success
-            showWaitlistSuccess(formData.email);
-            
-            // Store in localStorage
-            storeWaitlistSubmission(formData);
-            
-            // Track conversion
-            trackConversion('waitlist_signup', formData);
-            
-            console.log('Waitlist submission:', formData);
-            
-        } catch (error) {
-            console.error('Waitlist error:', error);
-            showNotification('Something went wrong. Please try again.', 'error');
-        } finally {
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalText;
-        }
-    });
-}
-
-function showWaitlistSuccess(email) {
-    if (!elements.waitlistForm || !elements.successMessage) return;
-    
-    // Hide form, show success
-    elements.waitlistForm.style.display = 'none';
-    elements.successMessage.style.display = 'block';
-    
-    // Update email in success message
-    const emailElement = elements.successMessage.querySelector('.user-email');
-    if (emailElement) {
-        emailElement.textContent = email;
-    }
-    
-    // Animate success icon
-    const icon = elements.successMessage.querySelector('.success-icon');
-    if (icon) {
-        icon.classList.add('bounce-in');
-    }
-}
-
-function resetWaitlistForm() {
-    if (!elements.waitlistForm || !elements.successMessage) return;
-    
-    elements.waitlistForm.reset();
-    elements.waitlistForm.style.display = 'block';
-    elements.successMessage.style.display = 'none';
-}
-
-// ============================================
-// UTILITY FUNCTIONS
-// ============================================
-
-function formatDate(dateStr) {
-    if (!dateStr) return 'Date unknown';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-}
-
-function getSeverityLevel(dataClasses) {
-    const highRisk = ['Passwords', 'Credit card numbers', 'Government IDs'];
-    const hasHighRisk = dataClasses.some(data => highRisk.includes(data));
-    
-    return hasHighRisk ? 'High Risk' : 'Medium Risk';
-}
-
-function updateStatistics() {
-    if (elements.breachCount) {
-        elements.breachCount.textContent = '4.5B+';
-    }
-    if (elements.userCount) {
-        elements.userCount.textContent = '1.2M+';
-    }
-    if (elements.statsUpdated) {
-        elements.statsUpdated.textContent = 'Updated just now';
-    }
-}
-
-function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
-        <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()" class="notification-close">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // Add to page
-    document.body.appendChild(notification);
-    
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
-}
-
-function storeWaitlistSubmission(data) {
-    try {
-        const submissions = JSON.parse(localStorage.getItem('waitlistSubmissions') || '[]');
-        submissions.push(data);
-        localStorage.setItem('waitlistSubmissions', JSON.stringify(submissions));
-    } catch (e) {
-        console.error('Failed to store waitlist submission:', e);
-    }
-}
-
-// ============================================
-// ANALYTICS & TRACKING
-// ============================================
-
-function trackScan(result) {
-    // Basic analytics - in production, use Google Analytics or similar
-    console.log('Scan completed:', {
-        email: result.email.substring(0, 3) + '...', // Partial for privacy
-        breachCount: result.breaches.length,
-        source: result.source,
-        timestamp: result.timestamp
-    });
-    
-    // Update scan count
-    let scanCount = parseInt(localStorage.getItem('totalScans') || '0');
-    scanCount++;
-    localStorage.setItem('totalScans', scanCount.toString());
-}
-
-function trackConversion(event, data) {
-    console.log('Conversion:', event, {
-        email: data.email.substring(0, 3) + '...',
-        timestamp: data.timestamp
-    });
-}
-
-// ============================================
-// EXPORT FOR GLOBAL ACCESS
-// ============================================
-
-// Make key functions available globally
-window.ExposureShield = {
-    performScan,
-    resetWaitlistForm,
-    shareResult: function(email, breachCount) {
-        const text = `My email ${email} was found in ${breachCount} data breach${breachCount !== 1 ? 'es' : ''}. Check yours at ${window.location.origin}`;
-        if (navigator.share) {
-            navigator.share({ title: 'ExposureShield Result', text: text });
+        if (!breaches || breaches.length === 0) {
+            container.innerHTML = this.getNoBreachesHTML(email);
         } else {
-            navigator.clipboard.writeText(text);
-            showNotification('Result copied to clipboard!', 'success');
+            container.innerHTML = this.getBreachesHTML(email, breaches);
         }
+        
+        // Scroll to results
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
-    showBreachDetails: function(index) {
-        showNotification(`Details for breach #${index + 1}`, 'info');
+
+    // Inject results styles
+    injectResultsStyles: function() {
+        if (document.getElementById('results-styles')) return;
+        
+        const css = `
+            .es-results {
+                animation: fadeIn 0.5s ease-out;
+                margin-top: 40px;
+            }
+            
+            .es-result-card {
+                background: white;
+                border-radius: 16px;
+                overflow: hidden;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+                border: 1px solid #e9ecef;
+            }
+            
+            .es-result-safe {
+                border-top: 5px solid #10b981;
+            }
+            
+            .es-result-alert {
+                border-top: 5px solid #ef4444;
+            }
+            
+            .es-result-header {
+                padding: 35px 40px;
+                text-align: center;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            }
+            
+            .es-result-icon {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 25px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 36px;
+            }
+            
+            .es-icon-safe {
+                background: rgba(16, 185, 129, 0.1);
+                color: #10b981;
+                border: 2px solid rgba(16, 185, 129, 0.3);
+            }
+            
+            .es-icon-alert {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+                border: 2px solid rgba(239, 68, 68, 0.3);
+            }
+            
+            .es-email-box {
+                background: #f8f9fa;
+                border-radius: 12px;
+                padding: 25px;
+                margin: 0 40px 30px;
+                text-align: center;
+                border: 1px solid #e9ecef;
+            }
+            
+            .es-email-address {
+                font-family: 'SF Mono', Monaco, monospace;
+                font-size: 20px;
+                font-weight: 700;
+                color: #1f2937;
+                word-break: break-all;
+            }
+            
+            .es-stats {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 20px;
+                margin: 0 40px 40px;
+            }
+            
+            .es-stat {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                border-radius: 12px;
+                padding: 25px;
+                text-align: center;
+                border: 1px solid #dee2e6;
+            }
+            
+            .es-stat-value {
+                font-size: 36px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+            
+            .es-stat-label {
+                color: #6b7280;
+                font-size: 14px;
+                text-transform: uppercase;
+                letter-spacing: 0.8px;
+                font-weight: 600;
+            }
+            
+            .es-breaches {
+                margin: 0 40px 40px;
+            }
+            
+            .es-breach-item {
+                display: flex;
+                align-items: flex-start;
+                padding: 25px;
+                margin-bottom: 15px;
+                background: #f8f9fa;
+                border-radius: 12px;
+                border-left: 4px solid #ef4444;
+            }
+            
+            .es-breach-icon {
+                width: 50px;
+                height: 50px;
+                background: white;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 20px;
+                flex-shrink: 0;
+                font-size: 22px;
+                color: #6b7280;
+                border: 1px solid #e5e7eb;
+            }
+            
+            .es-breach-content {
+                flex: 1;
+            }
+            
+            .es-breach-name {
+                font-size: 18px;
+                font-weight: 700;
+                margin: 0 0 10px;
+                color: #1f2937;
+            }
+            
+            .es-breach-meta {
+                display: flex;
+                gap: 20px;
+                color: #6b7280;
+                font-size: 14px;
+            }
+            
+            .es-actions {
+                margin: 40px;
+                padding: 30px;
+                background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+                border-radius: 16px;
+                border-left: 5px solid #f59e0b;
+            }
+            
+            .es-footer {
+                padding: 30px 40px;
+                background: #f8f9fa;
+                border-top: 1px solid #e9ecef;
+                text-align: center;
+            }
+            
+            .es-button {
+                padding: 14px 32px;
+                border-radius: 10px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: none;
+                font-size: 16px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                min-width: 180px;
+            }
+            
+            .es-button-primary {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                color: white;
+            }
+            
+            .es-button-primary:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            }
+            
+            @media (max-width: 768px) {
+                .es-result-header,
+                .es-email-box,
+                .es-stats,
+                .es-breaches,
+                .es-actions,
+                .es-footer {
+                    margin: 20px;
+                    padding: 25px;
+                }
+                
+                .es-stats {
+                    grid-template-columns: 1fr;
+                }
+                
+                .es-breach-meta {
+                    flex-direction: column;
+                    gap: 8px;
+                }
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.id = 'results-styles';
+        style.textContent = css;
+        document.head.appendChild(style);
     },
-    getRemediation: function(breachName) {
-        window.open(`https://haveibeenpwned.com/PwnedWebsites/${breachName}`, '_blank');
+
+    // HTML for no breaches
+    getNoBreachesHTML: function(email) {
+        return `
+            <div class="es-results">
+                <div class="es-result-card es-result-safe">
+                    <div class="es-result-header">
+                        <div class="es-result-icon es-icon-safe">
+                            <i class="fas fa-shield-check"></i>
+                        </div>
+                        <h2 style="margin: 0 0 15px; font-size: 32px; font-weight: 800; color: #1f2937;">
+                            No Breaches Found
+                        </h2>
+                        <p style="color: #6b7280; font-size: 18px; margin: 0;">
+                            Your email appears secure
+                        </p>
+                    </div>
+                    
+                    <div class="es-email-box">
+                        <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+                            Email Checked
+                        </div>
+                        <div class="es-email-address">${this.utils.escapeHtml(email)}</div>
+                    </div>
+                    
+                    <div style="padding: 0 40px; text-align: center; margin-bottom: 40px;">
+                        <p style="font-size: 20px; color: #10b981; font-weight: 600; margin: 0 0 25px;">
+                            ✅ Excellent! Your email hasn't been found in any known data breaches.
+                        </p>
+                        <p style="color: #6b7280; line-height: 1.6; font-size: 17px;">
+                            This means your email hasn't been publicly exposed in any major data breaches 
+                            tracked by Have I Been Pwned. Keep up the good security practices!
+                        </p>
+                    </div>
+                    
+                    <div class="es-footer">
+                        <p style="color: #6b7280; margin-bottom: 25px; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="fas fa-shield-alt" style="color: #10b981;"></i>
+                            Data provided by <strong>Have I Been Pwned</strong>
+                        </p>
+                        
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <button class="es-button es-button-primary" onclick="EXPOSURE_SHIELD.resetForNewScan()">
+                                <i class="fas fa-search"></i>
+                                Check Another Email
+                            </button>
+                            
+                            <button class="es-button" style="background: white; color: #6b7280; border: 2px solid #e5e7eb;" 
+                                    onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                                <i class="fas fa-arrow-up"></i>
+                                Back to Top
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     },
-    generateReport: function(email) {
-        showNotification('Report generation coming soon!', 'info');
+
+    // HTML for breaches found
+    getBreachesHTML: function(email, breaches) {
+        const totalBreaches = breaches.length;
+        const totalAccounts = breaches.reduce((sum, breach) => {
+            return sum + (breach.PwnCount ? parseInt(breach.PwnCount) : 0);
+        }, 0);
+        
+        const latestBreach = breaches
+            .filter(b => b.BreachDate)
+            .sort((a, b) => new Date(b.BreachDate) - new Date(a.BreachDate))[0];
+        
+        return `
+            <div class="es-results">
+                <div class="es-result-card es-result-alert">
+                    <div class="es-result-header">
+                        <div class="es-result-icon es-icon-alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h2 style="margin: 0 0 15px; font-size: 32px; font-weight: 800; color: #1f2937;">
+                            Security Alert
+                        </h2>
+                        <p style="color: #ef4444; font-size: 18px; margin: 0; font-weight: 600;">
+                            ${totalBreaches} Data Breach${totalBreaches !== 1 ? 'es' : ''} Found
+                        </p>
+                    </div>
+                    
+                    <div class="es-email-box">
+                        <div style="font-size: 14px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+                            Compromised Email
+                        </div>
+                        <div class="es-email-address">${this.utils.escapeHtml(email)}</div>
+                    </div>
+                    
+                    <div class="es-stats">
+                        <div class="es-stat">
+                            <div class="es-stat-value" style="color: #ef4444;">${totalBreaches}</div>
+                            <div class="es-stat-label">Total Breaches</div>
+                        </div>
+                        
+                        <div class="es-stat">
+                            <div class="es-stat-value" style="color: ${totalAccounts > 0 ? '#ef4444' : '#6b7280'}">
+                                ${this.utils.formatNumber(totalAccounts)}
+                            </div>
+                            <div class="es-stat-label">Accounts Affected</div>
+                        </div>
+                        
+                        <div class="es-stat">
+                            <div class="es-stat-value" style="color: ${latestBreach ? '#ef4444' : '#6b7280'}">
+                                ${latestBreach ? this.utils.formatDate(latestBreach.BreachDate) : 'N/A'}
+                            </div>
+                            <div class="es-stat-label">Latest Breach</div>
+                        </div>
+                    </div>
+                    
+                    ${breaches.length > 0 ? `
+                        <div class="es-breaches">
+                            <h3 style="margin: 0 0 25px; color: #1f2937; font-size: 24px; font-weight: 700;">
+                                <i class="fas fa-list" style="margin-right: 10px;"></i>
+                                Breach Details
+                            </h3>
+                            
+                            ${breaches.slice(0, 5).map(breach => `
+                                <div class="es-breach-item">
+                                    <div class="es-breach-icon">
+                                        ${breach.Domain ? '🌐' : '⚠️'}
+                                    </div>
+                                    <div class="es-breach-content">
+                                        <h4 class="es-breach-name">${this.utils.escapeHtml(breach.Name || 'Unknown')}</h4>
+                                        <div class="es-breach-meta">
+                                            <span>
+                                                <i class="far fa-calendar" style="margin-right: 5px;"></i>
+                                                ${this.utils.formatDate(breach.BreachDate)}
+                                            </span>
+                                            ${breach.PwnCount ? `
+                                                <span>
+                                                    <i class="fas fa-users" style="margin-right: 5px;"></i>
+                                                    ${this.utils.formatNumber(breach.PwnCount)} accounts
+                                                </span>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    
+                    <div class="es-actions">
+                        <h3 style="margin: 0 0 20px; color: #1f2937; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            Recommended Actions
+                        </h3>
+                        
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(245, 158, 11, 0.2);">
+                                <strong>1. Change Passwords:</strong> Update passwords for affected accounts immediately
+                            </li>
+                            <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(245, 158, 11, 0.2);">
+                                <strong>2. Enable 2FA:</strong> Add two-factor authentication to all critical accounts
+                            </li>
+                            <li style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(245, 158, 11, 0.2);">
+                                <strong>3. Use Password Manager:</strong> Generate unique passwords for every account
+                            </li>
+                            <li>
+                                <strong>4. Monitor Accounts:</strong> Watch for suspicious activity and unauthorized access
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="es-footer">
+                        <p style="color: #6b7280; margin-bottom: 25px; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i>
+                            Breach data from <strong>Have I Been Pwned</strong>
+                        </p>
+                        
+                        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                            <button class="es-button es-button-primary" onclick="EXPOSURE_SHIELD.resetForNewScan()">
+                                <i class="fas fa-search"></i>
+                                Check Another Email
+                            </button>
+                            
+                            <button class="es-button" style="background: white; color: #6b7280; border: 2px solid #e5e7eb;" 
+                                    onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                                <i class="fas fa-arrow-up"></i>
+                                Back to Top
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     },
-    showRemediationGuide: function() {
-        window.open('https://www.troyhunt.com/heres-what-you-need-to-know-about-the-latest-data-breach/', '_blank');
+
+    // Show error
+    showError: function(message) {
+        const container = document.getElementById('resultsContainer');
+        if (!container) return;
+        
+        container.innerHTML = `
+            <div class="es-results">
+                <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 16px; padding: 40px; text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 20px; color: #d97706;">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3 style="margin: 0 0 15px; color: #92400e; font-size: 24px;">
+                        Temporary Service Issue
+                    </h3>
+                    <p style="color: #92400e; margin-bottom: 25px; line-height: 1.6;">
+                        ${message || 'We couldn\'t complete the security check at this moment.'}
+                    </p>
+                    <button onclick="EXPOSURE_SHIELD.resetForNewScan()" 
+                            style="background: #f59e0b; color: #92400e; border: none; padding: 12px 30px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        `;
     },
-    toggleAPIMode: function() {
-        CONFIG.BACKEND_LIVE = !CONFIG.BACKEND_LIVE;
-        showNotification(
-            CONFIG.BACKEND_LIVE ? 'Switched to live API mode' : 'Switched to demo mode',
-            'success'
-        );
-    },
-    CONFIG
+
+    // Reset for new scan
+    resetForNewScan: function() {
+        this.removeResults();
+        
+        // Clear email input
+        const emailInput = document.querySelector('.email-input');
+        if (emailInput) {
+            emailInput.value = '';
+            emailInput.focus();
+        }
+        
+        // Scroll to scan section
+        const scanSection = document.getElementById('scan');
+        if (scanSection) {
+            scanSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        console.log('🔄 Ready for new scan');
+    }
 };
 
-// Initialize when page loads
+// Initialize on page load
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log(`${CONFIG.APP_NAME} v${CONFIG.VERSION} ready`);
-    });
+    document.addEventListener('DOMContentLoaded', () => EXPOSURE_SHIELD.init());
+} else {
+    setTimeout(() => EXPOSURE_SHIELD.init(), 100);
 }
+
+// Make globally available
+window.EXPOSURE_SHIELD = EXPOSURE_SHIELD;
