@@ -7,431 +7,894 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        /* Combined Platform Styles */
+        /* Enhanced Color Scheme */
         :root {
-            /* Primary Brand Colors */
-            --security-primary: #2563eb;     /* ExposureShield Blue */
-            --legacy-primary: #7c3aed;       /* LegacyShield Purple */
-            --platform-primary: #0f172a;     /* Platform Dark */
+            /* Primary Colors */
+            --security-blue: #2563eb;
+            --legacy-purple: #7c3aed;
+            --suite-dark: #0f172a;
+            --suite-gradient: linear-gradient(135deg, var(--security-blue) 0%, var(--legacy-purple) 100%);
             
-            /* Secondary Colors */
-            --security-secondary: #3b82f6;
-            --legacy-secondary: #8b5cf6;
+            /* Support Colors */
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
+            --info: #3b82f6;
             
-            /* Neutrals */
+            /* Neutral Colors */
             --light: #f8fafc;
-            --gray: #64748b;
-            --dark: #1e293b;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+            --dark: #0f172a;
             
             /* Effects */
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --radius: 12px;
-            --transition: all 0.3s ease;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            
+            /* Transitions */
+            --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        .platform-header {
-            background: linear-gradient(135deg, var(--platform-primary) 0%, #1e293b 100%);
-            color: white;
-            padding: 1rem 0;
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--gray-800);
+            line-height: 1.6;
+            background: var(--light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: var(--suite-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray-600);
+            font-size: 1.125rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Enhanced Header */
+        .site-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
             position: fixed;
-            width: 100%;
             top: 0;
+            width: 100%;
             z-index: 1000;
+            transition: var(--transition);
         }
-        
-        .platform-nav {
+
+        .site-header.scrolled {
+            box-shadow: var(--shadow);
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            padding: 1rem 1.5rem;
         }
-        
-        .platform-logo {
+
+        /* Enhanced Logo */
+        .brand-logo {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 700;
+            text-decoration: none;
         }
-        
-        .logo-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-left: 0.5rem;
-        }
-        
-        .security-badge {
-            background: var(--security-primary);
-            color: white;
-        }
-        
-        .legacy-badge {
-            background: var(--legacy-primary);
-            color: white;
-        }
-        
-        .service-tabs {
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--suite-gradient);
+            border-radius: 10px;
             display: flex;
-            gap: 0;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: var(--radius);
-            padding: 0.25rem;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
         }
-        
-        .service-tab {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.7);
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--gray-600);
             font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
+        }
+
+        /* Enhanced Navigation */
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--gray-800);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            position: relative;
             transition: var(--transition);
             display: flex;
             align-items: center;
+            gap: 0.375rem;
+        }
+
+        .nav-link:hover {
+            color: var(--security-blue);
+        }
+
+        .nav-link.active {
+            color: var(--security-blue);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--suite-gradient);
+            border-radius: 1px;
+        }
+
+        /* Enhanced CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
             gap: 0.5rem;
+            font-size: 0.9375rem;
         }
-        
-        .service-tab.active {
+
+        .btn-primary {
+            background: var(--suite-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
             background: white;
-            color: var(--platform-primary);
+            color: var(--security-blue);
+            border: 2px solid var(--security-blue);
         }
-        
-        .service-tab i {
-            font-size: 1.125rem;
+
+        .btn-secondary:hover {
+            background: var(--security-blue);
+            color: white;
         }
-        
-        /* Platform Overview Section */
-        .platform-overview {
-            padding: 8rem 2rem 4rem;
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gray-800);
+            border: 2px solid var(--gray-300);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--security-blue);
+            color: var(--security-blue);
+        }
+
+        /* Hero Section Enhancement */
+        .hero {
+            padding: 12rem 0 6rem;
             background: linear-gradient(135deg, #f0f9ff 0%, #f5f3ff 100%);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Enhanced Platform Cards */
+        .platform-overview {
+            background: white;
+        }
+
         .platform-cards {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
-            gap: 2rem;
+            gap: 3rem;
             align-items: center;
-            max-width: 1000px;
-            margin: 3rem auto 0;
+            max-width: 1200px;
+            margin: 4rem auto 0;
         }
-        
+
+        @media (max-width: 1024px) {
+            .platform-cards {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
         .platform-card {
             background: white;
             padding: 3rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            text-align: center;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
             transition: var(--transition);
             height: 100%;
-            border-top: 4px solid transparent;
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
         }
-        
+
         .platform-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
         }
-        
-        .security-card {
-            border-top-color: var(--security-primary);
+
+        .platform-card.security-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--security-blue);
         }
-        
-        .legacy-card {
-            border-top-color: var(--legacy-primary);
+
+        .platform-card.legacy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--legacy-purple);
         }
-        
+
         .platform-icon {
             width: 80px;
             height: 80px;
-            border-radius: 50%;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
             font-size: 2rem;
         }
-        
+
         .security-card .platform-icon {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            color: var(--security-primary);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.2) 100%);
+            color: var(--security-blue);
         }
-        
+
         .legacy-card .platform-icon {
-            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-            color: var(--legacy-primary);
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0.2) 100%);
+            color: var(--legacy-purple);
         }
-        
+
+        .features-list {
+            margin: 2rem 0;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--gray-600);
+        }
+
+        .feature i {
+            color: var(--success);
+            font-size: 1.125rem;
+        }
+
         .platform-connector {
             text-align: center;
         }
-        
-        .platform-connector i {
-            font-size: 2rem;
-            color: var(--gray);
-            background: white;
+
+        .connector-icon {
             width: 60px;
             height: 60px;
+            background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
+            color: var(--gray-600);
+            font-size: 1.5rem;
             box-shadow: var(--shadow);
         }
-        
-        /* Service Content Sections */
-        .service-content {
-            display: none;
-            padding: 2rem;
-        }
-        
-        .service-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* LegacyShield Specific Features */
-        .legacy-features {
+
+        /* Enhanced Legacy Features Grid */
+        .legacy-features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
-        
-        .legacy-feature {
+
+        .legacy-feature-card {
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: var(--radius);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--gray-200);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .legacy-feature:hover {
-            border-color: var(--legacy-primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+
+        .legacy-feature-card:hover {
+            border-color: var(--legacy-purple);
+            box-shadow: var(--shadow-lg);
         }
-        
+
         .feature-step {
             display: flex;
             align-items: flex-start;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
-        
+
         .step-number {
-            width: 36px;
-            height: 36px;
-            background: var(--legacy-primary);
+            width: 40px;
+            height: 40px;
+            background: var(--legacy-purple);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        
-        /* Combined Dashboard */
-        .dashboard {
-            padding: 4rem 2rem;
-            background: #f8fafc;
-        }
-        
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .dashboard-card {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f1f5f9;
-        }
-        
-        .security-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
-        
-        .stat-item {
-            text-align: center;
-            padding: 1rem;
-            background: #f8fafc;
-            border-radius: var(--radius);
-        }
-        
-        .stat-value {
-            font-size: 2rem;
             font-weight: 700;
-            color: var(--security-primary);
+            flex-shrink: 0;
+            font-size: 1.125rem;
         }
-        
-        .legacy-progress {
-            margin-top: 1rem;
+
+        .feature-list {
+            list-style: none;
         }
-        
-        .progress-bar {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 0.5rem;
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
         }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--legacy-primary);
-            border-radius: 4px;
-            transition: width 0.3s ease;
+
+        .feature-list li i {
+            color: var(--success);
         }
-        
-        /* Pricing Integration */
-        .pricing-tiers {
+
+        /* Enhanced Pricing Cards */
+        .pricing-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
-            margin: 3rem auto 0;
+            margin-top: 3rem;
         }
-        
-        .pricing-tier {
+
+        .pricing-card {
             background: white;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             overflow: hidden;
             box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
             position: relative;
+            transition: var(--transition);
         }
-        
-        .tier-badge {
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pricing-card.security-only {
+            border-top: 4px solid var(--security-blue);
+        }
+
+        .pricing-card.legacy-only {
+            border-top: 4px solid var(--legacy-purple);
+        }
+
+        .pricing-card.complete-suite {
+            border-top: 4px solid transparent;
+            border-image: var(--suite-gradient) 1;
+        }
+
+        .pricing-badge {
             position: absolute;
             top: 1rem;
             right: 1rem;
-            padding: 0.25rem 0.75rem;
+            padding: 0.375rem 1rem;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        
-        .security-tier {
-            border-top: 4px solid var(--security-primary);
-        }
-        
-        .legacy-tier {
-            border-top: 4px solid var(--legacy-primary);
-        }
-        
-        .complete-tier {
-            border-top: 4px solid #0f172a;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-        }
-        
-        .complete-tier .tier-badge {
-            background: linear-gradient(135deg, var(--security-primary) 0%, var(--legacy-primary) 100%);
+
+        .security-only .pricing-badge {
+            background: var(--security-blue);
             color: white;
         }
-        
+
+        .legacy-only .pricing-badge {
+            background: var(--legacy-purple);
+            color: white;
+        }
+
+        .complete-suite .pricing-badge {
+            background: var(--suite-gradient);
+            color: white;
+        }
+
+        .pricing-header {
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .pricing-features {
+            padding: 0 2rem 2rem;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features li i {
+            font-size: 1.125rem;
+        }
+
+        .pricing-features li i.fa-check {
+            color: var(--success);
+        }
+
+        .pricing-features li i.fa-times {
+            color: var(--gray-300);
+        }
+
+        .pricing-cta {
+            padding: 0 2rem 2rem;
+        }
+
+        .pricing-cta .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Trust Indicators */
+        .trust-section {
+            background: var(--gray-100);
+            padding: 4rem 0;
+            margin-top: 6rem;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .trust-item {
+            padding: 2rem;
+        }
+
+        .trust-icon {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--security-blue);
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: white;
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 3rem auto 0;
+            position: relative;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin: 0 1rem;
+        }
+
+        .testimonial-content {
+            font-size: 1.125rem;
+            font-style: italic;
+            color: var(--gray-800);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .testimonial-content::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--security-blue);
+            position: absolute;
+            top: -1.5rem;
+            left: -1rem;
+            opacity: 0.2;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--suite-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            background: var(--light);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: white;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--gray-100);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Enhanced Footer */
+        .site-footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h4 {
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background: var(--security-blue);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
         /* Responsive Design */
-        @media (max-width: 1024px) {
-            .platform-cards {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
             }
             
-            .platform-connector {
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
                 display: none;
             }
-        }
-        
-        @media (max-width: 768px) {
-            .platform-nav {
-                flex-direction: column;
-                gap: 1rem;
+            
+            .mobile-menu-toggle {
+                display: block;
             }
             
-            .service-tabs {
-                width: 100%;
-                justify-content: center;
+            .pricing-cards {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Unified Platform Header -->
-    <header class="platform-header">
-        <nav class="platform-nav">
-            <div class="platform-logo">
-                <i class="fas fa-shield-alt"></i>
-                <span>DigitalShield Suite</span>
-                <span class="logo-badge security-badge">Exposure</span>
-                <span class="logo-badge legacy-badge">Legacy</span>
+    <!-- Enhanced Header -->
+    <header class="site-header" id="header">
+        <div class="container">
+            <div class="header-container">
+                <a href="#" class="brand-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">DigitalShield Suite</span>
+                        <span class="logo-tagline">Complete Digital Life Management</span>
+                    </div>
+                </a>
+
+                <nav class="main-nav">
+                    <ul class="nav-links">
+                        <li><a href="#exposureshield" class="nav-link active">
+                            <i class="fas fa-shield-alt"></i>
+                            ExposureShield
+                        </a></li>
+                        <li><a href="#legacyshield" class="nav-link">
+                            <i class="fas fa-heart"></i>
+                            LegacyShield
+                        </a></li>
+                        <li><a href="#pricing" class="nav-link">
+                            <i class="fas fa-tag"></i>
+                            Pricing
+                        </a></li>
+                        <li><a href="#about" class="nav-link">
+                            <i class="fas fa-info-circle"></i>
+                            About
+                        </a></li>
+                        <li><a href="#contact" class="nav-link">
+                            <i class="fas fa-envelope"></i>
+                            Contact
+                        </a></li>
+                    </ul>
+
+                    <div class="cta-buttons">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-sign-in-alt"></i>
+                            Login
+                        </button>
+                        <button class="btn btn-primary" id="startTrial">
+                            <i class="fas fa-rocket"></i>
+                            Get Started
+                        </button>
+                    </div>
+                </nav>
             </div>
-            
-            <div class="service-tabs">
-                <button class="service-tab active" data-service="exposureshield">
-                    <i class="fas fa-shield-alt"></i>
-                    ExposureShield
-                </button>
-                <button class="service-tab" data-service="legacyshield">
-                    <i class="fas fa-heart"></i>
-                    LegacyShield
-                </button>
-                <button class="service-tab" data-service="dashboard">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                </button>
-            </div>
-            
-            <div class="nav-actions">
-                <button class="btn btn-outline-light">Login</button>
-                <button class="btn btn-primary">Get Started</button>
-            </div>
-        </nav>
+        </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main style="margin-top: 80px;">
-        
-        <!-- Platform Overview -->
-        <section class="platform-overview">
-            <div class="container">
-                <h1 class="hero-title">Complete Digital Life Management</h1>
-                <p class="hero-subtitle">Protect your present digital identity and secure your future digital legacy</p>
+    <!-- Enhanced Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title animate__animated animate__fadeInUp">
+                    Complete Digital Life Management
+                </h1>
+                <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+                    Protect your present digital identity and secure your future digital legacy with our comprehensive suite of security and inheritance tools.
+                </p>
                 
-                <div class="platform-cards">
+                <div class="platform-cards animate__animated animate__fadeIn animate__delay-2s">
+                    <!-- ExposureShield Card -->
                     <div class="platform-card security-card">
                         <div class="platform-icon">
                             <i class="fas fa-shield-alt"></i>
                         </div>
                         <h3>ExposureShield</h3>
-                        <p>Real-time cybersecurity protection and breach monitoring</p>
+                        <p>Real-time cybersecurity protection and breach monitoring for your active digital life</p>
+                        
                         <div class="features-list">
                             <div class="feature">
                                 <i class="fas fa-search"></i>
@@ -445,20 +908,37 @@
                                 <i class="fas fa-lock"></i>
                                 <span>Password Security</span>
                             </div>
+                            <div class="feature">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Identity Protection</span>
+                            </div>
                         </div>
+                        
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;">
+                            <i class="fas fa-arrow-right"></i>
+                            Explore Security
+                        </button>
                     </div>
                     
+                    <!-- Platform Connector -->
                     <div class="platform-connector">
-                        <i class="fas fa-link"></i>
-                        <p>Fully Integrated</p>
+                        <div class="connector-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <p>Fully Integrated Platform</p>
+                        <p class="text-sm" style="color: var(--gray-600); margin-top: 0.5rem;">
+                            Seamless transition between protection and legacy planning
+                        </p>
                     </div>
                     
+                    <!-- LegacyShield Card -->
                     <div class="platform-card legacy-card">
                         <div class="platform-icon">
                             <i class="fas fa-heart"></i>
                         </div>
                         <h3>LegacyShield</h3>
-                        <p>Digital inheritance planning and estate management</p>
+                        <p>Digital inheritance planning and estate management for your future legacy</p>
+                        
                         <div class="features-list">
                             <div class="feature">
                                 <i class="fas fa-file-contract"></i>
@@ -472,276 +952,589 @@
                                 <i class="fas fa-users"></i>
                                 <span>Beneficiary Management</span>
                             </div>
+                            <div class="feature">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Trustee Access</span>
+                            </div>
                         </div>
+                        
+                        <button class="btn btn-outline" style="width: 100%; margin-top: 1.5rem;">
+                            <i class="fas fa-arrow-right"></i>
+                            Explore Legacy
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Service Content Sections -->
-        <section class="service-content active" id="exposureshield-content">
-            <!-- Your existing ExposureShield content goes here -->
-            <div class="container">
-                <h2>ExposureShield: Cybersecurity Protection</h2>
-                <p>Real-time monitoring and protection for your digital identity...</p>
-                <!-- Include all your existing ExposureShield features -->
-            </div>
-        </section>
-
-        <section class="service-content" id="legacyshield-content">
-            <div class="container">
-                <h2>LegacyShield: Digital Inheritance Planning</h2>
-                <p>Secure your digital assets and ensure they're passed on according to your wishes.</p>
+    <!-- Trust Indicators -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <h3>Military-Grade Encryption</h3>
+                    <p>256-bit encryption for all data transmission and storage</p>
+                </div>
                 
-                <div class="legacy-features">
-                    <div class="legacy-feature">
-                        <div class="feature-step">
-                            <div class="step-number">1</div>
-                            <div>
-                                <h3>Digital Will Creation</h3>
-                                <p>Create legally-binding digital wills that specify how your online assets should be handled.</p>
-                            </div>
-                        </div>
-                        <ul>
-                            <li><i class="fas fa-check"></i> Legal document templates</li>
-                            <li><i class="fas fa-check"></i> Witness management</li>
-                            <li><i class="fas fa-check"></i> Notarization guidance</li>
-                        </ul>
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-user-lock"></i>
                     </div>
-                    
-                    <div class="legacy-feature">
-                        <div class="feature-step">
-                            <div class="step-number">2</div>
-                            <div>
-                                <h3>Asset Inventory</h3>
-                                <p>Catalog all your digital assets including accounts, cryptocurrencies, and digital property.</p>
-                            </div>
-                        </div>
-                        <ul>
-                            <li><i class="fas fa-check"></i> Account registry</li>
-                            <li><i class="fas fa-check"></i> Crypto wallet tracking</li>
-                            <li><i class="fas fa-check"></i> Document storage</li>
-                        </ul>
+                    <h3>Zero-Knowledge Protocol</h3>
+                    <p>We never see your sensitive data - only you have access</p>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-gavel"></i>
                     </div>
-                    
-                    <div class="legacy-feature">
-                        <div class="feature-step">
-                            <div class="step-number">3</div>
-                            <div>
-                                <h3>Beneficiary Setup</h3>
-                                <p>Designate beneficiaries and specify exactly what they should receive and when.</p>
-                            </div>
-                        </div>
-                        <ul>
-                            <li><i class="fas fa-check"></i> Multiple beneficiaries</li>
-                            <li><i class="fas fa-check"></i> Conditional distributions</li>
-                            <li><i class="fas fa-check"></i> Time-based releases</li>
-                        </ul>
+                    <h3>Legally Compliant</h3>
+                    <p>All documents created are legally binding and valid</p>
+                </div>
+                
+                <div class="trust-item">
+                    <div class="trust-icon">
+                        <i class="fas fa-clock"></i>
                     </div>
-                    
-                    <div class="legacy-feature">
-                        <div class="feature-step">
-                            <div class="step-number">4</div>
-                            <div>
-                                <h3>Trustee Management</h3>
-                                <p>Appoint and manage trustees who will execute your digital estate plan.</p>
-                            </div>
+                    <h3>24/7 Monitoring</h3>
+                    <p>Round-the-clock protection and support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enhanced Legacy Features Section -->
+    <section class="section" id="legacyshield">
+        <div class="container">
+            <h2 class="section-title">LegacyShield: Digital Inheritance Planning</h2>
+            <p class="section-subtitle">Secure your digital assets and ensure they're passed on according to your wishes with our comprehensive legacy planning tools</p>
+            
+            <div class="legacy-features-grid">
+                <div class="legacy-feature-card">
+                    <div class="feature-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3>Digital Will Creation</h3>
+                            <p>Create legally-binding digital wills that specify how your online assets should be handled</p>
                         </div>
-                        <ul>
-                            <li><i class="fas fa-check"></i> Trustee appointment</li>
-                            <li><i class="fas fa-check"></i> Access controls</li>
-                            <li><i class="fas fa-check"></i> Succession planning</li>
-                        </ul>
+                    </div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Legal document templates</li>
+                        <li><i class="fas fa-check"></i> Witness management system</li>
+                        <li><i class="fas fa-check"></i> Notarization guidance</li>
+                        <li><i class="fas fa-check"></i> State-specific compliance</li>
+                    </ul>
+                </div>
+                
+                <div class="legacy-feature-card">
+                    <div class="feature-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3>Asset Inventory</h3>
+                            <p>Catalog all your digital assets including accounts, cryptocurrencies, and digital property</p>
+                        </div>
+                    </div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Comprehensive account registry</li>
+                        <li><i class="fas fa-check"></i> Crypto wallet tracking</li>
+                        <li><i class="fas fa-check"></i> Secure document storage</li>
+                        <li><i class="fas fa-check"></i> Automatic value estimation</li>
+                    </ul>
+                </div>
+                
+                <div class="legacy-feature-card">
+                    <div class="feature-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3>Beneficiary Setup</h3>
+                            <p>Designate beneficiaries and specify exactly what they should receive and when</p>
+                        </div>
+                    </div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Multiple beneficiary support</li>
+                        <li><i class="fas fa-check"></i> Conditional distributions</li>
+                        <li><i class="fas fa-check"></i> Time-based releases</li>
+                        <li><i class="fas fa-check"></i> Age-based restrictions</li>
+                    </ul>
+                </div>
+                
+                <div class="legacy-feature-card">
+                    <div class="feature-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h3>Trustee Management</h3>
+                            <p>Appoint and manage trustees who will execute your digital estate plan</p>
+                        </div>
+                    </div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Trustee appointment system</li>
+                        <li><i class="fas fa-check"></i> Granular access controls</li>
+                        <li><i class="fas fa-check"></i> Succession planning</li>
+                        <li><i class="fas fa-check"></i> Activity monitoring</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Legacy Progress Tracker -->
+            <div class="legacy-progress" style="margin-top: 4rem; background: white; padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+                <h3 style="text-align: center; margin-bottom: 2rem;">Your Legacy Planning Journey</h3>
+                <div class="progress-steps">
+                    <div class="progress-step">
+                        <div class="step-indicator completed">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span>Will Creation</span>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator active">
+                            <span>2</span>
+                        </div>
+                        <span>Asset Inventory</span>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator">
+                            <span>3</span>
+                        </div>
+                        <span>Beneficiary Setup</span>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator">
+                            <span>4</span>
+                        </div>
+                        <span>Trustee Assignment</span>
+                    </div>
+                    <div class="progress-step">
+                        <div class="step-indicator">
+                            <span>5</span>
+                        </div>
+                        <span>Final Review</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="service-content" id="dashboard-content">
-            <div class="dashboard">
-                <h2>Your Digital Life Dashboard</h2>
-                <p>Complete overview of your security and legacy status</p>
-                
-                <div class="dashboard-grid">
-                    <!-- Security Status Card -->
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-shield-alt"></i> Security Status</h3>
-                            <span class="status-badge safe">Protected</span>
-                        </div>
-                        <div class="security-stats">
-                            <div class="stat-item">
-                                <div class="stat-label">Breaches Found</div>
-                                <div class="stat-value">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Protected Accounts</div>
-                                <div class="stat-value">12</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Last Scan</div>
-                                <div class="stat-value">Today</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Active Alerts</div>
-                                <div class="stat-value">0</div>
-                            </div>
-                        </div>
+    <!-- Enhanced Pricing Section -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Complete Protection Plans</h2>
+            <p class="section-subtitle">Choose the level of protection that fits your needs</p>
+            
+            <div class="pricing-cards">
+                <!-- Security Only -->
+                <div class="pricing-card security-only">
+                    <div class="pricing-badge">Security</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Security Only</h3>
+                        <div class="pricing-price">$4.99<span>/month</span></div>
+                        <p>ExposureShield features only</p>
                     </div>
-                    
-                    <!-- Legacy Status Card -->
-                    <div class="dashboard-card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-heart"></i> Legacy Status</h3>
-                            <span class="status-badge in-progress">65% Complete</span>
-                        </div>
-                        <div class="legacy-progress">
-                            <p>Digital Will Completion</p>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 65%"></div>
-                            </div>
-                            <p>Asset Inventory</p>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 40%"></div>
-                            </div>
-                            <p>Beneficiary Setup</p>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 80%"></div>
-                            </div>
-                        </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Real-time breach monitoring</li>
+                            <li><i class="fas fa-check"></i> Password security audit</li>
+                            <li><i class="fas fa-check"></i> 24/7 security alerts</li>
+                            <li><i class="fas fa-times"></i> Legacy planning tools</li>
+                            <li><i class="fas fa-times"></i> Digital will creation</li>
+                            <li><i class="fas fa-times"></i> Asset management</li>
+                        </ul>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Combined Pricing -->
-        <section class="pricing">
-            <div class="container">
-                <h2 class="section-title">Complete Protection Plans</h2>
-                <p class="section-subtitle">Choose the level of protection that fits your needs</p>
-                
-                <div class="pricing-tiers">
-                    <!-- ExposureShield Only -->
-                    <div class="pricing-tier security-tier">
-                        <div class="tier-header">
-                            <h3>Security Only</h3>
-                            <div class="price">$4.99<span>/month</span></div>
-                            <p>ExposureShield features only</p>
-                        </div>
-                        <div class="tier-features">
-                            <ul>
-                                <li><i class="fas fa-check"></i> Real-time breach monitoring</li>
-                                <li><i class="fas fa-check"></i> Password security</li>
-                                <li><i class="fas fa-check"></i> 24/7 alerts</li>
-                                <li><i class="fas fa-times"></i> Legacy planning</li>
-                                <li><i class="fas fa-times"></i> Digital will</li>
-                            </ul>
-                        </div>
+                    <div class="pricing-cta">
                         <button class="btn btn-outline">Get Started</button>
                     </div>
-                    
-                    <!-- LegacyShield Only -->
-                    <div class="pricing-tier legacy-tier">
-                        <div class="tier-header">
-                            <h3>Legacy Only</h3>
-                            <div class="price">$7.99<span>/month</span></div>
-                            <p>LegacyShield features only</p>
-                        </div>
-                        <div class="tier-features">
-                            <ul>
-                                <li><i class="fas fa-times"></i> Breach monitoring</li>
-                                <li><i class="fas fa-times"></i> Password security</li>
-                                <li><i class="fas fa-check"></i> Digital will creation</li>
-                                <li><i class="fas fa-check"></i> Asset management</li>
-                                <li><i class="fas fa-check"></i> Beneficiary setup</li>
-                            </ul>
-                        </div>
+                </div>
+                
+                <!-- Legacy Only -->
+                <div class="pricing-card legacy-only">
+                    <div class="pricing-badge">Legacy</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Legacy Only</h3>
+                        <div class="pricing-price">$7.99<span>/month</span></div>
+                        <p>LegacyShield features only</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-times"></i> Breach monitoring</li>
+                            <li><i class="fas fa-times"></i> Password security</li>
+                            <li><i class="fas fa-check"></i> Digital will creation</li>
+                            <li><i class="fas fa-check"></i> Asset management</li>
+                            <li><i class="fas fa-check"></i> Beneficiary setup</li>
+                            <li><i class="fas fa-check"></i> Trustee management</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-cta">
                         <button class="btn btn-outline">Get Started</button>
                     </div>
-                    
-                    <!-- Complete Suite -->
-                    <div class="pricing-tier complete-tier">
-                        <div class="tier-badge">Recommended</div>
-                        <div class="tier-header">
-                            <h3>Complete Suite</h3>
-                            <div class="price">$9.99<span>/month</span></div>
-                            <p>All features from both services</p>
-                        </div>
-                        <div class="tier-features">
-                            <ul>
-                                <li><i class="fas fa-check"></i> All Security features</li>
-                                <li><i class="fas fa-check"></i> All Legacy features</li>
-                                <li><i class="fas fa-check"></i> Unified dashboard</li>
-                                <li><i class="fas fa-check"></i> Priority support</li>
-                                <li><i class="fas fa-check"></i> Family sharing</li>
-                            </ul>
-                        </div>
+                </div>
+                
+                <!-- Complete Suite -->
+                <div class="pricing-card complete-suite">
+                    <div class="pricing-badge">Recommended</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-title">Complete Suite</h3>
+                        <div class="pricing-price">$9.99<span>/month</span></div>
+                        <p>All features from both services</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> All Security features</li>
+                            <li><i class="fas fa-check"></i> All Legacy features</li>
+                            <li><i class="fas fa-check"></i> Unified dashboard</li>
+                            <li><i class="fas fa-check"></i> Priority support</li>
+                            <li><i class="fas fa-check"></i> Family sharing (up to 5)</li>
+                            <li><i class="fas fa-check"></i> Advanced analytics</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-cta">
                         <button class="btn btn-primary">Get Complete Protection</button>
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <!-- Annual Pricing Option -->
+            <div class="annual-pricing" style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--gray-100); border-radius: var(--radius);">
+                <h3 style="margin-bottom: 1rem;">Save 20% with Annual Billing</h3>
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                    <div class="annual-option">
+                        <span style="font-weight: 600;">Complete Suite Annual:</span>
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--security-blue);">$95.90</span>
+                        <span style="color: var(--gray-600);">/year (Save $24)</span>
+                    </div>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-calendar-alt"></i>
+                        Choose Annual Billing
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section testimonials-section">
+        <div class="container">
+            <h2 class="section-title">Trusted by Thousands</h2>
+            <p class="section-subtitle">See what our users say about DigitalShield Suite</p>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        "DigitalShield Suite gave me peace of mind about both my current security and future legacy. The integrated approach saved me from managing multiple services."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SC</div>
+                        <div>
+                            <h4>Sarah Chen</h4>
+                            <p>Financial Advisor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Get answers to common questions about DigitalShield Suite</p>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How does the integration between ExposureShield and LegacyShield work?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Both services share a unified dashboard and authentication system. Your security data helps inform your legacy planning, and you can manage everything from one account with seamless switching between features.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Are the digital wills legally binding?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, our digital wills are created using legally compliant templates and include guidance for proper witnessing and notarization according to your state's requirements. We work with legal professionals to ensure validity.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Can I upgrade from a single service to the Complete Suite?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! You can upgrade at any time from your account dashboard. We'll prorate your current subscription and only charge the difference for the remaining period.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section" style="background: var(--suite-gradient); color: white; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Ready to Secure Your Digital Life?</h2>
+            <p style="font-size: 1.125rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">
+                Join thousands of users who trust DigitalShield Suite for complete digital life management
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button class="btn" style="background: white; color: var(--security-blue); font-weight: 700;">
+                    <i class="fas fa-play-circle"></i>
+                    Start 14-Day Free Trial
+                </button>
+                <button class="btn" style="background: transparent; border: 2px solid white; color: white;">
+                    <i class="fas fa-play"></i>
+                    Watch Demo Video
+                </button>
+            </div>
+            <p style="margin-top: 2rem; font-size: 0.875rem; opacity: 0.9;">
+                No credit card required • Cancel anytime • All features included
+            </p>
+        </div>
+    </section>
+
+    <!-- Enhanced Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="#" class="brand-logo" style="margin-bottom: 1.5rem; display: inline-block;">
+                        <div class="logo-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-main" style="color: white;">DigitalShield Suite</span>
+                        </div>
+                    </a>
+                    <p style="color: #cbd5e1; margin-bottom: 1.5rem;">
+                        Complete digital life management for security and legacy planning.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <ul class="footer-links">
+                        <li><a href="#exposureshield">ExposureShield</a></li>
+                        <li><a href="#legacyshield">LegacyShield</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="#blog">Security Blog</a></li>
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#guides">Help Center</a></li>
+                        <li><a href="#webinars">Webinars</a></li>
+                        <li><a href="#community">Community</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#press">Press</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="#legal">Legal</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <p style="color: #cbd5e1; margin-bottom: 1rem;">
+                        <i class="fas fa-envelope"></i> support@digitalshield.com
+                    </p>
+                    <p style="color: #cbd5e1;">
+                        <i class="fas fa-phone"></i> (555) 123-4567
+                    </p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2023 DigitalShield Suite. All rights reserved.</p>
+                <p style="margin-top: 0.5rem;">
+                    <a href="#" style="color: #94a3b8; margin: 0 0.5rem;">Privacy Policy</a> • 
+                    <a href="#" style="color: #94a3b8; margin: 0 0.5rem;">Terms of Service</a> • 
+                    <a href="#" style="color: #94a3b8; margin: 0 0.5rem;">Cookie Policy</a>
+                </p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Service Tab Switching
-        document.querySelectorAll('.service-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Update active tab
-                document.querySelectorAll('.service-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                
-                // Update active content
-                const service = tab.dataset.service;
-                document.querySelectorAll('.service-content').forEach(content => {
-                    content.classList.remove('active');
+        // Enhanced JavaScript for DigitalShield Suite
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // FAQ functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    faqItem.classList.toggle('active');
+                    
+                    // Update chevron icon
+                    const icon = question.querySelector('i');
+                    if (faqItem.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
                 });
-                document.getElementById(`${service}-content`).classList.add('active');
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Update active navigation
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                        
+                        // Scroll to target
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Pricing card hover effects
+            const pricingCards = document.querySelectorAll('.pricing-card');
+            pricingCards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-10px)';
+                });
                 
-                // Update URL hash
-                window.location.hash = service;
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Start trial button
+            document.getElementById('startTrial').addEventListener('click', () => {
+                // Show trial modal
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(15, 23, 42, 0.9);
+                    backdrop-filter: blur(5px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2000;
+                    padding: 1rem;
+                `;
+                
+                modal.innerHTML = `
+                    <div style="background: white; padding: 2.5rem; border-radius: var(--radius); max-width: 500px; width: 100%; position: relative;">
+                        <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--gray-600);">&times;</button>
+                        <h3 style="margin-bottom: 1rem;">Start Your Free Trial</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Get 14 days of full access to DigitalShield Suite. No credit card required.</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                            <input type="email" placeholder="Your email address" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); font-size: 1rem;">
+                            <input type="password" placeholder="Create a password" style="padding: 1rem; border: 2px solid var(--gray-200); border-radius: var(--radius); font-size: 1rem;">
+                        </div>
+                        
+                        <button class="btn btn-primary" style="width: 100%;" onclick="startTrial()">
+                            Start 14-Day Free Trial
+                        </button>
+                        
+                        <p style="text-align: center; margin-top: 1rem; color: var(--gray-600); font-size: 0.875rem;">
+                            By signing up, you agree to our <a href="#" style="color: var(--security-blue);">Terms</a> and <a href="#" style="color: var(--security-blue);">Privacy Policy</a>
+                        </p>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            });
+
+            // Platform card animations
+            const observerOptions = {
+                threshold: 0.2,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe platform cards
+            document.querySelectorAll('.platform-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+
+            // Observe legacy feature cards
+            document.querySelectorAll('.legacy-feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
             });
         });
 
-        // Check URL hash on load
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.substring(1);
-            if (hash && ['exposureshield', 'legacyshield', 'dashboard'].includes(hash)) {
-                const tab = document.querySelector(`.service-tab[data-service="${hash}"]`);
-                if (tab) tab.click();
-            }
-        });
-
-        // Legacy Planning Progress
-        const legacyItems = document.querySelectorAll('.legacy-progress-item');
-        legacyItems.forEach(item => {
-            const progress = item.dataset.progress;
-            const fill = item.querySelector('.progress-fill');
-            fill.style.width = `${progress}%`;
-        });
-
-        // Simulate security scan
-        function simulateSecurityScan() {
-            const breachesFound = Math.floor(Math.random() * 3);
-            const protectedAccounts = Math.floor(Math.random() * 20) + 5;
-            
-            document.querySelector('.stat-value:nth-child(1)').textContent = breachesFound;
-            document.querySelector('.stat-value:nth-child(2)').textContent = protectedAccounts;
-            
-            // Update status badge
-            const statusBadge = document.querySelector('.status-badge');
-            if (breachesFound === 0) {
-                statusBadge.textContent = 'Protected';
-                statusBadge.className = 'status-badge safe';
-            } else {
-                statusBadge.textContent = `${breachesFound} Breaches`;
-                statusBadge.className = 'status-badge warning';
-            }
+        // Global functions
+        function startTrial() {
+            alert('Trial started! Check your email for confirmation. Redirecting to dashboard...');
+            window.location.href = '#';
         }
-
-        // Auto-scan every 30 seconds
-        setInterval(simulateSecurityScan, 30000);
-        simulateSecurityScan(); // Initial scan
     </script>
 </body>
 </html>
