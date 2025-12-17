@@ -890,6 +890,27 @@
             animation: fadeInUp 0.6s ease forwards;
         }
     </style>
+    <!-- SEO & Analytics - ADD THIS RIGHT BEFORE </head> -->
+<meta name="description" content="ExposureShield: Complete digital protection with real-time security monitoring and digital legacy planning. Check email breaches and secure your digital assets.">
+<meta name="keywords" content="cybersecurity, data breach, digital legacy, password security, identity protection, HIBP, email security">
+<meta name="author" content="ExposureShield">
+<meta property="og:title" content="ExposureShield | Complete Digital Protection">
+<meta property="og:description" content="Real-time security monitoring + Digital legacy planning in one platform">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.exposureshield.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ExposureShield">
+<meta name="twitter:description" content="Protect your digital life today and tomorrow">
+
+<!-- Google Analytics - Replace G-XXXXXXXXXX with your actual ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+</head>
 </head>
 <body>
     <!-- Professional Header -->
@@ -1425,6 +1446,115 @@
             </div>
         </div>
     </section>
+<!-- Contact Section - ADD AFTER TESTIMONIALS -->
+<section class="contact-section" style="padding: 6rem 2rem; background: #f8fafc;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <h2 style="text-align: center; margin-bottom: 0.5rem; color: var(--neutral-dark);">Contact Us</h2>
+    <p style="text-align: center; color: var(--neutral-gray); margin-bottom: 3rem;">
+      Get in touch with our security team
+    </p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 800px; margin: 0 auto;">
+      <!-- Contact Info -->
+      <div>
+        <h3 style="margin-bottom: 1.5rem; color: var(--neutral-dark);">Get In Touch</h3>
+        
+        <div style="margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="width: 40px; height: 40px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div>
+              <div style="font-weight: 600;">Email</div>
+              <a href="mailto:contact@exposureshield.com" style="color: var(--neutral-gray); text-decoration: none;">
+                contact@exposureshield.com
+              </a>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="width: 40px; height: 40px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-phone"></i>
+            </div>
+            <div>
+              <div style="font-weight: 600;">Phone</div>
+              <a href="tel:2079278740" style="color: var(--neutral-gray); text-decoration: none;">
+                (207) 927-8740
+              </a>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 40px; height: 40px; background: var(--primary-blue); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div>
+              <div style="font-weight: 600;">Hours</div>
+              <div style="color: var(--neutral-gray);">Mon-Fri, 9AM-6PM EST</div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="background: white; padding: 2rem; border-radius: var(--radius); border: 1px solid #e5e7eb;">
+          <h4 style="margin-bottom: 1rem; color: var(--neutral-dark);">Support Response Time</h4>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+            <span style="color: var(--neutral-gray);">Email:</span>
+            <span style="font-weight: 600; color: var(--success);">≤ 24 hours</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--neutral-gray);">Phone:</span>
+            <span style="font-weight: 600; color: var(--success);">Business hours</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contact Form -->
+      <div>
+        <div style="background: white; padding: 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow);">
+          <h3 style="margin-bottom: 1.5rem; color: var(--neutral-dark);">Send Message</h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--neutral-dark);">
+                Your Name
+              </label>
+              <input type="text" id="contactName" 
+                     style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: var(--transition);"
+                     placeholder="John Smith">
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--neutral-dark);">
+                Email Address
+              </label>
+              <input type="email" id="contactEmail" 
+                     style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: var(--transition);"
+                     placeholder="john@example.com" required>
+            </div>
+            
+            <div>
+              <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--neutral-dark);">
+                Message
+              </label>
+              <textarea id="contactMessageInput" rows="5"
+                        style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 1rem; transition: var(--transition); resize: vertical;"
+                        placeholder="How can we help you?" required></textarea>
+            </div>
+            
+            <button id="sendMessageBtn" 
+                    style="background: var(--primary-blue); color: white; border: none; padding: 1rem; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+              <i class="fas fa-paper-plane"></i>
+              Send Message
+            </button>
+            
+            <div id="contactMessageDisplay" style="display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End Contact Section -->
 
     <!-- FAQ -->
     <section class="faq-section">
@@ -1581,17 +1711,17 @@
         </div>
         
         <div class="footer-bottom">
-            <p>© 2023 ExposureShield. All rights reserved.</p>
-            <p>
-                <a href="#">Privacy Policy</a> • 
-                <a href="#">Terms of Service</a> • 
-                <a href="#">Cookie Policy</a> • 
-                <a href="#">GDPR Compliance</a>
-            </p>
-            <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
-                Secure check powered by HIBP API • SOC 2 Type II Certified
-            </p>
-        </div>
+    <p>© 2023 ExposureShield. All rights reserved.</p>
+    <p>
+        <a href="/privacy.html">Privacy Policy</a> • 
+        <a href="/terms.html">Terms of Service</a> • 
+        <a href="#">Cookie Policy</a> • 
+        <a href="#">GDPR Compliance</a>
+    </p>
+    <p style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+        Secure check powered by HIBP API • SOC 2 Type II Certified
+    </p>
+</div>
     </footer>
 
     <script>
@@ -1724,5 +1854,312 @@
             window.location.href = 'https://app.exposureshield.com/dashboard';
         }
     </script>
+    <script>
+// Contact Form Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const contactBtn = document.getElementById('sendMessageBtn');
+  if (contactBtn) {
+    contactBtn.addEventListener('click', async function() {
+      const name = document.getElementById('contactName')?.value.trim() || '';
+      const email = document.getElementById('contactEmail')?.value.trim() || '';
+      const message = document.getElementById('contactMessageInput')?.value.trim() || '';
+      const messageDisplay = document.getElementById('contactMessageDisplay');
+      
+      if (!email.includes('@')) {
+        showMessage('Please enter a valid email address', 'error');
+        return;
+      }
+      
+      if (message.length < 10) {
+        showMessage('Please enter a message (minimum 10 characters)', 'error');
+        return;
+      }
+      
+      const originalText = this.innerHTML;
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, message })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showMessage('✅ Message sent successfully! We\'ll respond within 24 hours.', 'success');
+          document.getElementById('contactName').value = '';
+          document.getElementById('contactEmail').value = '';
+          document.getElementById('contactMessageInput').value = '';
+        } else {
+          showMessage(`❌ ${data.error || 'Failed to send message'}`, 'error');
+        }
+      } catch (error) {
+        console.error('Contact error:', error);
+        showMessage('❌ Network error. Please email us directly.', 'error');
+      } finally {
+        this.innerHTML = originalText;
+        this.disabled = false;
+      }
+    });
+  }
+  
+  function showMessage(text, type) {
+    const messageDiv = document.getElementById('contactMessageDisplay');
+    if (!messageDiv) return;
+    
+    messageDiv.textContent = text;
+    messageDiv.style.display = 'block';
+    messageDiv.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+    messageDiv.style.color = type === 'success' ? '#065f46' : '#991b1b';
+    messageDiv.style.border = type === 'success' ? '1px solid #a7f3d0' : '1px solid #fecaca';
+    
+    setTimeout(() => {
+      messageDiv.style.display = 'none';
+    }, 5000);
+  }
+});
+
+// Real Email Check Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const checkBtn = document.getElementById('checkBtn');
+  if (checkBtn) {
+    checkBtn.addEventListener('click', async function() {
+      const email = document.getElementById('emailInput')?.value.trim() || '';
+      
+      if (!email.includes('@')) {
+        alert('Please enter a valid email address');
+        return;
+      }
+      
+      const originalText = this.innerHTML;
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+      this.disabled = true;
+      
+      try {
+        const response = await fetch('/api/check-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showResultsModal(data, email);
+        } else {
+          alert(`Error: ${data.error || 'Failed to check email'}`);
+        }
+      } catch (error) {
+        console.error('Check error:', error);
+        alert('Network error. Please try again.');
+      } finally {
+        this.innerHTML = originalText;
+        this.disabled = false;
+      }
+    });
+  }
+  
+  function showResultsModal(data, email) {
+    const safe = data.safe;
+    const breaches = data.breaches || [];
+    const pastes = data.pastes || [];
+    const exposedCount = data.exposedCount || 0;
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+    `;
+    
+    // Determine status color
+    let statusColor, statusIcon, statusText;
+    if (safe && exposedCount === 0) {
+        statusColor = '#10b981';
+        statusIcon = 'fas fa-shield-check';
+        statusText = 'Secure';
+    } else if (!safe || exposedCount > 0) {
+        statusColor = '#ef4444';
+        statusIcon = 'fas fa-shield-exclamation';
+        statusText = 'Exposed';
+    } else {
+        statusColor = '#f59e0b';
+        statusIcon = 'fas fa-shield-alt';
+        statusText = 'Warning';
+    }
+    
+    modal.innerHTML = `
+        <div style="background: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
+            <div style="padding: 30px; position: relative;">
+                <!-- Close button -->
+                <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
+                    &times;
+                </button>
+                
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div style="width: 80px; height: 80px; margin: 0 auto 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; background: ${statusColor}; color: white; box-shadow: 0 10px 25px ${statusColor}40;">
+                        <i class="${statusIcon}"></i>
+                    </div>
+                    <h3 style="margin: 0 0 8px; color: #111827; font-size: 28px; font-weight: 700;">
+                        ${statusText}
+                    </h3>
+                    <p style="color: #6b7280; font-size: 16px; margin: 0;">
+                        Checked: <span style="font-family: monospace; font-weight: 500;">${email}</span>
+                    </p>
+                    
+                    <!-- API Status Badge -->
+                    ${data.usingRealAPI ? `
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background: #d1fae5; color: #065f46; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; margin-top: 10px;">
+                            <i class="fas fa-check-circle"></i>
+                            Real HIBP Data
+                        </div>
+                    ` : data.simulated ? `
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 500; margin-top: 10px;">
+                            <i class="fas fa-vial"></i>
+                            Simulated Data
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <!-- Stats Grid -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 32px; font-weight: 800; color: ${breaches.length > 0 ? '#ef4444' : '#10b981'}; line-height: 1;">${breaches.length}</div>
+                        <div style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 6px;">Data Breaches</div>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 32px; font-weight: 800; color: ${pastes.length > 0 ? '#f59e0b' : '#10b981'}; line-height: 1;">${pastes.length}</div>
+                        <div style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 6px;">Paste Exposures</div>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e5e7eb;">
+                        <div style="font-size: 32px; font-weight: 800; color: ${exposedCount > 0 ? '#ef4444' : '#10b981'}; line-height: 1;">${exposedCount.toLocaleString()}</div>
+                        <div style="font-size: 13px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 6px;">Password Exposures</div>
+                    </div>
+                </div>
+                
+                <!-- Breaches Section -->
+                ${breaches.length > 0 ? `
+                    <div style="margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <div style="width: 32px; height: 32px; background: #fee2e2; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #dc2626;">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h4 style="margin: 0; color: #111827; font-size: 18px; font-weight: 600;">Data Breaches Found</h4>
+                        </div>
+                        
+                        ${breaches.slice(0, 3).map(breach => `
+                            <div style="background: #fef2f2; border-radius: 10px; padding: 18px; margin-bottom: 12px; border: 1px solid #fecaca;">
+                                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; overflow: hidden;">
+                                        ${breach.LogoPath ? `<img src="${breach.LogoPath}" alt="${breach.Name}" style="width: 32px; height: 32px; object-fit: contain;">` : `<div style="color: #6b7280; font-size: 20px;">🌐</div>`}
+                                    </div>
+                                    <div style="flex: 1;">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                            <div>
+                                                <strong style="color: #111827; font-size: 16px;">${breach.Name || 'Unknown'}</strong>
+                                                <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                                                    <span style="font-size: 13px; color: #6b7280;">
+                                                        <i class="far fa-calendar" style="margin-right: 4px;"></i>
+                                                        ${breach.BreachDate || 'Unknown'}
+                                                    </span>
+                                                    <span style="font-size: 13px; color: #6b7280;">
+                                                        <i class="fas fa-users" style="margin-right: 4px;"></i>
+                                                        ${breach.PwnCount ? parseInt(breach.PwnCount).toLocaleString() : 'N/A'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style="background: #dc2626; color: white; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px;">
+                                                BREACHED
+                                            </div>
+                                        </div>
+                                        <p style="color: #6b7280; font-size: 14px; line-height: 1.5; margin: 0;">
+                                            ${breach.Description ? breach.Description.substring(0, 120) + (breach.Description.length > 120 ? '...' : '') : 'No description available.'}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        
+                        ${breaches.length > 3 ? `
+                            <div style="text-align: center; padding: 12px; background: #f8fafc; border-radius: 8px; margin-top: 10px;">
+                                <span style="color: #6b7280; font-size: 14px;">+ ${breaches.length - 3} more breach${breaches.length - 3 > 1 ? 'es' : ''} found</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+                
+                <!-- Recommendation -->
+                <div style="background: ${safe && exposedCount === 0 ? '#d1fae5' : '#fef3c7'}; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid ${safe && exposedCount === 0 ? '#a7f3d0' : '#fde68a'};">
+                    <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                        <div style="color: ${safe && exposedCount === 0 ? '#10b981' : '#f59e0b'}; font-size: 1.25rem;">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 0.5rem; color: ${safe && exposedCount === 0 ? '#065f46' : '#92400e'};">Recommendation</div>
+                            <p style="color: ${safe && exposedCount === 0 ? '#065f46' : '#92400e'}; margin: 0; font-size: 0.95rem;">${data.recommendation}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions -->
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="this.closest('div[style*=\\"position: fixed\\"]').remove(); document.querySelector('.email-input').value=''; document.querySelector('.email-input').focus();" 
+                            style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(37, 99, 235, 0.3)'" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                        <i class="fas fa-search"></i>
+                        Check Another Email
+                    </button>
+                    
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'}); this.closest('div[style*=\\"position: fixed\\"]').remove();" 
+                            style="background: white; color: #6b7280; border: 2px solid #e5e7eb; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
+                            onmouseover="this.style.background='#f9fafb'; this.style.transform='translateY(-2px)'" 
+                            onmouseout="this.style.background='white'; this.style.transform='translateY(0)'">
+                        <i class="fas fa-arrow-up"></i>
+                        Back to Top
+                    </button>
+                </div>
+                
+                <!-- Footer -->
+                <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #6b7280; font-size: 14px; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="fas fa-shield-alt" style="color: ${safe ? '#10b981' : '#ef4444'}"></i>
+                        Data provided by <strong>Have I Been Pwned</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.appendChild(modal);
+    
+    // Focus close button for accessibility
+    const closeBtn = modal.querySelector('button');
+    if (closeBtn) closeBtn.focus();
+  }
+});
+
+</script>
 </body>
 </html>
