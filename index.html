@@ -2009,6 +2009,22 @@
                 `;
                 
                 document.body.appendChild(modal);
+                // Add event listeners for modal buttons (add this after modal is appended to body)
+modal.querySelector('#modal-check-another-btn').addEventListener('click', function() {
+    const modalContainer = this.closest('div[style*="position: fixed"]');
+    const emailInput = document.getElementById('emailInput');
+    if(emailInput) {
+        emailInput.value = '';
+        emailInput.focus();
+    }
+    modalContainer.remove();
+});
+
+modal.querySelector('#modal-back-to-top-btn').addEventListener('click', function() {
+    const modalContainer = this.closest('div[style*="position: fixed"]');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    modalContainer.remove();
+});
             }
 
             // Smooth scrolling for navigation
@@ -2269,8 +2285,7 @@
                     <div style="background: white; border-radius: 16px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
                         <div style="padding: 30px; position: relative;">
                             <!-- Close button -->
-                            <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='transparent'">
-                                &times;
+                            <button id="modal-close-btn" ...>
                             </button>
                             
                             <!-- Header -->
@@ -2383,22 +2398,22 @@
                             
                             <!-- Actions -->
                             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                                <button onclick="this.closest('div[style*=\\"position: fixed\\"]').remove(); document.getElementById('emailInput').value=''; document.getElementById('emailInput').focus();" 
-                                        style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
-                                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(37, 99, 235, 0.3)'" 
-                                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                                    <i class="fas fa-search"></i>
-                                    Check Another Email
-                                </button>
-                                
-                                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'}); this.closest('div[style*=\\"position: fixed\\"]').remove();" 
-                                        style="background: white; color: #6b7280; border: 2px solid #e5e7eb; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
-                                        onmouseover="this.style.background='#f9fafb'; this.style.transform='translateY(-2px)'" 
-                                        onmouseout="this.style.background='white'; this.style.transform='translateY(0)'">
-                                    <i class="fas fa-arrow-up"></i>
-                                    Back to Top
-                                </button>
-                            </div>
+    <button id="modal-check-another-btn"
+            style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
+            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(37, 99, 235, 0.3)'" 
+            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+        <i class="fas fa-search"></i>
+        Check Another Email
+    </button>
+    
+    <button id="modal-back-to-top-btn"
+            style="background: white; color: #6b7280; border: 2px solid #e5e7eb; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" 
+            onmouseover="this.style.background='#f9fafb'; this.style.transform='translateY(-2px)'" 
+            onmouseout="this.style.background='white'; this.style.transform='translateY(0)'">
+        <i class="fas fa-arrow-up"></i>
+        Back to Top
+    </button>
+</div>
                             
                             <!-- Footer -->
                             <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
