@@ -47,6 +47,69 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-XXXXXXXXXX');
+      document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.start-payment').forEach(button => {
+        button.addEventListener('click', async function() {
+            const plan = this.getAttribute('data-plan');
+            const email = prompt('Enter your email to continue:');
+            
+            if (!email || !email.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Show loading
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            this.disabled = true;
+            
+            try {
+                const response = await fetch('/api/create-checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ plan, email })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.url) {
+                    if (data.simulated) {
+                        // Show demo message
+                        alert('Demo Mode: In production, this would redirect to secure payment checkout.');
+                        // Redirect to demo page
+                        window.location.href = '/payment-demo.html';
+                    } else {
+                        // Real Stripe redirect
+                        window.location.href = data.url;
+                    }
+                } else {
+                    alert(data.error || 'Failed to create checkout. Please try again.');
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment service unavailable. Please try again later.');
+            } finally {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }
+        });
+    });
+    
+    // Annual billing button
+    const annualButton = document.querySelector('.btn[onclick*="Annual"]');
+    if (annualButton) {
+        annualButton.addEventListener('click', function() {
+            const email = prompt('Enter your email for annual billing (Save 20%):');
+            if (email && email.includes('@')) {
+                // Redirect to annual plan checkout
+                window.location.href = `/api/create-checkout?plan=complete&interval=year&email=${encodeURIComponent(email)}`;
+            }
+        });
+    }
+});
+
     </script>
     
     <!-- Facebook Pixel Code -->
