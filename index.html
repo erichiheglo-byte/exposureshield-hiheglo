@@ -2428,6 +2428,40 @@ modal.querySelector('#modal-back-to-top-btn').addEventListener('click', function
                 
                 // Add modal to page
                 document.body.appendChild(modal);
+                // ===== REPLACE THE EVENT LISTENER PART OF showResultsModal WITH THIS =====
+
+// Add this RIGHT AFTER document.body.appendChild(modal);
+
+// Use event delegation - works even if buttons don't exist yet
+modal.addEventListener('click', function(event) {
+    const target = event.target;
+    
+    // Check if click was on "Check Another Email" button or its icon
+    if (target.id === 'modal-check-another-btn' || target.closest('#modal-check-another-btn')) {
+        console.log('Check Another Email button clicked');
+        const emailInput = document.getElementById('emailInput');
+        if(emailInput) {
+            emailInput.value = '';
+            emailInput.focus();
+        }
+        this.remove(); // Remove the modal
+    }
+    
+    // Check if click was on "Back to Top" button or its icon
+    if (target.id === 'modal-back-to-top-btn' || target.closest('#modal-back-to-top-btn')) {
+        console.log('Back to Top button clicked');
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        this.remove(); // Remove the modal
+    }
+    
+    // Check if click was on close button
+    if (target.id === 'modal-close-btn' || target.closest('#modal-close-btn')) {
+        console.log('Close button clicked');
+        this.remove(); // Remove the modal
+    }
+});
+
+// ===== END OF CODE =====
                 
                 // Focus close button for accessibility
                 const closeBtn = modal.querySelector('button');
