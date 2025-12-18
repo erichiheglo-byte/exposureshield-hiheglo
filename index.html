@@ -118,30 +118,29 @@
               } else {
                 alert(data.error || 'Failed to create checkout. Please try again.');
               }
-            } catch (error) {
-              console.error('Payment error:', error);
-              alert('Payment service unavailable. Please try again later.');
+                        } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment service unavailable. Please try again later.');
             } finally {
-              this.innerHTML = originalText;
-              this.disabled = false;
-            
+                this.innerHTML = originalText;
+                this.disabled = false;
             }
-          });
         });
-        
-        // Annual billing button
-        const annualButton = document.querySelector('.btn[onclick*="Annual"]');
-        if (annualButton) {
-          annualButton.addEventListener('click', function() {
+    });
+    
+    // Annual billing button
+    const annualButton = document.querySelector('.btn[onclick*="Annual"]');
+    if (annualButton) {
+        annualButton.addEventListener('click', function() {
             const email = prompt('Enter your email for annual billing (Save 20%):');
             if (email && email.includes('@')) {
-              // Redirect to annual plan checkout
-              window.location.href = `/api/create-checkout?plan=complete&interval=year&email=${encodeURIComponent(email)}`;
+                // Redirect to annual plan checkout
+                window.location.href = `/api/create-checkout?plan=complete&interval=year&email=${encodeURIComponent(email)}`;
             }
-          });
-        }
-      });
-    </script>
+        });
+    }
+});
+</script>
     <style>
         :root {
             /* Professional Blue Theme - Security Focus */
