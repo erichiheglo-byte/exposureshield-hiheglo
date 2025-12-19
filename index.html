@@ -534,7 +534,8 @@
                 See if your email has been compromised in any data breaches using the Have I Been Pwned database.
               </p>
 
-              <form id="hibpForm" autocomplete="off" novalidate>
+             <form id="hibpForm" autocomplete="off" novalidate onsubmit="return false;">
+
                 <div class="field">
                   <label for="hibpEmail">Enter your email address</label>
                   <input id="hibpEmail" name="hibpEmail" type="email" placeholder="you@example.com" required />
