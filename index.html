@@ -1014,7 +1014,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return db - da;
     });
 
-    const top = sorted.slice(0, 8);
+    const topBreaches = sorted.slice(0, 8);
+
 
     const listHtml = top.map(b => {
       const name = escapeHtml(b.Title || b.Name || "Unknown");
