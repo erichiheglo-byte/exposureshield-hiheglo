@@ -979,10 +979,56 @@
   const hibpResult = document.getElementById("hibpResult");
 
   function renderBreaches(email, breaches) {
-    if (!breaches || breaches.length === 0) {
-      hibpResult.textContent = `Good news: No breaches found for ${email}.`;
-      return;
-    }
+  const count = Array.isArray(breaches) ? breaches.length : 0;
+
+  // Simple risk label (you can adjust later)
+  let risk = "Low";
+  if (count >= 8) risk = "High";
+  else if (count >= 3) risk = "Medium";
+
+  if (count === 0) {
+    hibpResult.innerHTML = `
+      <b style="color: rgba(52,211,153,0.95);">Good news:</b>
+      No breaches found for <b>${email}</b>.
+      <div class="hint" style="margin-top:8px;">Powered by Have I Been Pwned API</div>
+    `;
+    return;
+  }
+
+  // Sort by breach date (newest first if available)
+  const sorted = breaches.slice().sort((a, b) => {
+    const da = Date.parse(a.BreachDate || a.AddedDate || "") || 0;
+    const db = Date.parse(b.BreachDate || b.AddedDate || "") || 0;
+    return db - da;
+  });
+
+  const top = sorted.slice(0, 8);
+
+  const listHtml = top.map(b => {
+    const name = (b.Title || b.Name || "Unknown").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const date = (b.BreachDate || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const domain = (b.Domain || "").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const line2 = [domain, date].filter(Boolean).join(" • ");
+    return `<li style="margin:6px 0;">
+              <b>${name}</b>
+              ${line2 ? `<div style="color: rgba(255,255,255,0.72); font-size: 12px; margin-top:2px;">${line2}</div>` : ""}
+            </li>`;
+  }).join("");
+
+  hibpResult.innerHTML = `
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <div><b>${count} breach(es) found</b> for <b>${email}</b>.</div>
+      <div class="tag">Risk: <b style="margin-left:6px; color: rgba(255,255,255,0.92);">${risk}</b></div>
+    </div>
+
+    <ul style="margin:10px 0 0; padding-left: 18px; color: rgba(255,255,255,0.86);">
+      ${listHtml}
+    </ul>
+
+    ${count > top.length ? `<div class="hint" style="margin-top:10px;">Showing top ${top.length} of ${count} breaches.</div>` : `<div class="hint" style="margin-top:10px;">Powered by Have I Been Pwned API</div>`}
+  `;
+}
+
 
     const top = breaches.slice(0, 5);
     const names = top.map(b => b.Name || b.Title).filter(Boolean);
@@ -993,7 +1039,7 @@
         Top matches: ${names.join(", ")}${breaches.length > top.length ? " ..." : ""}
       </span>
     `;
-  }
+
 
   if (hibpForm && hibpEmail && hibpResult) {
     hibpForm.addEventListener("submit", async (e) => {
@@ -1005,6 +1051,9 @@
       }
 
       hibpResult.textContent = `Checking breaches for: ${email} ...`;
+const submitBtn = hibpForm.querySelector('button[type="submit"]');
+if (submitBtn) submitBtn.disabled = true;
+
 
       try {
         const r = await fetch(`/api/hibp?email=${encodeURIComponent(email)}`, {
