@@ -30,11 +30,16 @@
 
     // HIBP uses 404 = no breaches
     if (response.status === 404) {
-      return res.status(200).json({ ok: true, breaches: [] });
-    }
+  // Cache "no breaches" too (safe and reduces repeated calls)
+  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
+  return res.status(200).json({ ok: true, breaches: [] });
+}
+
 
     if (!response.ok) {
       const text = await response.text();
+      res.setHeader("Cache-Control", "no-store");
+
       return res.status(response.status).json({
         ok: false,
         error: "HIBP request failed",
@@ -44,6 +49,9 @@
     }
 
     const breaches = await response.json();
+    // Cache breach results at the edge for 1 hour; allow stale up to 24h while revalidating
+res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
+
     return res.status(200).json({ ok: true, breaches });
   } catch (err) {
     return res.status(500).json({
