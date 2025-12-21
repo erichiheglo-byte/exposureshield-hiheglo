@@ -1047,7 +1047,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  hibpForm.addEventListener("submit", async (e) => {
+  /* DISABLED: moved to shared.js -> hibpForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -1068,7 +1068,8 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "accept": "application/json" }
       });
 
-      const data = await r.json().catch(() => null);
+       */
+const data = await r.json().catch(() => null);
 
       if (!r.ok || !data || data.ok !== true) {
         hibpResult.textContent = "Unable to check right now. Please try again.";
@@ -1083,14 +1084,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  hibpForm.addEventListener("reset", () => {
+  /* DISABLED: moved to shared.js -> hibpForm.addEventListener("reset", () => {
     hibpResult.textContent = "Powered by Have I Been Pwned API";
   });
 
+ */
 });
 </script>
 
 <!-- OPTIONAL: Shared footer/header script if you use it -->
-<!-- <script src="/shared.js" defer></script> -->
+<script src="/shared.js" defer></script>
 </body>
 </html>
+
+

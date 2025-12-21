@@ -1,13 +1,13 @@
-/* =========================================================
-   ExposureShield – shared.js (Production)
+﻿/* =========================================================
+   ExposureShield â€“ shared.js (Production)
    Works with /api/hibp (Vercel Serverless Function)
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("hibp-form");
-  const emailInput = document.getElementById("hibp-email");
-  const resultBox = document.getElementById("hibp-result");
-  const resetBtn = document.getElementById("hibp-reset");
+  const form = document.getElementById("hibpForm") || document.getElementById("hibp-form");
+  const emailInput = document.getElementById("hibpEmail") || document.getElementById("hibp-email");
+  const resultBox = document.getElementById("hibpResult") || document.getElementById("hibp-result");
+  const resetBtn = document.getElementById("hibpReset") || document.getElementById("hibp-reset");
 
   if (!form || !emailInput || !resultBox) return;
 
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setLoading(state) {
     if (state) {
-      resultBox.innerHTML = `<div class="loading">Checking email security…</div>`;
+      resultBox.innerHTML = `<div class="loading">Checking email securityâ€¦</div>`;
     }
   }
 
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(b => `
         <li>
           <strong>${b.Title || b.Name}</strong><br/>
-          <small>${b.Domain || "Unknown domain"} • ${b.BreachDate || "Unknown date"}</small>
+          <small>${b.Domain || "Unknown domain"} â€¢ ${b.BreachDate || "Unknown date"}</small>
         </li>
       `)
       .join("");
@@ -127,3 +127,4 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 });
+
