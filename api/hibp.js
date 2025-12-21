@@ -1,63 +1,46 @@
-﻿export default async function handler(req, res) {
+﻿// api/hibp.js
+// Compatibility alias for the HIBP email check.
+// This keeps /api/hibp working while the main implementation lives in /api/check-email.
+
+export default async function handler(req, res) {
   try {
-    const email = (req.query.email || "").toString().trim();
+    // Support either ?email= or ?q=
+    const email = (req.query.email || req.query.q || "").toString().trim();
 
     if (!email) {
       return res.status(400).json({ ok: false, error: "Missing email parameter." });
     }
 
-    const apiKey = process.env.HIBP_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({
-        ok: false,
-        error: "HIBP_API_KEY is not set in Vercel environment variables."
-      });
+    // Call the same origin endpoint /api/check-email
+    // NOTE: On Vercel, absolute URL is safer. We'll infer it from headers.
+    const proto = (req.headers["x-forwarded-proto"] || "https").toString();
+    const host = (req.headers["x-forwarded-host"] || req.headers.host || "").toString();
+
+    if (!host) {
+      // Fallback: still try relative (works in many cases)
+      const r = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`);
+      const data = await r.json();
+      return res.status(r.status).json(data);
     }
 
-    const url =
-      "https://haveibeenpwned.com/api/v3/breachedaccount/" +
-      encodeURIComponent(email) +
-      "?truncateResponse=false";
-
-    const response = await fetch(url, {
+    const url = `${proto}://${host}/api/check-email?email=${encodeURIComponent(email)}`;
+    const r = await fetch(url, {
       method: "GET",
-      headers: {
-        "hibp-api-key": apiKey,
-        "user-agent": "ExposureShield (contact@exposureshield.com)",
-        "api-version": "3"
-      }
+      headers: { Accept: "application/json" },
+      cache: "no-store",
     });
 
-    // HIBP uses 404 = no breaches
-    if (response.status === 404) {
-  // Cache "no breaches" too (safe and reduces repeated calls)
-  res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
-  return res.status(200).json({ ok: true, breaches: [] });
-}
+    const data = await r.json().catch(() => null);
 
-
-    if (!response.ok) {
-      const text = await response.text();
-      res.setHeader("Cache-Control", "no-store");
-
-      return res.status(response.status).json({
-        ok: false,
-        error: "HIBP request failed",
-        status: response.status,
-        details: text
-      });
+    if (!r.ok) {
+      return res.status(r.status).json(
+        data || { ok: false, error: `check-email failed (${r.status})` }
+      );
     }
 
-    const breaches = await response.json();
-    // Cache breach results at the edge for 1 hour; allow stale up to 24h while revalidating
-res.setHeader("Cache-Control", "s-maxage=3600, stale-while-revalidate=86400");
-
-    return res.status(200).json({ ok: true, breaches });
+    // Return exactly what check-email returns (should include { ok, breaches, ... })
+    return res.status(200).json(data || { ok: false, error: "Empty response from check-email." });
   } catch (err) {
-    return res.status(500).json({
-      ok: false,
-      error: "Server error",
-      details: String(err)
-    });
+    return res.status(500).json({ ok: false, error: "Server error.", detail: String(err?.message || err) });
   }
 }
