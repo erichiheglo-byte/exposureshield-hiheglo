@@ -1,70 +1,91 @@
 // api/check-email.js
-// Accepts BOTH GET and POST.
-// Returns normalized JSON: { ok: true, breaches: [...] }
+// ExposureShield — HIBP breach check (Node runtime, correct headers, robust responses)
 
-const HIBP_API_BASE = "https://haveibeenpwned.com/api/v3";
-
-function send(res, status, body) {
-  res.status(status);
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Cache-Control", "no-store");
-  return res.json(body);
-}
-
-function readEmail(req) {
-  const q = (req.query?.email || req.query?.q || "").toString().trim();
-  if (q) return q;
-
-  const b = (req.body?.email || "").toString().trim();
-  return b || "";
-}
+export const config = {
+  runtime: "nodejs",
+};
 
 export default async function handler(req, res) {
   try {
-    // Allow GET and POST only
-    if (req.method !== "GET" && req.method !== "POST") {
-      res.setHeader("Allow", "GET, POST");
-      return send(res, 405, { ok: false, error: "Method not allowed" });
+    // Only allow GET (optional but cleaner)
+    if (req.method && req.method !== "GET") {
+      res.setHeader("Allow", "GET");
+      return res.status(405).json({ ok: false, error: "Method not allowed." });
     }
 
-    const email = readEmail(req);
+    const email = (req.query.email || "").toString().trim();
     if (!email) {
-      return send(res, 400, { ok: false, error: "Missing email parameter." });
+      return res.status(400).json({ ok: false, error: "Missing email parameter." });
     }
 
-    const apiKey = process.env.HIBP_API_KEY;
+    const apiKey = (process.env.HIBP_API_KEY || "").toString().trim();
     if (!apiKey) {
-      return send(res, 500, { ok: false, error: "Missing HIBP_API_KEY on server." });
+      return res.status(500).json({ ok: false, error: "Server missing HIBP_API_KEY." });
     }
 
-    const url = `${HIBP_API_BASE}/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`;
+    // HIBP endpoint (breached account)
+    // Use truncateResponse=true for smaller payload and faster response
+    const hibpUrl =
+      `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}` +
+      `?truncateResponse=true`;
 
-    const r = await fetch(url, {
-      method: "GET",
-      headers: {
-        "hibp-api-key": apiKey,
-        "user-agent": "ExposureShield (contact@exposureshield.com)",
-        "accept": "application/json",
-      },
-    });
+    // Timeout protection
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
 
-    // HIBP: 404 means no breaches for that account
-    if (r.status === 404) {
-      return send(res, 200, { ok: true, breaches: [] });
+    let hibpRes;
+    try {
+      hibpRes = await fetch(hibpUrl, {
+        method: "GET",
+        headers: {
+          // IMPORTANT: header name must be exactly hibp-api-key
+          "hibp-api-key": apiKey,
+          // IMPORTANT: user-agent is required by HIBP
+          "user-agent": "ExposureShield (support@exposureshield.com)",
+          accept: "application/json",
+        },
+        cache: "no-store",
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
     }
 
-    if (!r.ok) {
-      const text = await r.text().catch(() => "");
-      return send(res, r.status, {
+    // If no breaches, HIBP returns 404 (normal)
+    if (hibpRes.status === 404) {
+      return res.status(200).json({ ok: true, breaches: [] });
+    }
+
+    // Try JSON first, fall back to text
+    const contentType = (hibpRes.headers.get("content-type") || "").toLowerCase();
+    const rawBody = contentType.includes("application/json")
+      ? await hibpRes.json().catch(() => null)
+      : await hibpRes.text().catch(() => null);
+
+    if (!hibpRes.ok) {
+      return res.status(hibpRes.status).json({
         ok: false,
-        error: `HIBP request failed (${r.status}).`,
-        detail: text.slice(0, 200),
+        error: `HIBP API error: ${hibpRes.status}`,
+        detail:
+          typeof rawBody === "string"
+            ? rawBody
+            : rawBody
+            ? JSON.stringify(rawBody)
+            : "No response body",
+        breaches: [],
       });
     }
 
-    const breaches = await r.json().catch(() => []);
-    return send(res, 200, { ok: true, breaches: Array.isArray(breaches) ? breaches : [] });
+    // HIBP returns an array of breaches on success
+    const breaches = Array.isArray(rawBody) ? rawBody : [];
+    return res.status(200).json({ ok: true, breaches });
   } catch (err) {
-    return send(res, 500, { ok: false, error: "Server error.", detail: String(err?.message || err) });
+    const isAbort = err && (err.name === "AbortError" || String(err).includes("AbortError"));
+    return res.status(isAbort ? 504 : 500).json({
+      ok: false,
+      error: isAbort ? "HIBP request timed out." : "Server error.",
+      detail: String(err?.message || err),
+      breaches: [],
+    });
   }
 }

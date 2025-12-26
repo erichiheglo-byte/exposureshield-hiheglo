@@ -2,35 +2,30 @@
   "version": 2,
   "functions": {
     "api/check-email.js": { "maxDuration": 10 },
+    "api/hibp.js": { "maxDuration": 10 },
     "api/contact.js": { "maxDuration": 10 },
-    "api/create-checkout.js": { "maxDuration": 10 }
+    "api/create-checkout.js": { "maxDuration": 10 },
+    "api/record-payment.js": { "maxDuration": 10 }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/$1" },
-
     { "source": "/api/check-email", "destination": "/api/check-email.js" },
+    { "source": "/api/hibp", "destination": "/api/hibp.js" },
     { "source": "/api/contact", "destination": "/api/contact.js" },
     { "source": "/api/create-checkout", "destination": "/api/create-checkout.js" },
-    
-{ "source": "/partials/(.*)", "destination": "/partials/$1" },
+    { "source": "/api/record-payment", "destination": "/api/record-payment.js" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/refund", "destination": "/refund.html" },
-    
-{ "source": "/legacy", "destination": "/legacy.html" },
-{ "source": "/pricing", "destination": "/pricing.html" },
-
+    { "source": "/legacy", "destination": "/legacy.html" },
+    { "source": "/pricing", "destination": "/pricing.html" },
+    { "source": "/payment-demo", "destination": "/payment-demo.html" },
+    { "source": "/payment-success", "destination": "/payment-success.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
-        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" }
-      ]
-    }
-  ]
+  "headers": [],
+  "env": {
+    "HIBP_API_KEY": "HIBP_API_KEY",
+    "PAYPAL_CLIENT_ID": "PAYPAL_CLIENT_ID",
+    "STRIPE_ENABLED": "false"
+  }
 }
