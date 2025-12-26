@@ -1,853 +1,1058 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Digital Legacy Planning — ExposureShield</title>
-  <link rel="canonical" href="https://www.exposureshield.com/legacy" />
-  
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Secure your digital legacy with ExposureShield's comprehensive digital inheritance planning. Protect and transfer your online assets, accounts, and digital property to your heirs.">
-  <meta name="robots" content="index,follow">
-  <meta property="og:title" content="Digital Legacy Planning — ExposureShield">
-  <meta property="og:description" content="Protect and transfer your digital assets with professional legacy planning services.">
-  <meta property="og:type" content="website">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Planning | ExposureShield - Digital Inheritance Security</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reuse styles from index.html with legacy-specific additions */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --legacy-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    :root {
-      /* Modern color palette */
-      --primary-dark: #0f172a;
-      --primary-blue: #1e40af;
-      --primary-light-blue: #3b82f6;
-      --accent-teal: #0d9488;
-      --accent-purple: #7c3aed;
-      --neutral-dark: #1e293b;
-      --neutral-medium: #475569;
-      --neutral-light: #e2e8f0;
-      --neutral-bg: #f8fafc;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--secondary);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    html {
-      scroll-behavior: smooth;
-    }
+        /* Header (same as index) */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      color: var(--neutral-dark);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
 
-    /* Header & Navigation */
-    .legacy-header {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
-      color: white;
-      padding: 4rem 2rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
 
-    .legacy-header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 400px;
-      height: 400px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-      border-radius: 50%;
-    }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
 
-    .legacy-header h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      letter-spacing: -0.5px;
-      position: relative;
-      z-index: 2;
-    }
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
 
-    .legacy-subtitle {
-      font-size: 1.25rem;
-      color: rgba(255, 255, 255, 0.85);
-      max-width: 800px;
-      margin: 0 auto 2rem;
-      font-weight: 400;
-      position: relative;
-      z-index: 2;
-    }
+        nav a:hover {
+            color: var(--primary);
+        }
 
-    /* Container & Layout */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+        nav a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
 
-    /* Hero Stats */
-    .stats-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 2rem;
-      margin: 4rem auto;
-      position: relative;
-      z-index: 2;
-    }
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
 
-    .stat-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    }
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
 
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--primary-light-blue);
-      margin-bottom: 0.5rem;
-    }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
 
-    .stat-label {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.85);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        /* Legacy Hero */
+        .legacy-hero {
+            background: var(--legacy-gradient);
+            color: white;
+            padding: 100px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    /* Problem Section */
-    .problem-section {
-      background: white;
-      border-radius: 24px;
-      padding: 4rem;
-      margin: -3rem auto 4rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      position: relative;
-      z-index: 10;
-      max-width: 1000px;
-    }
+        .legacy-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+            border-radius: 50% 0 0 50%;
+            transform: translateX(30%);
+        }
 
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      color: var(--primary-dark);
-      text-align: center;
-    }
+        .legacy-hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
 
-    .problem-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
+        .legacy-hero p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
 
-    .problem-card {
-      background: var(--neutral-bg);
-      border-radius: 16px;
-      padding: 2rem;
-      border-left: 4px solid var(--danger);
-      transition: transform 0.3s ease;
-    }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
 
-    .problem-card:hover {
-      transform: translateX(10px);
-    }
+        .stat-item {
+            text-align: center;
+        }
 
-    .problem-card i {
-      font-size: 2rem;
-      color: var(--danger);
-      margin-bottom: 1rem;
-    }
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
 
-    /* Features Section */
-    .features-section {
-      padding: 6rem 0;
-      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-    }
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 2.5rem;
-      margin-top: 3rem;
-    }
+        /* Why Legacy Section */
+        .why-legacy {
+            padding: 80px 0;
+            background: white;
+        }
 
-    .feature-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-    }
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            text-align: center;
+        }
 
-    .feature-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border-color: var(--primary-light-blue);
-    }
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .feature-icon {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, var(--primary-light-blue), var(--accent-purple));
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
-      color: white;
-    }
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
 
-    .feature-card h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: var(--primary-dark);
-    }
+        .problem-card {
+            background: var(--light);
+            padding: 30px;
+            border-radius: var(--radius);
+            position: relative;
+            border-left: 4px solid var(--danger);
+        }
 
-    /* Process Section */
-    .process-section {
-      padding: 6rem 0;
-      background: white;
-    }
+        .problem-card::before {
+            content: '⚠';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+        }
 
-    .process-timeline {
-      max-width: 900px;
-      margin: 4rem auto 0;
-      position: relative;
-    }
+        .problem-card h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
 
-    .process-timeline::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(to bottom, var(--primary-light-blue), var(--accent-teal));
-      transform: translateX(-50%);
-    }
+        /* Features Section */
+        .legacy-features {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
 
-    .process-step {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4rem;
-      position: relative;
-    }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
 
-    .process-step:nth-child(odd) {
-      flex-direction: row-reverse;
-    }
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .step-content {
-      flex: 1;
-      padding: 2.5rem;
-      background: var(--neutral-bg);
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-    }
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
 
-    .step-number {
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, var(--primary-light-blue), var(--accent-teal));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0 2rem;
-      flex-shrink: 0;
-      position: relative;
-      z-index: 2;
-    }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
 
-    /* Pricing Section */
-    .pricing-section {
-      padding: 6rem 0;
-      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-      text-align: center;
-    }
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+        .feature-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
 
-    .pricing-card {
-      background: white;
-      border-radius: 24px;
-      padding: 3rem;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: white;
+        }
 
-    .pricing-card.popular {
-      border: 2px solid var(--primary-light-blue);
-      transform: scale(1.05);
-    }
+        .steps-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            margin-top: 40px;
+            position: relative;
+        }
 
-    .popular-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: linear-gradient(135deg, var(--primary-light-blue), var(--accent-purple));
-      color: white;
-      padding: 0.5rem 2rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border-bottom-left-radius: 16px;
-    }
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gray-light);
+        }
 
-    .price-amount {
-      font-size: 3.5rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin: 1.5rem 0;
-    }
+        .step {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            position: relative;
+        }
 
-    .price-period {
-      font-size: 1rem;
-      color: var(--neutral-medium);
-      font-weight: 500;
-    }
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            z-index: 1;
+        }
 
-    .pricing-features {
-      text-align: left;
-      margin: 2rem 0;
-    }
+        .step-content {
+            flex: 1;
+            padding-top: 10px;
+        }
 
-    .pricing-features li {
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-    }
+        .step-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
 
-    .pricing-features i {
-      color: var(--success);
-      margin-right: 0.75rem;
-    }
+        /* CTA Section */
+        .legacy-cta {
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+            border-radius: var(--radius);
+            margin: 60px auto;
+            max-width: 1000px;
+        }
 
-    .cta-button {
-      display: inline-block;
-      background: linear-gradient(135deg, var(--primary-light-blue), var(--accent-purple));
-      color: white;
-      padding: 1rem 2.5rem;
-      border-radius: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-      width: 100%;
-      margin-top: 1.5rem;
-    }
+        .legacy-cta h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
 
-    .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
-    }
+        .legacy-cta p {
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 1.1rem;
+        }
 
-    .cta-button.secondary {
-      background: transparent;
-      border: 2px solid var(--neutral-light);
-      color: var(--neutral-dark);
-    }
+        .pricing-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-size: 1.1rem;
+        }
 
-    /* FAQ Section */
-    .faq-section {
-      padding: 6rem 0;
-      background: white;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+        .pricing-badge .price {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
 
-    .faq-item {
-      margin-bottom: 1.5rem;
-      border: 1px solid var(--neutral-light);
-      border-radius: 16px;
-      overflow: hidden;
-    }
+        .pricing-badge .period {
+            color: #94a3b8;
+        }
 
-    .faq-question {
-      padding: 1.5rem;
-      background: var(--neutral-bg);
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            background: var(--light);
+        }
 
-    .faq-answer {
-      padding: 1.5rem;
-      display: none;
-    }
+        .faq-grid {
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
 
-    .faq-item.active .faq-answer {
-      display: block;
-    }
+        .faq-item {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
 
-    /* CTA Section */
-    .final-cta {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, #1e293b 100%);
-      color: white;
-      padding: 6rem 2rem;
-      text-align: center;
-      border-radius: 24px;
-      margin: 4rem auto;
-      max-width: 1000px;
-    }
+        .faq-question {
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    .final-cta h2 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
+        .faq-question:hover {
+            background: #f8fafc;
+        }
 
-    /* Footer */
-    .legacy-footer {
-      background: var(--primary-dark);
-      color: rgba(255, 255, 255, 0.8);
-      padding: 4rem 2rem;
-      text-align: center;
-    }
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .legacy-header h1 {
-        font-size: 2.5rem;
-      }
-      
-      .problem-section,
-      .feature-card,
-      .pricing-card {
-        padding: 2rem;
-      }
-      
-      .process-timeline::before {
-        left: 30px;
-      }
-      
-      .process-step {
-        flex-direction: row !important;
-        margin-left: 60px;
-      }
-      
-      .step-number {
-        position: absolute;
-        left: -60px;
-        margin: 0;
-      }
-      
-      .pricing-card.popular {
-        transform: none;
-      }
-    }
-  </style>
+        .faq-answer.active {
+            padding: 0 20px 20px 20px;
+            max-height: 500px;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s;
+        }
+
+        .faq-toggle.active {
+            transform: rotate(45deg);
+        }
+
+        /* Footer (same as index) */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 15px 0;
+            }
+
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .legacy-hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                gap: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .steps-container::before {
+                left: 30px;
+            }
+
+            .step-number {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .legacy-cta {
+                margin: 40px 20px;
+                padding: 40px 20px;
+            }
+
+            .legacy-cta h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Animation for steps */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
 </head>
 <body>
-    <div id="shared-header"></div>
-  <!-- Hero Header -->
-  <header class="legacy-header">
-    <div class="container">
-      <h1>Secure Your Digital Legacy</h1>
-      <p class="legacy-subtitle">
-        Protect and transfer your digital assets, online accounts, and digital property 
-        to your heirs with our comprehensive digital inheritance planning service.
-      </p>
-      
-      <div class="stats-container">
-        <div class="stat-card">
-          <div class="stat-number">$60K+</div>
-          <div class="stat-label">Average Digital Assets Value</div>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="legacy.html" class="active">Legacy</a></li>
+                </ul>
+            </nav>
+            
+            <a href="#startLegacy" class="cta-button">Start Legacy Plan</a>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">89%</div>
-          <div class="stat-label">Without Digital Will</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">24/7</div>
-          <div class="stat-label">Secure Monitoring</div>
-        </div>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <!-- The Problem -->
-  <section class="problem-section">
-    <div class="container">
-      <h2 class="section-title">The Digital Inheritance Crisis</h2>
-      <p style="text-align: center; color: var(--neutral-medium); font-size: 1.125rem; line-height: 1.8; margin-bottom: 2rem;">
-        In today's digital world, your online presence carries significant value. 
-        Without proper planning, your digital assets could be lost forever or fall into the wrong hands.
-      </p>
-      
-      <div class="problem-grid">
-        <div class="problem-card">
-          <i class="fas fa-lock"></i>
-          <h3>Locked Accounts</h3>
-          <p>Heirs struggle to access social media, email, and financial accounts without proper credentials.</p>
+    <!-- Legacy Hero -->
+    <section class="legacy-hero">
+        <div class="container">
+            <h1>Secure Your Digital Legacy</h1>
+            <p>Protect your digital assets and ensure a smooth transfer to your beneficiaries with our comprehensive digital inheritance planning platform.</p>
+            
+            <a href="#startLegacy" class="cta-button" style="font-size: 1.1rem; padding: 15px 30px;">
+                <i class="fas fa-hourglass-start"></i> Start Legacy Planning
+            </a>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">72%</div>
+                    <div class="stat-label">of digital assets are lost</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">$35K</div>
+                    <div class="stat-label">Average value per digital estate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10M+</div>
+                    <div class="stat-label">Digital accounts secured</div>
+                </div>
+            </div>
         </div>
-        
-        <div class="problem-card">
-          <i class="fas fa-coins"></i>
-          <h3>Lost Cryptocurrency</h3>
-          <p>Over $100 billion in Bitcoin is permanently lost due to inaccessible private keys.</p>
-        </div>
-        
-        <div class="problem-card">
-          <i class="fas fa-photo-video"></i>
-          <h3>Digital Memories</h3>
-          <p>Irreplaceable photos, videos, and documents stored in cloud services become inaccessible.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Features -->
-  <section class="features-section">
-    <div class="container">
-      <h2 class="section-title">Complete Digital Legacy Solution</h2>
-      <p style="text-align: center; color: var(--neutral-medium); font-size: 1.125rem; margin-bottom: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-        Our comprehensive platform provides everything you need to secure and transfer your digital legacy.
-      </p>
-      
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-file-contract"></i>
-          </div>
-          <h3>Digital Will Creation</h3>
-          <p>Create legally-binding digital wills that specify exactly how your online assets should be handled and distributed.</p>
+    <!-- Why Legacy Planning -->
+    <section class="why-legacy">
+        <div class="container">
+            <h2 class="section-title">Why Digital Legacy Planning Matters</h2>
+            <p class="section-subtitle">In today's digital world, your online presence has significant value and requires proper management for future generations.</p>
+            
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <h3>Lost Digital Assets</h3>
+                    <p>Cryptocurrency wallets, digital art, online businesses, and valuable accounts can become inaccessible without proper planning.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3>Identity Theft Risks</h3>
+                    <p>Unsecured digital accounts after passing can become targets for identity theft and fraud affecting your beneficiaries.</p>
+                </div>
+                
+                <div class="problem-card">
+                    <h3>Legal Complications</h3>
+                    <p>Most traditional wills don't cover digital assets, leading to complex legal battles and estate distribution delays.</p>
+                </div>
+            </div>
         </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-key"></i>
-          </div>
-          <h3>Secure Credential Vault</h3>
-          <p>Encrypted storage for passwords, recovery keys, and authentication codes with time-delayed release to designated beneficiaries.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-user-shield"></i>
-          </div>
-          <h3>Trustee Management</h3>
-          <p>Appoint and manage multiple trustees with tiered access levels for different types of digital assets.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-briefcase"></i>
-          </div>
-          <h3>Asset Inventory</h3>
-          <p>Comprehensive catalog of all digital assets: accounts, cryptocurrencies, domains, intellectual property, and more.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <h3>Military-Grade Encryption</h3>
-          <p>256-bit AES encryption with zero-knowledge architecture. We never see your sensitive data.</p>
-        </div>
-        
-        <div class="feature-card">
-          <div class="feature-icon">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <h3>Beneficiary Onboarding</h3>
-          <p>Guided process for beneficiaries with verification, education, and step-by-step instructions.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Process Timeline -->
-  <section class="process-section">
-    <div class="container">
-      <h2 class="section-title">How It Works</h2>
-      
-      <div class="process-timeline">
-        <div class="process-step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Asset Discovery & Inventory</h3>
-            <p>We help you identify and catalog all your digital assets across platforms and services.</p>
-          </div>
+    <!-- Legacy Features -->
+    <section class="legacy-features">
+        <div class="container">
+            <h2 class="section-title">Complete Legacy Security Suite</h2>
+            <p class="section-subtitle">Everything you need to secure and transfer your digital legacy safely and efficiently.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>Digital Will Creation</h3>
+                    <p>Create legally-sound digital wills that specifically address your online assets and accounts.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Secure Access Management</h3>
+                    <p>Securely store and transfer access credentials to trusted beneficiaries with military-grade encryption.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Beneficiary Management</h3>
+                    <p>Designate multiple beneficiaries with different access levels and transfer conditions.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>Trustee Oversight</h3>
+                    <p>Appoint trustees to manage the transfer process and ensure your wishes are followed precisely.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-stopwatch"></i>
+                    </div>
+                    <h3>Timed Transfers</h3>
+                    <p>Schedule asset transfers based on specific dates, events, or conditions you define.</p>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>Audit Trail</h3>
+                    <p>Complete transparency with detailed logs of all access and transfer activities.</p>
+                </div>
+            </div>
         </div>
-        
-        <div class="process-step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Will Creation & Planning</h3>
-            <p>Create your digital will with clear instructions for each type of asset and beneficiary.</p>
-          </div>
-        </div>
-        
-        <div class="process-step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Trustee & Beneficiary Setup</h3>
-            <p>Designate trustees and beneficiaries with specific access levels and permissions.</p>
-          </div>
-        </div>
-        
-        <div class="process-step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Secure Storage & Monitoring</h3>
-            <p>Your plan is encrypted and stored securely with 24/7 monitoring and regular updates.</p>
-          </div>
-        </div>
-        
-        <div class="process-step">
-          <div class="step-number">5</div>
-          <div class="step-content">
-            <h3>Activation & Transfer</h3>
-            <p>When needed, trustees are notified and guided through the secure asset transfer process.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Pricing -->
-  <section class="pricing-section">
-    <div class="container">
-      <h2 class="section-title">Choose Your Legacy Plan</h2>
-      <p style="color: var(--neutral-medium); font-size: 1.125rem; margin-bottom: 3rem;">
-        Flexible plans for individuals, families, and businesses
-      </p>
-      
-      <div class="pricing-grid">
-        <div class="pricing-card">
-          <h3>Basic Legacy</h3>
-          <div class="price-amount">$7.99<span style="font-size: 1.5rem;">/month</span></div>
-          <div class="price-period">or $79.99/year (save 17%)</div>
-          
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Digital Will Creation</li>
-            <li><i class="fas fa-check"></i> Asset Inventory (up to 50 items)</li>
-            <li><i class="fas fa-check"></i> 2 Beneficiaries</li>
-            <li><i class="fas fa-check"></i> 1 Trustee</li>
-            <li><i class="fas fa-times" style="color: var(--neutral-light);"></i> Priority Support</li>
-            <li><i class="fas fa-times" style="color: var(--neutral-light);"></i> Business Accounts</li>
-          </ul>
-          
-          <button class="cta-button secondary">Get Started</button>
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How Legacy Planning Works</h2>
+            <p class="section-subtitle">A simple, secure process to protect your digital future in four easy steps.</p>
+            
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Create Your Digital Inventory</h3>
+                        <p>Document all your digital assets including accounts, cryptocurrencies, digital art, online businesses, and intellectual property.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Designate Beneficiaries</h3>
+                        <p>Choose who gets access to what, set conditions, and appoint trustees to oversee the process.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Set Transfer Conditions</h3>
+                        <p>Define when and how assets should be transferred - immediately, after verification, or based on specific conditions.</p>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Secure & Monitor</h3>
+                        <p>Your plan is encrypted and securely stored. You can update it anytime, and we monitor for any security issues.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="pricing-card popular">
-          <div class="popular-badge">MOST POPULAR</div>
-          <h3>Complete Legacy</h3>
-          <div class="price-amount">$9.99<span style="font-size: 1.5rem;">/month</span></div>
-          <div class="price-period">or $99.99/year (save 17%)</div>
-          
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Everything in Basic</li>
-            <li><i class="fas fa-check"></i> Unlimited Assets</li>
-            <li><i class="fas fa-check"></i> 5 Beneficiaries</li>
-            <li><i class="fas fa-check"></i> 3 Trustees</li>
-            <li><i class="fas fa-check"></i> Priority Support</li>
-            <li><i class="fas fa-check"></i> Legal Document Review</li>
-          </ul>
-          
-          <button class="cta-button">Get Complete Protection</button>
-        </div>
-        
-        <div class="pricing-card">
-          <h3>Family Legacy</h3>
-          <div class="price-amount">$19.99<span style="font-size: 1.5rem;">/month</span></div>
-          <div class="price-period">or $199.99/year (save 17%)</div>
-          
-          <ul class="pricing-features">
-            <li><i class="fas fa-check"></i> Everything in Complete</li>
-            <li><i class="fas fa-check"></i> Up to 5 Family Members</li>
-            <li><i class="fas fa-check"></i> Family Trust Setup</li>
-            <li><i class="fas fa-check"></i> Business Accounts Included</li>
-            <li><i class="fas fa-check"></i> 24/7 Phone Support</li>
-            <li><i class="fas fa-check"></i> Annual Review & Updates</li>
-          </ul>
-          
-          <button class="cta-button secondary">For Families</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- FAQ -->
-  <section class="faq-section">
-    <div class="container">
-      <h2 class="section-title">Frequently Asked Questions</h2>
-      
-      <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div class="faq-question">
-          Is a digital will legally binding?
-          <i class="fas fa-chevron-down"></i>
+    <!-- CTA Section -->
+    <section id="startLegacy" class="legacy-cta">
+        <div class="container">
+            <h2>Start Your Legacy Plan Today</h2>
+            <p>Protect your digital assets and ensure peace of mind for yourself and your loved ones. Start with our free plan or unlock advanced features.</p>
+            
+            <div class="pricing-badge">
+                <span class="price">$29.99</span>
+                <span class="period">/month for full legacy suite</span>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                <a href="checkout.html?plan=legacy_basic" class="cta-button" style="font-size: 1.1rem; padding: 15px 30px;">
+                    <i class="fas fa-rocket"></i> Start Free Plan
+                </a>
+                <a href="checkout.html?plan=legacy_premium" class="cta-button" style="font-size: 1.1rem; padding: 15px 30px; background: var(--success);">
+                    <i class="fas fa-crown"></i> Get Premium Legacy
+                </a>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8;">
+                <i class="fas fa-shield-alt"></i> All plans include 256-bit encryption • 30-day money-back guarantee
+            </p>
         </div>
-        <div class="faq-answer">
-          Yes, when properly executed. Our digital wills comply with electronic signature laws (ESIGN Act, UETA) and are recognized in all 50 states. We recommend consulting with an attorney in your jurisdiction for specific requirements.
-        </div>
-      </div>
-      
-      <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div class="faq-question">
-          How do you ensure security?
-          <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="faq-answer">
-          We use military-grade 256-bit AES encryption with zero-knowledge architecture. Your data is encrypted before leaving your device, and we never have access to your encryption keys. All data is stored in SOC 2 Type II certified data centers.
-        </div>
-      </div>
-      
-      <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div class="faq-question">
-          What happens if ExposureShield goes out of business?
-          <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="faq-answer">
-          We have a legally-binding continuity plan that ensures your digital will and assets remain accessible. All data is escrowed with an independent third-party trustee, and you'll receive instructions for accessing your encrypted backup in such an event.
-        </div>
-      </div>
-      
-      <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div class="faq-question">
-          Can I update my digital will?
-          <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="faq-answer">
-          Absolutely. You can update your digital will, asset inventory, beneficiaries, and trustees at any time. All changes are version-controlled with timestamps, and previous versions are archived for legal purposes.
-        </div>
-      </div>
-      
-      <div class="faq-item" onclick="this.classList.toggle('active')">
-        <div class="faq-question">
-          What types of digital assets can I include?
-          <i class="fas fa-chevron-down"></i>
-        </div>
-        <div class="faq-answer">
-          You can include: Social media accounts, email accounts, financial accounts, cryptocurrency wallets, domain names, online businesses, digital content (photos, videos, music), software licenses, intellectual property, loyalty programs, and any other digital property with value.
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Final CTA -->
-  <section class="container">
-    <div class="final-cta">
-      <h2>Don't Leave Your Digital Legacy to Chance</h2>
-      <p style="color: rgba(255, 255, 255, 0.85); font-size: 1.25rem; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto;">
-        Join thousands who have secured their digital future with ExposureShield's professional legacy planning.
-      </p>
-      
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
-        <button class="cta-button" style="width: auto;">
-          <i class="fas fa-shield-alt"></i> Start Your Legacy Plan
-        </button>
-        <button class="cta-button secondary" style="width: auto;">
-          <i class="fas fa-calendar"></i> Schedule a Demo
-        </button>
-      </div>
-      
-      <p style="margin-top: 2rem; color: rgba(255, 255, 255, 0.7); font-size: 0.875rem;">
-        30-day money-back guarantee • Cancel anytime • All plans include basic security monitoring
-      </p>
-    </div>
-  </section>
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Get answers to common questions about digital legacy planning.</p>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What happens to my digital assets if I don't have a plan?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Without a digital legacy plan, your online accounts and assets may become inaccessible. Most platforms will eventually delete inactive accounts, and cryptocurrencies can be permanently lost if private keys aren't preserved. Your beneficiaries may face lengthy legal processes to gain access.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is digital inheritance legally binding?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, when properly structured. Our digital wills are designed to meet legal requirements in most jurisdictions. We recommend consulting with a local estate attorney to ensure compliance with specific state or country laws regarding digital assets.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do you keep my data secure?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We use military-grade 256-bit encryption for all stored data. Access requires multi-factor authentication, and we never store unencrypted credentials. All data transfers use TLS 1.3 encryption, and we undergo regular third-party security audits.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can I update my legacy plan?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely. You can update your digital inventory, change beneficiaries, modify transfer conditions, or revoke access at any time. All changes are logged with a complete audit trail, and previous versions are preserved for reference.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What happens if ExposureShield goes out of business?
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We have a comprehensive continuity plan. All encrypted data can be exported at any time, and we maintain escrow agreements with trusted third parties to ensure service continuity or proper data transfer to alternative providers in such scenarios.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Footer -->
-  <footer class="legacy-footer">
-    <div class="container">
-      <p style="margin-bottom: 2rem; font-size: 1.125rem;">
-        ExposureShield Legacy Planning — Protecting Digital Futures Since 2024
-      </p>
-      
-      <div style="display: flex; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
-        <a href="/privacy" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Privacy Policy</a>
-        <a href="/terms" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Terms of Service</a>
-        <a href="/refund" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">Refund Policy</a>
-        <a href="mailto:legacy@exposureshield.com" style="color: rgba(255, 255, 255, 0.8); text-decoration: none;">legacy@exposureshield.com</a>
-      </div>
-      
-      <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.875rem;">
-        ExposureShield provides digital planning tools and information. We are not a law firm and do not provide legal advice.
-        For legal advice regarding estate planning, please consult with a qualified attorney in your jurisdiction.
-      </p>
-    </div>
-  </footer>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">ExposureShield</div>
+                    <p>Complete digital protection and legacy security solutions for individuals and families.</p>
+                    <div class="api-badge" style="background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; margin-top: 20px;">
+                        <i class="fas fa-key"></i>
+                        Enterprise-grade security • GDPR compliant
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Legacy Services</h4>
+                    <ul>
+                        <li><a href="#">Digital Will Creation</a></li>
+                        <li><a href="#">Asset Inventory</a></li>
+                        <li><a href="#">Beneficiary Management</a></li>
+                        <li><a href="#">Trustee Services</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Legacy Planning Guide</a></li>
+                        <li><a href="#">Digital Asset Checklist</a></li>
+                        <li><a href="#">Legal Considerations</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="contact.html">Contact Support</a></li>
+                        <li><a href="#">Legacy FAQs</a></li>
+                        <li><a href="#">Setup Assistance</a></li>
+                        <li><a href="#">Emergency Access</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 ExposureShield. All rights reserved. | Data processing in accordance with global privacy regulations</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">
+                    <i class="fas fa-shield-alt"></i> Bank-level security • SOC 2 Type II compliant • Regular security audits
+                </p>
+            </div>
+        </div>
+    </footer>
 
-  <script>
-    // FAQ toggle functionality
-    document.querySelectorAll('.faq-question').forEach(question => {
-      question.addEventListener('click', () => {
-        const item = question.parentElement;
-        item.classList.toggle('active');
-      });
-    });
-    
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        // FAQ Toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const toggle = question.querySelector('.faq-toggle');
+                
+                answer.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Legacy Plan Selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for plan parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const plan = urlParams.get('plan');
+            
+            if (plan) {
+                localStorage.setItem('selectedPlan', plan);
+                
+                // Update CTA buttons based on plan
+                const ctaButtons = document.querySelectorAll('.cta-button');
+                ctaButtons.forEach(button => {
+                    if (button.href.includes('checkout.html')) {
+                        button.href = `checkout.html?plan=${plan}`;
+                    }
+                });
+            }
+        });
+
+        // Legacy planning form simulation
+        function startLegacyPlanning() {
+            const email = prompt('Enter your email to start your legacy plan:');
+            if (email && validateEmail(email)) {
+                localStorage.setItem('legacyEmail', email);
+                window.location.href = 'legacy-setup.html';
+            } else if (email) {
+                alert('Please enter a valid email address.');
+            }
         }
-      });
-    });
-    
-    // CTA button handlers
-    document.querySelectorAll('.cta-button').forEach(button => {
-      button.addEventListener('click', function() {
-        const plan = this.closest('.pricing-card')?.querySelector('h3')?.textContent || 'Legacy Plan';
-        console.log(`Starting ${plan} signup flow...`);
-        // In production, this would trigger your signup modal
-        alert(`Starting signup process for: ${plan}\n\nIn production, this would open the signup form.`);
-      });
-    });
-  </script>
- <div id="shared-footer"></div>
- <script src="/shared.js" defer></script>
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Legacy statistics counter animation
+        function animateCounter(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(start);
+                }
+            }, 16);
+        }
+
+        // Animate stats when they come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = document.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.textContent.replace(/[^0-9]/g, ''));
+                        if (!isNaN(target)) {
+                            animateCounter(stat, target);
+                        }
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        // Observe the hero stats section
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) {
+            statsObserver.observe(heroStats);
+        }
+    </script>
 </body>
 </html>

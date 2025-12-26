@@ -1,436 +1,923 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ExposureShield — Digital Life Security</title>
-  <meta name="description" content="Complete digital protection and legacy security solutions. Active breach monitoring, password security, identity protection, and digital inheritance planning." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExposureShield | Complete Digital Protection & Legacy Security</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+        }
 
-  <meta name="google-site-verification" content="fSDgeROtGR1EKX8BDOuH5fnGQN1rU5BMlPre6fPVKeg" />
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- PayPal SDK (Hosted Buttons) -->
-  <script src="https://www.paypal.com/sdk/js?client-id=BAAvPKMyVbaJ2ZY7MIotI9SdFCvU7UHZyGU8xgqjRjXpx20nqWbJTRfEi_nMHEFKQ-v6zKtiKo0fxL86KU&components=hosted-buttons&currency=USD"></script>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--secondary);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
 
-  <!-- jsPDF -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-  <style>
-    :root{
-      --bg: #0b1220;
-      --panel: rgba(255,255,255,0.06);
-      --panel2: rgba(255,255,255,0.10);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.72);
-      --line: rgba(255,255,255,0.14);
-      --brand: #38bdf8;
-      --brand2: #a78bfa;
-      --ok: #34d399;
-      --warn: #fbbf24;
-      --bad: #fb7185;
-      --radius: 18px;
-      --shadow: 0 18px 60px rgba(0,0,0,0.45);
-      --max: 1140px;
-    }
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 600px at 20% 0%, rgba(56,189,248,0.22), transparent 60%),
-        radial-gradient(1000px 600px at 80% 10%, rgba(167,139,250,0.18), transparent 55%),
-        var(--bg);
-      color: var(--text);
-    }
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+        /* Header & Navigation */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    header{
-      position: sticky;
-      top:0;
-      z-index: 50;
-      backdrop-filter: blur(10px);
-      background: rgba(11,18,32,0.78);
-      border-bottom: 1px solid var(--line);
-    }
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      padding: 14px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-weight: 800;
-      letter-spacing: 0.2px;
-      white-space: nowrap;
-    }
-    .logo{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(56,189,248,1), rgba(167,139,250,1));
-      box-shadow: 0 10px 30px rgba(56,189,248,0.16);
-    }
-    nav{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content:flex-end;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    nav a{ padding: 8px 10px; border-radius: 10px; }
-    nav a:hover{ background: rgba(255,255,255,0.06); color: var(--text); }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
 
-    .btn{
-      appearance:none;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-weight: 700;
-      font-size: 14px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: 10px;
-    }
-    .btn:hover{ background: rgba(255,255,255,0.10); }
-    .btn-primary{
-      border: 1px solid rgba(56,189,248,0.35);
-      background: linear-gradient(135deg, rgba(56,189,248,0.95), rgba(167,139,250,0.85));
-      color: #07101f;
-    }
-    .btn-primary:hover{ filter: brightness(1.03); }
-    .btn-row{ display:flex; gap:10px; flex-wrap:wrap; }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.05);
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      color: var(--muted);
-    }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    section{ padding: 46px 0; }
-    .grid2{
-      display:grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 18px;
-      align-items: start;
-    }
-    @media (max-width: 920px){
-      .grid2{ grid-template-columns: 1fr; }
-    }
+        .logo i {
+            color: var(--accent);
+        }
 
-    .card{
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.06);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-    }
-    .card-inner{ padding: 18px; }
-    .card h2{ margin: 0 0 8px; font-size: 16px; letter-spacing: -0.2px; }
-    .card p{ margin: 0 0 14px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
 
-    .hero{ padding: 54px 0 34px; }
-    .pill-row{ display:flex; gap: 10px; flex-wrap: wrap; }
-    .h1{
-      font-size: 42px;
-      line-height: 1.12;
-      margin: 14px 0 12px;
-      letter-spacing: -0.6px;
-    }
-    @media (max-width: 520px){
-      .h1{ font-size: 32px; }
-    }
-    .lead{
-      color: var(--muted);
-      font-size: 16px;
-      line-height: 1.65;
-      margin: 0 0 18px;
-    }
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
 
-    ul.clean{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; line-height: 1.65; }
-    ul.clean li{ margin: 6px 0; }
+        nav a:hover {
+            color: var(--primary);
+        }
 
-    label{ display:block; font-size: 13px; color: var(--muted); margin: 0 0 8px; }
-    input, textarea{
-      width: 100%;
-      padding: 12px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: rgba(7, 12, 22, 0.6);
-      color: var(--text);
-      outline: none;
-    }
-    input:focus, textarea:focus{
-      border-color: rgba(56,189,248,0.55);
-      box-shadow: 0 0 0 4px rgba(56,189,248,0.12);
-    }
-    .field{ margin-bottom: 12px; }
-    .hint{ font-size: 12px; color: var(--muted); margin-top: 8px; }
-    .note{
-      margin-top: 10px;
-      border-top: 1px solid var(--line);
-      padding-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-    }
+        nav a.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
 
-    /* Premium */
-    .premium-report{
-      margin-top: 18px;
-      border: 1px solid rgba(56,189,248,0.30);
-      background: rgba(11,18,32,0.80);
-      border-radius: var(--radius);
-      padding: 18px;
-    }
-    .premium-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      margin: 12px 0 10px;
-    }
-    .premium-item{
-      background: rgba(255,255,255,0.03);
-      padding: 10px;
-      border-radius: 10px;
-      font-size: 13px;
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .status{
-      display:none;
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-    .download-box{
-      display:none;
-      margin-top: 12px;
-      text-align:center;
-      border: 1px dashed rgba(52,211,153,0.45);
-      background: rgba(52,211,153,0.06);
-      border-radius: var(--radius);
-      padding: 14px;
-    }
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
 
-    /* Footer */
-    footer{
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      padding: 30px 0 40px;
-      font-size: 13px;
-      margin-top: 20px;
-    }
-    .small{
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .legal{ display:flex; gap: 10px; flex-wrap: wrap; }
-  </style>
+        .cta-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border-radius: 50% 0 0 50%;
+            transform: translateX(30%);
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .secondary-button {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--gray-light);
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secondary-button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Email Check Section */
+        .email-check-section {
+            background: white;
+            padding: 50px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--secondary);
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .email-check-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-buttons button {
+            flex: 1;
+            padding: 16px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--light);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .security-badge i {
+            color: var(--success);
+        }
+
+        /* Results Container */
+        #resultsContainer {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: var(--radius);
+            background: var(--light);
+            text-align: left;
+            width: 100%;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .risk-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .risk-low { background: #dcfce7; color: #166534; }
+        .risk-medium { background: #fef3c7; color: #92400e; }
+        .risk-high { background: #fee2e2; color: #991b1b; }
+
+        .breach-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .breach-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Services Section */
+        .services {
+            margin-bottom: 80px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .service-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--gray);
+        }
+
+        .service-features i {
+            color: var(--success);
+        }
+
+        /* Enterprise Features */
+        .enterprise-features {
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%);
+            color: white;
+            padding: 60px 0;
+            border-radius: var(--radius);
+            margin-bottom: 80px;
+        }
+
+        .enterprise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--gray-light);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .api-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 15px 0;
+            }
+
+            nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            nav.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .email-check-section {
+                padding: 30px 20px;
+            }
+
+            .form-buttons {
+                flex-direction: column;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loader-spinner {
+            border: 3px solid var(--gray-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-
 <body>
-  <header>
-    <div class="wrap">
-      <div class="topbar">
-        <a class="brand" href="#top" aria-label="ExposureShield home">
-          <span class="logo" aria-hidden="true"></span>
-          <span>ExposureShield</span>
-        </a>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <a href="legacy.html" class="cta-button">Start Security Plan</a>
+        </div>
+    </header>
 
-        <nav aria-label="Primary">
-          <a href="#services">Services</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-          <a class="btn btn-primary" href="#pricing">Start Security Plan</a>
-        </nav>
-      </div>
-    </div>
-  </header>
-
-  <main id="top">
-    <!-- HERO -->
+    <!-- Hero Section -->
     <section class="hero">
-      <div class="wrap">
-        <div class="grid2">
-          <div>
-            <div class="pill-row">
-              <span class="tag">Digital Life Security</span>
-              <span class="tag">Active Protection</span>
-              <span class="tag">Legacy Planning</span>
+        <div class="container">
+            <h1>Complete Digital Protection & Legacy Security</h1>
+            <p>Protect your present digital identity while securing your future legacy with enterprise-grade security solutions.</p>
+            <div class="hero-buttons">
+                <a href="#emailCheck" class="cta-button">Get Started Free</a>
+                <a href="legacy.html" class="secondary-button">Learn About Legacy</a>
             </div>
-
-            <h1 class="h1">Complete Digital Protection &amp; Legacy Security</h1>
-            <p class="lead">
-              Protect your present digital identity while securing your future legacy with enterprise-grade security solutions.
-            </p>
-
-            <div class="btn-row">
-              <a class="btn btn-primary" href="#pricing">Get Started Free</a>
-              <a class="btn" href="#email-check">Check Email Security</a>
-            </div>
-
-            <p class="hint">No credit card required • Cancel anytime • All features included in trial</p>
-          </div>
-
-          <div class="card">
-            <div class="card-inner">
-              <h2>Security</h2>
-              <p><b style="color: rgba(255,255,255,0.92);">Active Protection</b><br />
-                Real-time cybersecurity protection and breach monitoring for your active digital life.</p>
-
-              <ul class="clean">
-                <li>Breach Detection</li>
-                <li>Real-time Alerts</li>
-                <li>Password Security</li>
-                <li>Identity Protection</li>
-              </ul>
-
-              <hr style="border:0;border-top:1px solid var(--line);margin:16px 0;" />
-
-              <h2>Legacy</h2>
-              <p><b style="color: rgba(255,255,255,0.92);">Future Security</b><br />
-                Digital inheritance planning and estate management for your future legacy.</p>
-
-              <ul class="clean">
-                <li>Digital Will</li>
-                <li>Asset Transfer</li>
-                <li>Beneficiary Management</li>
-                <li>Trustee Access</li>
-              </ul>
-
-              <div class="note">
-                Secure check powered by HIBP API • Privacy-first design
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
 
-    <!-- EMAIL CHECK -->
-    <section id="email-check">
-      <div class="wrap">
-        <div class="grid2">
-          <div class="card">
-            <div class="card-inner">
-              <h2>Check Your Email Security</h2>
-              <p>See if your email was compromised in known breaches (Have I Been Pwned).</p>
-
-              <form id="hibpForm" autocomplete="off" novalidate>
-                <div class="field">
-                  <label for="hibpEmail">Enter your email address</label>
-                  <input id="hibpEmail" name="hibpEmail" type="email" placeholder="you@example.com" required />
-                </div>
-
-                <div class="btn-row">
-                  <button class="btn btn-primary" type="submit">Check Email</button>
-                  <button class="btn" type="reset">Reset</button>
-                </div>
-
-                <div id="hibpResult" class="note" aria-live="polite">
-                  Enter an email above to check for breaches.
-                </div>
-
-                <!-- Premium (single, unique IDs) -->
-                <div id="premiumReport" class="premium-report" style="display:none;">
-                  <h3 style="margin:0 0 6px;">Download Full Security Report (PDF)</h3>
-                  <div style="color:var(--muted); font-size:14px;">
-                    Unlock the PDF report for <b>$4.99</b>. Includes detailed remediation steps.
-                  </div>
-
-                  <div class="premium-grid">
-                    <div class="premium-item">✓ Breach timeline summary</div>
-                    <div class="premium-item">✓ Step-by-step remediation</div>
-                    <div class="premium-item">✓ Risk notes and actions</div>
-                    <div class="premium-item">✓ PDF export</div>
-                  </div>
-
-                  <div id="paypalContainer" style="margin-top:10px;"></div>
-
-                  <div id="paymentStatus" class="status" aria-live="polite"></div>
-
-                  <div id="downloadSection" class="download-box">
-                    <button id="downloadPdfBtn" class="btn btn-primary" style="width:100%; padding:14px;">
-                      Download Security Report (PDF)
+    <!-- Email Check Section -->
+    <section id="emailCheck" class="email-check-section">
+        <div class="container">
+            <h2 class="section-title">Check Your Email Security</h2>
+            <p class="section-subtitle">See if your email was compromised in known breaches (Have I Been Pwned).</p>
+            
+            <div class="email-check-form">
+                <input type="email" 
+                       id="emailInput" 
+                       class="email-input" 
+                       placeholder="you@example.com" 
+                       required>
+                
+                <div class="form-buttons">
+                    <button id="checkEmailBtn" class="cta-button">
+                        <i class="fas fa-search"></i> Check Email
                     </button>
-                    <div class="hint" style="margin-top:8px;">
-                      Report for: <span id="reportEmail"></span>
-                    </div>
-                  </div>
+                    <button id="resetBtn" class="secondary-button">Reset</button>
                 </div>
-              </form>
-
-              <div class="note">
-                Secure check powered by HIBP API • We do not ask for your passwords
-              </div>
+                
+                <div id="defaultMessage" class="default-message">
+                    Enter an email above to check for breaches.
+                </div>
+                
+                <div class="loader" id="loader">
+                    <div class="loader-spinner"></div>
+                    <p>Checking security status...</p>
+                </div>
+                
+                <div id="resultsContainer"></div>
+                
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    Secure check powered by HIBP API • We do not ask for your passwords
+                </div>
             </div>
-          </div>
-
-          <div class="card">
-            <div class="card-inner">
-              <h2>Enterprise-Grade Security</h2>
-              <p>Built with strong privacy-first engineering and secure-by-design practices.</p>
-
-              <ul class="clean">
-                <li>Encrypted connections (HTTPS)</li>
-                <li>Minimal data handling</li>
-                <li>Fast, real-time checks</li>
-                <li>Clear user guidance</li>
-              </ul>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
 
-    <!-- SERVICES / PRICING / CONTACT blocks remain as you had them -->
-    <!-- (You can keep your existing sections here unchanged) -->
-
-  </main>
-
-  <footer>
-    <div class="wrap">
-      <div class="small">
-        <div>© <span id="year"></span> ExposureShield. All rights reserved.</div>
-        <div class="legal">
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Service</a>
-          <a href="/refund">Refund Policy</a>
+    <!-- Services Section -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Digital Life Security</h2>
+            <p class="section-subtitle">Comprehensive protection for your digital presence across all platforms.</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Active Protection</h3>
+                    <p>Real-time cybersecurity protection and breach monitoring for your active digital life.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Breach Detection</li>
+                        <li><i class="fas fa-check"></i> Real-time Alerts</li>
+                        <li><i class="fas fa-check"></i> Password Security</li>
+                        <li><i class="fas fa-check"></i> Identity Protection</li>
+                    </ul>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-hourglass-end"></i>
+                    </div>
+                    <h3>Legacy Planning</h3>
+                    <p>Digital inheritance planning and estate management for your future legacy.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Digital Will</li>
+                        <li><i class="fas fa-check"></i> Asset Transfer</li>
+                        <li><i class="fas fa-check"></i> Beneficiary Management</li>
+                        <li><i class="fas fa-check"></i> Trustee Access</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
 
-      <div class="note" style="margin-top: 12px;">
-        Secure check powered by HIBP API • Data processing in accordance with global privacy regulations
-      </div>
-    </div>
-  </footer>
+    <!-- Enterprise Features -->
+    <section class="enterprise-features">
+        <div class="container">
+            <h2 class="section-title">Enterprise-Grade Security</h2>
+            <p class="section-subtitle" style="color: #cbd5e1;">Built with strong privacy-first engineering and secure-by-design practices.</p>
+            
+            <div class="enterprise-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Encrypted Connections</h3>
+                    <p>HTTPS encryption for all data transmission</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Minimal Data Handling</h3>
+                    <p>We process only what's absolutely necessary</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Fast, Real-time Checks</h3>
+                    <p>Instant security status updates</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Clear User Guidance</h3>
+                    <p>Actionable security recommendations</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <!-- Main JavaScript -->
-  <script src="/shared.js" defer></script>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">ExposureShield</div>
+                    <p>Complete digital protection and legacy security solutions for individuals and families.</p>
+                    <div class="api-badge">
+                        <i class="fas fa-key"></i>
+                        Secure check powered by HIBP API
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="refund.html">Refund Policy</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="guides.html">Security Guides</a></li>
+                        <li><a href="sitemap.xml">Sitemap</a></li>
+                        <li><a href="status.html">System Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 ExposureShield. All rights reserved. | Data processing in accordance with global privacy regulations</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">
+                    <i class="fas fa-shield-alt"></i> Secure check powered by HIBP API • Privacy-first design
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        // Email Check Functionality
+        document.getElementById('checkEmailBtn').addEventListener('click', checkEmailSecurity);
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+
+        // Check Email Security
+        async function checkEmailSecurity() {
+            const email = document.getElementById('emailInput').value.trim();
+            const loader = document.getElementById('loader');
+            const defaultMessage = document.getElementById('defaultMessage');
+            const resultsContainer = document.getElementById('resultsContainer');
+            
+            if (!email || !validateEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Show loader, hide default message
+            loader.style.display = 'block';
+            defaultMessage.style.display = 'none';
+            resultsContainer.style.display = 'none';
+            
+            try {
+                // Simulate API call (replace with actual API call)
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // For demo purposes - actual implementation would call your backend
+                const mockBreaches = [
+                    { name: "Adobe", date: "2013-10-04", data: "Email addresses, Password hints" },
+                    { name: "LinkedIn", date: "2012-05-05", data: "Email addresses, Passwords" },
+                    { name: "MySpace", date: "2008-08-18", data: "Email addresses, Passwords" }
+                ];
+                
+                displayResults(email, mockBreaches);
+                
+            } catch (error) {
+                showError("Unable to check email security. Please try again.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function displayResults(email, breaches) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            const riskLevel = breaches.length === 0 ? 'None' : 
+                            breaches.length < 3 ? 'Low' : 
+                            breaches.length < 6 ? 'Medium' : 'High';
+            
+            let riskClass = '';
+            if (riskLevel === 'Low') riskClass = 'risk-low';
+            else if (riskLevel === 'Medium') riskClass = 'risk-medium';
+            else if (riskLevel === 'High') riskClass = 'risk-high';
+            
+            let breachesHTML = '';
+            if (breaches.length > 0) {
+                breachesHTML = `
+                    <div class="result-header">
+                        <h3>Security Alert</h3>
+                        <span class="risk-badge ${riskClass}">Risk Level: ${riskLevel}</span>
+                    </div>
+                    <p>Your email <strong>${email}</strong> was found in ${breaches.length} breach${breaches.length > 1 ? 'es' : ''}.</p>
+                    <ul class="breach-list">
+                        ${breaches.map(breach => `
+                            <li class="breach-item">
+                                <div>
+                                    <strong>${breach.name}</strong>
+                                    <div style="font-size: 0.9rem; color: #64748b;">${breach.date} • ${breach.data}</div>
+                                </div>
+                                <a href="#" class="secondary-button" style="padding: 8px 16px;">Details</a>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <div style="margin-top: 20px; padding: 20px; background: #f1f5f9; border-radius: 8px;">
+                        <h4 style="margin-bottom: 10px;">Recommended Actions:</h4>
+                        <ul style="list-style: none;">
+                            <li><i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i> Change passwords for affected accounts</li>
+                            <li><i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i> Enable two-factor authentication (2FA)</li>
+                            <li><i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i> Use a password manager</li>
+                            <li><i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i> Monitor accounts for suspicious activity</li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                breachesHTML = `
+                    <div class="result-header">
+                        <h3 style="color: #10b981;">✓ No Breaches Found</h3>
+                    </div>
+                    <p>Your email <strong>${email}</strong> was not found in any known breaches.</p>
+                    <div style="margin-top: 20px; padding: 20px; background: #f1f5f9; border-radius: 8px;">
+                        <h4 style="margin-bottom: 10px;">Security Status: Good</h4>
+                        <p>Continue practicing good security habits:</p>
+                        <ul style="list-style: none;">
+                            <li><i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 10px;"></i> Use strong, unique passwords</li>
+                            <li><i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 10px;"></i> Enable 2FA where available</li>
+                            <li><i class="fas fa-shield-alt" style="color: #3b82f6; margin-right: 10px;"></i> Regularly update your passwords</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            resultsContainer.innerHTML = breachesHTML;
+            resultsContainer.style.display = 'block';
+            
+            // Scroll to results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showError(message) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = `
+                <div style="background: #fee2e2; color: #991b1b; padding: 20px; border-radius: 8px; text-align: center;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <h3>Error</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            resultsContainer.style.display = 'block';
+        }
+
+        function resetForm() {
+            document.getElementById('emailInput').value = '';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('defaultMessage').style.display = 'block';
+            document.getElementById('loader').style.display = 'none';
+        }
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
