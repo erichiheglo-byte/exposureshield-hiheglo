@@ -794,17 +794,35 @@
             resultsContainer.style.display = 'none';
             
             try {
-                // Simulate API call (replace with actual API call)
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                // For demo purposes - actual implementation would call your backend
-                const mockBreaches = [
-                    { name: "Adobe", date: "2013-10-04", data: "Email addresses, Password hints" },
-                    { name: "LinkedIn", date: "2012-05-05", data: "Email addresses, Passwords" },
-                    { name: "MySpace", date: "2008-08-18", data: "Email addresses, Passwords" }
-                ];
-                
-                displayResults(email, mockBreaches);
+                // Call real backend API (Vercel serverless function)
+                const res = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`, {
+                    method: "GET",
+                    headers: { "Accept": "application/json" },
+                    cache: "no-store"
+                });
+
+                const data = await res.json().catch(() => null);
+
+                if (!res.ok) {
+                    const msg =
+                        (data && (data.error || data.message))
+                            ? (data.error || data.message)
+                            : `API error: ${res.status}`;
+                    throw new Error(msg);
+                }
+
+                // Convert real HIBP response to existing displayResults() format
+                const breaches = Array.isArray(data?.breaches) ? data.breaches : [];
+
+                const mappedBreaches = breaches.map(breach => ({
+                    name: breach.Title || breach.Name || "Unknown",
+                    date: breach.BreachDate || "Unknown date",
+                    data: Array.isArray(breach.DataClasses)
+                        ? breach.DataClasses.join(", ")
+                        : "Unknown data"
+                }));
+
+                displayResults(email, mappedBreaches);
                 
             } catch (error) {
                 showError("Unable to check email security. Please try again.");
