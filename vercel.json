@@ -1,18 +1,12 @@
 {
   "version": 2,
   "functions": {
-    "api/check-email.js": { "maxDuration": 10 },
-    "api/hibp.js": { "maxDuration": 10 },
-    "api/contact.js": { "maxDuration": 10 },
-    "api/create-checkout.js": { "maxDuration": 10 },
-    "api/record-payment.js": { "maxDuration": 10 }
+    "api/check-email.js": { "runtime": "nodejs20.x", "maxDuration": 10 },
+    "api/contact.js": { "runtime": "nodejs20.x", "maxDuration": 10 },
+    "api/create-checkout.js": { "runtime": "nodejs20.x", "maxDuration": 10 },
+    "api/record-payment.js": { "runtime": "nodejs20.x", "maxDuration": 10 }
   },
   "rewrites": [
-    { "source": "/api/check-email", "destination": "/api/check-email.js" },
-    { "source": "/api/hibp", "destination": "/api/hibp.js" },
-    { "source": "/api/contact", "destination": "/api/contact.js" },
-    { "source": "/api/create-checkout", "destination": "/api/create-checkout.js" },
-    { "source": "/api/record-payment", "destination": "/api/record-payment.js" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/refund", "destination": "/refund.html" },
@@ -22,10 +16,7 @@
     { "source": "/payment-success", "destination": "/payment-success.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "headers": [],
   "env": {
-    "HIBP_API_KEY": "HIBP_API_KEY",
-    "PAYPAL_CLIENT_ID": "PAYPAL_CLIENT_ID",
     "STRIPE_ENABLED": "false"
   }
 }
