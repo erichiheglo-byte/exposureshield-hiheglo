@@ -5,11 +5,16 @@
     "api/contact.js": { "maxDuration": 10 },
     "api/create-checkout.js": { "maxDuration": 10 },
     "api/record-payment.js": { "maxDuration": 10 },
+
     "api/register.js": { "maxDuration": 10 },
     "api/login.js": { "maxDuration": 10 },
+    "api/me.js": { "maxDuration": 10 },
+
     "api/save-legacy-plan.js": { "maxDuration": 10 }
   },
   "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/:path*" },
+
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/refund", "destination": "/refund.html" },
@@ -18,7 +23,7 @@
     { "source": "/payment-demo", "destination": "/payment-demo.html" },
     { "source": "/payment-success", "destination": "/payment-success.html" },
 
-    { "source": "/(?!api/)(.*)", "destination": "/index.html" }
+    { "source": "/:path*", "destination": "/index.html" }
   ],
   "env": {
     "STRIPE_ENABLED": "false"
