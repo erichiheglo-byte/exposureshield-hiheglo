@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" },
+    { "src": "**/*", "use": "@vercel/static" }
+  ],
   "functions": {
     "api/check-email.js": { "maxDuration": 10 },
     "api/contact.js": { "maxDuration": 10 },
@@ -12,18 +16,18 @@
 
     "api/save-legacy-plan.js": { "maxDuration": 10 }
   },
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
+  "routes": [
+    { "src": "^/api/(.*)$", "dest": "/api/$1" },
 
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/refund", "destination": "/refund.html" },
-    { "source": "/legacy", "destination": "/legacy.html" },
-    { "source": "/pricing", "destination": "/pricing.html" },
-    { "source": "/payment-demo", "destination": "/payment-demo.html" },
-    { "source": "/payment-success", "destination": "/payment-success.html" },
+    { "src": "^/privacy$", "dest": "/privacy.html" },
+    { "src": "^/terms$", "dest": "/terms.html" },
+    { "src": "^/refund$", "dest": "/refund.html" },
+    { "src": "^/legacy$", "dest": "/legacy.html" },
+    { "src": "^/pricing$", "dest": "/pricing.html" },
+    { "src": "^/payment-demo$", "dest": "/payment-demo.html" },
+    { "src": "^/payment-success$", "dest": "/payment-success.html" },
 
-    { "source": "/:path*", "destination": "/index.html" }
+    { "src": "^(?!/api/).*", "dest": "/index.html" }
   ],
   "env": {
     "STRIPE_ENABLED": "false"
