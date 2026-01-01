@@ -1,46 +1,43 @@
 ﻿const { applyCors } = require("./_lib/cors.js");
 
+// Simple in-memory rate limiter (use Redis in production)
+const requestCounts = new Map();
+const RATE_LIMIT = 10; // requests per minute
+const WINDOW_MS = 60 * 1000; // 1 minute
+
+function rateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - WINDOW_MS;
+  
+  if (!requestCounts.has(ip)) {
+    requestCounts.set(ip, []);
+  }
+  
+  const requests = requestCounts.get(ip);
+  // Remove old requests
+  while (requests.length && requests[0] < windowStart) {
+    requests.shift();
+  }
+  
+  if (requests.length >= RATE_LIMIT) {
+    return false;
+  }
+  
+  requests.push(now);
+  return true;
+}
+
+function getClientIP(req) {
+  return req.headers['x-forwarded-for'] || 
+         req.headers['x-real-ip'] || 
+         req.connection.remoteAddress || 
+         'unknown';
+}
+
 function send(res, status, obj) {
   res.statusCode = status;
   res.setHeader("Content-Type", "application/json; charset=utf-8");
   res.end(JSON.stringify(obj));
-}
-
-function calculateSecurityScore(breachCount) {
-  if (breachCount === 0) return 100;
-  if (breachCount <= 5) return 80;
-  if (breachCount <= 20) return 60;
-  if (breachCount <= 50) return 40;
-  if (breachCount <= 100) return 20;
-  return 10;
-}
-
-function getStatus(score) {
-  if (score >= 80) return "excellent";
-  if (score >= 60) return "good";
-  if (score >= 40) return "fair";
-  if (score >= 20) return "poor";
-  return "critical";
-}
-
-function getRecommendations(breachCount) {
-  const recommendations = [
-    "Use a password manager to generate and store unique passwords",
-    "Enable two-factor authentication on all important accounts",
-    "Use an alias email for non-essential services",
-    "Regularly check haveibeenpwned.com for new breaches",
-    "Consider using a privacy-focused email service"
-  ];
-  
-  if (breachCount > 0) {
-    recommendations.unshift("Change passwords for breached services immediately");
-  }
-  
-  if (breachCount > 10) {
-    recommendations.push("Consider a credit monitoring service");
-  }
-  
-  return recommendations;
 }
 
 module.exports = async function handler(req, res) {
@@ -48,6 +45,16 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== "GET") {
     return send(res, 405, { ok: false, error: "Method not allowed" });
+  }
+
+  // Rate limiting
+  const clientIP = getClientIP(req);
+  if (!rateLimit(clientIP)) {
+    return send(res, 429, { 
+      ok: false, 
+      error: "Too many requests. Please try again in a minute.",
+      retryAfter: 60
+    });
   }
 
   try {
@@ -61,6 +68,26 @@ module.exports = async function handler(req, res) {
       return send(res, 500, { ok: false, error: "HIBP_API_KEY not configured" });
     }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return send(res, 400, { ok: false, error: "Invalid email format." });
+    }
+
+    // Don't allow disposable/temp emails (basic check)
+    const disposableDomains = [
+      "tempmail.com", "mailinator.com", "10minutemail.com", 
+      "guerrillamail.com", "yopmail.com", "trashmail.com"
+    ];
+    
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (disposableDomains.some(d => domain.includes(d))) {
+      return send(res, 400, { 
+        ok: false, 
+        error: "Disposable email addresses are not supported for security checks." 
+      });
+    }
+
     const hibpUrl =
       `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`;
 
@@ -70,7 +97,8 @@ module.exports = async function handler(req, res) {
         "hibp-api-key": apiKey,
         "user-agent": "ExposureShield (support@exposureshield.com)",
         "accept": "application/json"
-      }
+      },
+      timeout: 10000 // 10 second timeout
     });
 
     if (r.status === 404) {
@@ -94,22 +122,41 @@ module.exports = async function handler(req, res) {
 
     const breaches = await r.json();
     const breachCount = breaches.length;
-    const securityScore = calculateSecurityScore(breachCount);
-    const status = getStatus(securityScore);
+    const securityScore = 100 - Math.min(breachCount * 2, 90); // Simple scoring
+    const status = securityScore >= 80 ? "excellent" : 
+                   securityScore >= 60 ? "good" : 
+                   securityScore >= 40 ? "fair" : 
+                   securityScore >= 20 ? "poor" : "critical";
+    
+    // Sort breaches by date (newest first)
+    breaches.sort((a, b) => new Date(b.BreachDate || b.breachDate) - new Date(a.BreachDate || a.breachDate));
     
     return send(res, 200, { 
       ok: true, 
       email, 
-      breaches,
+      breaches: breaches.slice(0, 50), // Limit to 50 breaches
       breachCount,
       securityScore,
       status,
       message: `${breachCount} data breach${breachCount === 1 ? '' : 'es'} found`,
-      recommendations: getRecommendations(breachCount),
-      timestamp: new Date().toISOString()
+      recommendations: [
+        breachCount > 0 ? "Change passwords for breached services immediately" : "Continue good security practices",
+        "Enable two-factor authentication on all important accounts",
+        "Use a password manager to generate and store unique passwords",
+        "Consider using email aliases for different services"
+      ],
+      timestamp: new Date().toISOString(),
+      rateLimit: {
+        remaining: RATE_LIMIT - requestCounts.get(clientIP).length,
+        reset: Math.ceil((WINDOW_MS - (Date.now() - requestCounts.get(clientIP)[0])) / 1000)
+      }
     });
   } catch (err) {
     console.error("check-email error:", err);
-    return send(res, 500, { ok: false, error: "Unable to check email security. Please try again." });
+    return send(res, 500, { 
+      ok: false, 
+      error: "Unable to check email security. Please try again.",
+      code: err.name
+    });
   }
 };
