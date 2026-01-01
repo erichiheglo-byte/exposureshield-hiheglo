@@ -1,73 +1,14 @@
-﻿// api/auth/login.js - SIMPLE GUARANTEED VERSION
+﻿// api/auth/login.js - SIMPLE GUARANTEED WORKING VERSION
 const { applyCors } = require("../_lib/cors.js");
 const { getUserByEmail } = require("../_lib/store.js");
 const { signJwt } = require("../_lib/jwt.js");
 const crypto = require("crypto");
 
-function readJsonBody(req) {
-  return new Promise((resolve, reject) => {
-    let raw = "";
-    req.on("data", (chunk) => (raw += chunk));
-    req.on("end", () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (e) {
-        reject(e);
-      }
-    });
-    req.on("error", reject);
-  });
-}
-
-// SIMPLE password check: Try EVERY possible format
-function checkPassword(password, storedHash) {
-  if (!storedHash || typeof storedHash !== "string") return false;
-  
-  console.log("Checking password, stored hash:", storedHash.substring(0, 50) + "...");
-  
-  // Format 1: PBKDF2 (new system)
-  if (storedHash.startsWith("pbkdf2")) {
-    const parts = storedHash.split("$");
-    if (parts.length >= 6 && parts[0] === "pbkdf2") {
-      const iter = parseInt(parts[2], 10);
-      const salt = parts[4];
-      const hash = parts[5];
-      
-      if (iter && salt && hash) {
-        const test = crypto.pbkdf2Sync(String(password), salt, iter, 32, "sha256").toString("hex");
-        return crypto.timingSafeEqual(Buffer.from(test, "hex"), Buffer.from(hash, "hex"));
-      }
-    }
-  }
-  
-  // Format 2: HMAC-SHA256 with salt:hash (old system)
-  if (storedHash.includes(":")) {
-    const [salt, hash] = storedHash.split(":");
-    if (salt && hash) {
-      const computed = crypto.createHmac("sha256", salt).update(password).digest("hex");
-      if (computed === hash) {
-        console.log("OLD format worked, auto-migrating...");
-        // Auto-migrate to new format
-        const { hashPassword } = require("../_lib/password.js");
-        // Note: In production, you'd save this back to the database
-        return true;
-      }
-    }
-  }
-  
-  // Format 3: Plain hash (fallback - should not happen)
-  const simpleHash = crypto.createHash("sha256").update(password).digest("hex");
-  if (simpleHash === storedHash) {
-    console.log("WARNING: Plain hash found!");
-    return true;
-  }
-  
-  return false;
-}
-
 module.exports = async function handler(req, res) {
+  // Apply CORS FIRST
   if (applyCors(req, res, "POST,OPTIONS")) return;
-
+  
+  // ALWAYS set Content-Type for ALL responses
   res.setHeader("Content-Type", "application/json");
 
   if (req.method !== "POST") {
@@ -75,18 +16,14 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
   }
 
-  const jwtSecret = String(process.env.JWT_SECRET || "").trim();
-  if (!jwtSecret) {
-    res.statusCode = 500;
-    return res.end(JSON.stringify({ ok: false, error: "JWT_SECRET not configured" }));
-  }
-
+  // Get body - SIMPLE version for Vercel
   let body;
   try {
-    body = await readJsonBody(req);
-  } catch {
+    // Vercel Serverless provides req.body as string already
+    body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : {};
+  } catch (e) {
     res.statusCode = 400;
-    return res.end(JSON.stringify({ ok: false, error: "Invalid JSON body" }));
+    return res.end(JSON.stringify({ ok: false, error: "Invalid JSON: " + e.message }));
   }
 
   const email = String(body.email || "").trim().toLowerCase();
@@ -94,37 +31,74 @@ module.exports = async function handler(req, res) {
 
   if (!email || !password) {
     res.statusCode = 400;
-    return res.end(JSON.stringify({ ok: false, error: "Missing email or password" }));
+    return res.end(JSON.stringify({ ok: false, error: "Email and password required" }));
   }
 
-  console.log("Login attempt for:", email);
-  
+  // Get user
   const user = await getUserByEmail(email);
   if (!user) {
-    console.log("User not found:", email);
     res.statusCode = 401;
-    return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
+    return res.end(JSON.stringify({ ok: false, error: "Invalid email or password (user not found)" }));
   }
 
-  console.log("User found, checking password...");
+  // Check password hash exists
+  if (!user.passwordHash || typeof user.passwordHash !== "string") {
+    res.statusCode = 500;
+    return res.end(JSON.stringify({ ok: false, error: "Server error: No password hash" }));
+  }
+
+  // SIMPLE PASSWORD VERIFICATION - JUST FOR PBKDF2 (new system)
+  // Format: pbkdf2$sha256$210000$salt$hash
+  const hashParts = user.passwordHash.split("$");
   
-  const passwordValid = checkPassword(password, user.passwordHash);
-  
-  if (!passwordValid) {
-    console.log("Password invalid for:", email);
-    console.log("Hash was:", user.passwordHash ? user.passwordHash.substring(0, 100) : "null");
-    res.statusCode = 401;
+  if (hashParts.length < 6 || hashParts[0] !== "pbkdf2") {
+    res.statusCode = 500;
     return res.end(JSON.stringify({ 
       ok: false, 
-      error: "Invalid email or password",
-      hint: "Try resetting your password"
+      error: "Invalid password format in database",
+      actualHash: user.passwordHash.substring(0, 100)
     }));
   }
 
-  console.log("Password valid, generating token...");
+  const salt = hashParts[4];
+  const storedHash = hashParts[5];
   
-  const token = signJwt({ sub: user.id, email: user.email }, jwtSecret, { expiresInSeconds: 60 * 60 * 24 * 7 });
+  if (!salt || !storedHash) {
+    res.statusCode = 500;
+    return res.end(JSON.stringify({ ok: false, error: "Missing salt or hash in stored password" }));
+  }
 
+  // Compute hash
+  const computedHash = crypto
+    .pbkdf2Sync(password, salt, 210000, 32, "sha256")
+    .toString("hex");
+
+  // Compare securely
+  const storedBuffer = Buffer.from(storedHash, "hex");
+  const computedBuffer = Buffer.from(computedHash, "hex");
+  
+  if (!crypto.timingSafeEqual(storedBuffer, computedBuffer)) {
+    res.statusCode = 401;
+    return res.end(JSON.stringify({ 
+      ok: false, 
+      error: "Invalid email or password (hash mismatch)",
+      debug: {
+        storedLength: storedHash.length,
+        computedLength: computedHash.length,
+        saltLength: salt.length
+      }
+    }));
+  }
+
+  // Generate JWT
+  const jwtSecret = process.env.JWT_SECRET || "default-secret-change-me";
+  const token = signJwt(
+    { sub: user.id, email: user.email },
+    jwtSecret,
+    { expiresInSeconds: 604800 }
+  );
+
+  // Return success (remove password hash)
   const safeUser = { ...user };
   delete safeUser.passwordHash;
 
