@@ -101,3 +101,77 @@ module.exports = async function handler(req, res) {
   res.statusCode = 200;
   return res.end(JSON.stringify({ ok: true, token, user: safeUser }));
 };
+// NOTE: This is the LIVE Vercel route for /api/auth/register.
+// All registration requests go through here. Do not edit _lib/auth/* files.
+
+import rateLimit from 'express-rate-limit';
+import authFunctions from '../../_lib/auth/authFunctions';
+
+// Helper for Express middleware in Next.js
+const applyMiddleware = (middleware) => (request, response) =>
+  new Promise((resolve, reject) => {
+    middleware(request, response, (result) =>
+      result instanceof Error ? reject(result) : resolve(result)
+    );
+  });
+
+// Rate limiting for registration (stricter than login)
+const registerRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3, // Max 3 accounts per hour from same IP
+  message: {
+    error: 'Too many registration attempts. Please try again later.',
+    code: 'REGISTRATION_LIMITED'
+  },
+  keyGenerator: (req) => {
+    return req.headers['x-forwarded-for'] || req.ip || 'unknown';
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+  
+  try {
+    // Apply rate limiting
+    await applyMiddleware(registerRateLimiter)(req, res);
+    
+    // ✅ YOUR EXISTING REGISTRATION LOGIC STARTS HERE - UNTOUCHED
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+    
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    }
+    
+    const result = await authFunctions.register(email, password);
+    
+    if (result.success) {
+      return res.status(201).json({
+        success: true,
+        token: result.token,
+        user: result.user
+      });
+    } else {
+      return res.status(400).json({ error: result.error });
+    }
+    // ✅ YOUR EXISTING LOGIC ENDS HERE
+    
+  } catch (error) {
+    if (error.statusCode === 429) {
+      return res.status(429).json({ 
+        error: 'Too many registration attempts. Please try again in an hour.',
+        code: 'REGISTRATION_LIMITED'
+      });
+    }
+    
+    console.error('Registration error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}

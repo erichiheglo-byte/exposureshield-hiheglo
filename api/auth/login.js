@@ -112,3 +112,92 @@ module.exports = async function handler(req, res) {
     }
   }
 };
+// NOTE: This is the LIVE Vercel route for /api/auth/login.
+// All auth requests go through here. Do not edit _lib/auth/* files.
+
+import rateLimit from 'express-rate-limit';
+import slowDown from 'express-slow-down';
+import authFunctions from '../../_lib/auth/authFunctions';
+
+// Apply middleware only to login endpoint
+const applyMiddleware = middleware => (request, response) => {
+  return new Promise((resolve, reject) => {
+    middleware(request, response, (result) => {
+      if (result instanceof Error) {
+        return reject(result);
+      }
+      return resolve(result);
+    });
+  });
+};
+
+// Rate limiting: max 5 attempts per 15 minutes
+const getRateLimitMiddlewares = () => {
+  const limiters = [];
+  
+  // Slow down after 3 attempts
+  limiters.push(
+    slowDown({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      delayAfter: 3, // Allow 3 attempts at normal speed
+      delayMs: (hits) => hits * 1000, // Add 1 second delay per extra hit
+      maxDelayMs: 5000, // Maximum 5 second delay
+      keyGenerator: (req) => req.body?.email || req.ip, // Limit by email or IP
+      skipSuccessfulRequests: true, // Don't count successful logins
+    })
+  );
+  
+  // Hard limit: 5 attempts per 15 minutes
+  limiters.push(
+    rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 5, // Maximum 5 attempts
+      message: { error: 'Too many login attempts. Please try again later.' },
+      keyGenerator: (req) => req.body?.email || req.ip,
+      skipSuccessfulRequests: true,
+    })
+  );
+  
+  return limiters;
+};
+
+const middlewares = getRateLimitMiddlewares();
+
+export default async function handler(req, res) {
+  try {
+    // Apply rate limiting middlewares
+    for (const middleware of middlewares) {
+      await applyMiddleware(middleware)(req, res);
+    }
+    
+    // Your existing login logic
+    const { email, password } = req.body;
+    
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+    
+    const result = await authFunctions.login(email, password);
+    
+    if (result.success) {
+      return res.status(200).json({
+        success: true,
+        token: result.token,
+        user: result.user
+      });
+    } else {
+      return res.status(401).json({ error: result.error });
+    }
+    
+  } catch (error) {
+    if (error.statusCode === 429) {
+      // Rate limit error
+      return res.status(429).json({ 
+        error: 'Too many login attempts. Please try again in 15 minutes.' 
+      });
+    }
+    
+    console.error('Login error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
