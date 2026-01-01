@@ -1,89 +1,131 @@
-﻿// api/_lib/store.js - FINAL WORKING VERSION
-const { Redis } = require('@upstash/redis');
+﻿// api/_lib/store.js
+// Persistent user store using Upstash Redis (REST over HTTP).
+// IMPORTANT: This module must never crash auth endpoints.
+// If Upstash is misconfigured or unavailable, it falls back to in-memory for the invocation.
+//
+// Env vars supported:
+//
+// Option A (Upstash REST):
+//   UPSTASH_REDIS_REST_URL
+//   UPSTASH_REDIS_REST_TOKEN
+//
+// Option B (Vercel KV / Upstash KV):
+//   KV_REST_API_URL
+//   KV_REST_API_TOKEN
+//
+// Note: Vercel Node runtimes support global fetch.
 
-let redisClient = null;
+const mem = new Map();
 
-// Initialize the Redis client
-try {
-  // Use the environment variables FROM YOUR VERSCEL PROJECT
-  redisClient = new Redis({
-    url: process.env.KV_REST_API_URL,        // "https://lucky-chamois-9204.upstash.io"
-    token: process.env.KV_REST_API_TOKEN,    // Your ASP0AA... token
-  });
-  console.log('SUCCESS: Upstash Redis client initialized.');
-} catch (error) {
-  console.error('FAILED to initialize Redis client:', error);
-  // In production, don't fall back to memory
-  redisClient = null;
+function getRestUrl() {
+  return process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || "";
+}
+function getRestToken() {
+  return process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || "";
+}
+function upstashReady() {
+  return Boolean(getRestUrl() && getRestToken());
 }
 
-// Key prefix constants
-const USER_PREFIX = 'user:';
-const EMAIL_INDEX_PREFIX = 'email:';
-
-// Helper functions for key generation
-function getUserKey(id) { 
-  return USER_PREFIX + id; 
+function emailKey(email) {
+  return `user:${String(email).toLowerCase().trim()}`;
+}
+function idKey(id) {
+  return `user_id:${String(id).trim()}`;
 }
 
-function getEmailKey(email) { 
-  return EMAIL_INDEX_PREFIX + email.toLowerCase().trim(); 
-}
+async function safeUpstashGet(key) {
+  try {
+    const base = getRestUrl();
+    const token = getRestToken();
+    const url = `${base}/get/${encodeURIComponent(key)}`;
 
-// CREATE USER (called by register.js)
-async function createUser(userData) {
-  if (!redisClient) {
-    throw new Error('Redis client not available. Cannot save user.');
+    const r = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!r.ok) {
+      const body = await r.text().catch(() => "");
+      console.error(`Upstash GET failed (${r.status}): ${body}`);
+      return null; // do NOT throw
+    }
+
+    const j = await r.json().catch(() => null);
+    return j?.result ?? null;
+  } catch (e) {
+    console.error("Upstash GET error:", e && e.message ? e.message : e);
+    return null; // do NOT throw
   }
-  
-  const id = userData.id;
-  const emailKey = getEmailKey(userData.email);
-  const userKey = getUserKey(id);
-
-  // Save both the user object and email->ID index atomically
-  const pipeline = redisClient.pipeline();
-  pipeline.set(emailKey, id);                    // Index: email -> user ID
-  pipeline.set(userKey, JSON.stringify(userData)); // Store full user object
-  await pipeline.exec();
-
-  console.log(`DEBUG: User saved. Email: ${emailKey}, User: ${userKey}`);
-  return userData;
 }
 
-// GET USER BY EMAIL (called by login.js)
+async function safeUpstashSet(key, value) {
+  try {
+    const base = getRestUrl();
+    const token = getRestToken();
+    const url = `${base}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`;
+
+    const r = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!r.ok) {
+      const body = await r.text().catch(() => "");
+      console.error(`Upstash SET failed (${r.status}): ${body}`);
+      return false; // do NOT throw
+    }
+
+    return true;
+  } catch (e) {
+    console.error("Upstash SET error:", e && e.message ? e.message : e);
+    return false; // do NOT throw
+  }
+}
+
 async function getUserByEmail(email) {
-  if (!redisClient || !email) return null;
+  const eKey = emailKey(email);
 
-  const emailKey = getEmailKey(email);
-  
-  // First, get the user ID from the email index
-  const userId = await redisClient.get(emailKey);
-  if (!userId) {
-    console.log(`DEBUG: No user found for email: ${email}`);
-    return null;
+  if (upstashReady()) {
+    const raw = await safeUpstashGet(eKey);
+    if (raw) {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
   }
 
-  // Then, get the full user data using the ID
-  return await getUserById(userId);
+  return mem.get(eKey) || null;
 }
 
-// GET USER BY ID (helper function)
 async function getUserById(id) {
-  if (!redisClient || !id) return null;
-  
-  const userKey = getUserKey(id);
-  const data = await redisClient.get(userKey);
-  
-  if (!data) {
-    console.log(`DEBUG: No user data found for ID: ${id}`);
-    return null;
+  const iKey = idKey(id);
+
+  if (upstashReady()) {
+    const email = await safeUpstashGet(iKey);
+    if (email) return await getUserByEmail(email);
   }
-  
-  return JSON.parse(data);
+
+  const email = mem.get(iKey);
+  if (!email) return null;
+  return mem.get(emailKey(email)) || null;
 }
 
-module.exports = {
-  createUser,
-  getUserById,
-  getUserByEmail
-};
+async function createUser(user) {
+  const email = String(user.email || "").toLowerCase().trim();
+  const eKey = emailKey(email);
+  const iKey = idKey(user.id);
+
+  if (upstashReady()) {
+    const ok1 = await safeUpstashSet(eKey, JSON.stringify(user));
+    const ok2 = await safeUpstashSet(iKey, email);
+    if (ok1 && ok2) return true;
+    // If Upstash fails, fall back to mem for this invocation
+  }
+
+  mem.set(eKey, user);
+  mem.set(iKey, email);
+  return true;
+}
+
+module.exports = { getUserByEmail, getUserById, createUser };
