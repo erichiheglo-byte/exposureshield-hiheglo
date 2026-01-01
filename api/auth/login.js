@@ -1,74 +1,62 @@
-﻿const { applyCors } = require("../_lib/cors.js");
-const { verifyPassword } = require("../_lib/password.js");
+const { applyCors } = require("../_lib/cors.js");
 const { getUserByEmail } = require("../_lib/store.js");
-const jwt = require("../_lib/jwt.js");
-
-function send(res, status, obj) {
-  res.statusCode = status;
-  res.setHeader("Content-Type", "application/json; charset=utf-8");
-  res.setHeader("Cache-Control", "no-store");
-  res.end(JSON.stringify(obj));
-}
-
-function readJson(req) {
-  return new Promise((resolve, reject) => {
-    let body = "";
-    req.on("data", (c) => (body += c));
-    req.on("end", () => {
-      try { resolve(body ? JSON.parse(body) : {}); }
-      catch (e) { reject(e); }
-    });
-  });
-}
-
-function safeUser(u) {
-  if (!u) return null;
-  const { passwordHash, ...rest } = u;
-  return rest;
-}
-
-function signToken(payload, secret) {
-  if (typeof jwt.signJwt === "function") {
-    try { return jwt.signJwt(payload, secret); } catch {}
-    try { return jwt.signJwt(secret, payload); } catch {}
-  }
-  throw new Error("signJwt not available in api/_lib/jwt.js");
-}
+const { verifyPassword } = require("../_lib/password.js");
+const { signJwt } = require("../_lib/jwt.js");
 
 module.exports = async function handler(req, res) {
   if (applyCors(req, res, "POST,OPTIONS")) return;
 
   if (req.method !== "POST") {
-    return send(res, 405, { ok: false, error: "Method not allowed" });
+    res.statusCode = 405;
+    res.setHeader("Content-Type", "application/json");
+    return res.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
   }
 
   try {
-    const data = await readJson(req);
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : (req.body || {});
+    const email = String(body.email || "").trim().toLowerCase();
+    const password = String(body.password || "");
 
-    const email = String(data.email || "").trim().toLowerCase();
-    const password = String(data.password || "").trim();
-
-    if (!email || !password) return send(res, 400, { ok: false, error: "Email and password are required" });
-
-    const jwtSecret = (process.env.JWT_SECRET || "").toString().trim();
-    if (!jwtSecret) return send(res, 500, { ok: false, error: "JWT_SECRET not configured" });
+    if (!email || !password) {
+      res.statusCode = 400;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(JSON.stringify({ ok: false, error: "Email and password are required" }));
+    }
 
     const user = await getUserByEmail(email);
+
     if (!user || !user.passwordHash) {
-      return send(res, 401, { ok: false, error: "Invalid email or password" });
+      res.statusCode = 401;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
     }
 
     const ok = verifyPassword(password, user.passwordHash);
-    if (!ok) return send(res, 401, { ok: false, error: "Invalid email or password" });
+    if (!ok) {
+      res.statusCode = 401;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
+    }
 
-    const token = signToken(
-      { sub: user.id, email: user.email, plan: user.plan || "free" },
-      jwtSecret
-    );
+    const jwtSecret = String(process.env.JWT_SECRET || "").trim();
+    if (!jwtSecret) {
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "application/json");
+      return res.end(JSON.stringify({ ok: false, error: "JWT_SECRET not configured" }));
+    }
 
-    return send(res, 200, { ok: true, token, user: safeUser(user) });
-  } catch (err) {
-    console.error("login error:", err);
-    return send(res, 500, { ok: false, error: "Unable to login. Please try again." });
+    const token = signJwt({ sub: user.id, email: user.email }, jwtSecret);
+
+    const safeUser = { ...user };
+    delete safeUser.passwordHash;
+
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    return res.end(JSON.stringify({ ok: true, token, user: safeUser }));
+  } catch (e) {
+    console.error("Login error:", e);
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "application/json");
+    return res.end(JSON.stringify({ ok: false, error: "Server error", detail: String(e.message || e) }));
   }
 };
