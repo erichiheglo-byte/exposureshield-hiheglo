@@ -1,64 +1,23 @@
-﻿const mem = new Map();
-
-function env(name) {
-  return (process.env[name] || "").toString().trim();
+﻿// api/_lib/store.js
+const mem = new Map();
+function emailKey(email) {
+  return `user:${String(email).toLowerCase()}`;
 }
-
-function hasUpstash() {
-  return Boolean(env("UPSTASH_REDIS_REST_URL") && env("UPSTASH_REDIS_REST_TOKEN"));
+function idKey(id) {
+  return `user_id:${String(id)}`;
 }
-
-async function upstashGet(key) {
-  const url = env("UPSTASH_REDIS_REST_URL");
-  const token = env("UPSTASH_REDIS_REST_TOKEN");
-
-  const r = await fetch(`${url}/get/${encodeURIComponent(key)}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-
-  if (!r.ok) throw new Error(`Upstash GET failed: ${r.status}`);
-  const data = await r.json();
-  return data && Object.prototype.hasOwnProperty.call(data, "result") ? data.result : null;
-}
-
-async function upstashSet(key, value) {
-  const url = env("UPSTASH_REDIS_REST_URL");
-  const token = env("UPSTASH_REDIS_REST_TOKEN");
-
-  const r = await fetch(
-    `${url}/set/${encodeURIComponent(key)}/${encodeURIComponent(value)}`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-
-  if (!r.ok) throw new Error(`Upstash SET failed: ${r.status}`);
-  const data = await r.json();
-  return data && Object.prototype.hasOwnProperty.call(data, "result") ? data.result : null;
-}
-
 async function getUserByEmail(email) {
-  const key = `user:${String(email).toLowerCase()}`;
-
-  if (hasUpstash()) {
-    const raw = await upstashGet(key);
-    if (!raw) return null;
-    try { return JSON.parse(raw); } catch { return null; }
-  }
-
-  return mem.get(key) || null;
+  return mem.get(emailKey(email)) || null;
 }
-
+async function getUserById(id) {
+  const email = mem.get(idKey(id));
+  if (!email) return null;
+  return mem.get(emailKey(email)) || null;
+}
 async function createUser(user) {
-  const email = String(user && user.email ? user.email : "").toLowerCase();
-  const key = `user:${email}`;
-  const value = JSON.stringify(user);
-
-  if (hasUpstash()) {
-    await upstashSet(key, value);
-    return true;
-  }
-
-  mem.set(key, user);
+  const email = String(user.email || '').toLowerCase();
+  mem.set(emailKey(email), user);
+  mem.set(idKey(user.id), email);
   return true;
 }
-
-module.exports = { getUserByEmail, createUser };
+module.exports = { getUserByEmail, getUserById, createUser };
