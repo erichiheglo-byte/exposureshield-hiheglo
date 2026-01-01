@@ -12,7 +12,8 @@ export default async function handler(req, res) {
   );
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    // Use 204 for preflight (cleaner)
+    res.status(204).end();
     return;
   }
 
@@ -52,7 +53,7 @@ export default async function handler(req, res) {
 
     // --- Metadata ---
     const ip =
-      req.headers['x-forwarded-for']?.split(',')[0] ||
+      req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
       req.socket?.remoteAddress ||
       'unknown';
 

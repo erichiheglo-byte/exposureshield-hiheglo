@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Mock API</title>
+    <script>
+    // Mock API that works with file:// protocol
+    window.mockEmailCheck = async function(email) {
+        return {
+            success: true,
+            email: email,
+            breaches: 0,
+            exposed: false,
+            recommendation: "Email is secure (mock data)",
+            score: 85
+        };
+    };
+    
+    // Override fetch to use mock
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+        if (url.includes('/api/check-email')) {
+            console.log("Mocking API call:", url);
+            const email = new URL(url, 'http://localhost').searchParams.get('email');
+            return Promise.resolve({
+                ok: true,
+                json: () => mockEmailCheck(email),
+                text: () => JSON.stringify(mockEmailCheck(email))
+            });
+        }
+        return originalFetch.call(this, url, options);
+    };
+    
+    console.log("✅ Mock API loaded");
+    </script>
+</head>
+<body style="display:none;">
+    Mock API Page
+</body>
+</html>

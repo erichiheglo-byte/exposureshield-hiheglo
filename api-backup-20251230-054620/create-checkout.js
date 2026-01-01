@@ -2,17 +2,23 @@
 export default async function handler(req, res) {
   // --- CORS headers (FIXED: credentials + origin cannot be "*") ---
   const origin = req.headers.origin || '*';
+
+  // If you allow credentials, you must not use "*" for Allow-Origin
+  // So we echo the request origin when present, otherwise fall back to a safe default
+  const allowOrigin = origin === '*' ? 'https://www.exposureshield.com' : origin;
+
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
   res.setHeader('Vary', 'Origin');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,OPTIONS');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    'Content-Type, X-Requested-With, Accept'
   );
+  res.setHeader('Cache-Control', 'no-store');
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
+    res.status(204).end();
     return;
   }
 
@@ -33,7 +39,8 @@ export default async function handler(req, res) {
 
     const { plan, email } = body || {};
 
-    if (!email || !String(email).includes('@')) {
+    const cleanEmail = (email || '').toString().trim();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
       return res.status(400).json({ error: 'Valid email required' });
     }
 
@@ -42,23 +49,23 @@ export default async function handler(req, res) {
       security: {
         name: 'Security Protection',
         price: 499, // $4.99
-        description: 'Real-time breach monitoring only',
+        description: 'Real-time breach monitoring only'
       },
       legacy: {
         name: 'Legacy Planning',
         price: 799, // $7.99
-        description: 'Digital inheritance planning only',
+        description: 'Digital inheritance planning only'
       },
       complete: {
         name: 'Complete Suite',
         price: 999, // $9.99
-        description: 'Both security & legacy planning',
+        description: 'Both security & legacy planning'
       },
       'complete-annual': {
         name: 'Complete Suite (Annual)',
         price: 9590, // $95.90
-        description: 'Annual billing - Save 20%',
-      },
+        description: 'Annual billing - Save 20%'
+      }
     };
 
     const requestedPlanKey = typeof plan === 'string' ? plan : '';
@@ -68,7 +75,11 @@ export default async function handler(req, res) {
 
     const selectedPlan = plans[planKey];
 
-    console.log('💳 Creating checkout for:', { plan: planKey, email, price: selectedPlan.price });
+    console.log('💳 Creating checkout for:', {
+      plan: planKey,
+      email: cleanEmail,
+      price: selectedPlan.price
+    });
 
     // SIMULATION MODE - Replace with real Stripe when ready
     // Keep demo mode default; set STRIPE_ENABLED="true" when you want real Stripe later
@@ -96,10 +107,10 @@ export default async function handler(req, res) {
         mode: 'subscription',
         success_url: 'https://www.exposureshield.com/payment-success?session_id={CHECKOUT_SESSION_ID}',
         cancel_url: 'https://www.exposureshield.com/pricing',
-        customer_email: email,
+        customer_email: cleanEmail,
         metadata: {
           plan: planKey,
-          email: email
+          email: cleanEmail
         }
       });
 
@@ -125,7 +136,7 @@ export default async function handler(req, res) {
       success_url: 'https://www.exposureshield.com/payment-success',
       cancel_url: 'https://www.exposureshield.com/pricing',
       simulated: true,
-      message: 'Payment system in demo mode. Enable Stripe for real payments.',
+      message: 'Payment system in demo mode. Enable Stripe for real payments.'
     };
 
     return res.status(200).json(checkoutSession);
@@ -133,7 +144,7 @@ export default async function handler(req, res) {
     console.error('Checkout error:', error);
     return res.status(500).json({
       error: 'Payment service temporarily unavailable',
-      details: error && error.message ? error.message : 'Unknown error',
+      details: error && error.message ? error.message : 'Unknown error'
     });
   }
 }

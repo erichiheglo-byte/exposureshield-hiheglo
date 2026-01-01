@@ -1,128 +1,236 @@
-﻿// ===== LIVE HIBP EMAIL CHECK (uses /api/check-email) =====
-document.addEventListener("DOMContentLoaded", () => {
-  const hibpForm = document.getElementById("hibpForm");
-  const hibpEmail = document.getElementById("hibpEmail");
-  const hibpResult = document.getElementById("hibpResult");
+﻿// shared.js - Centralized Authentication System for ExposureShield
+// Single source for all auth, header updates, and session management
 
-  if (!hibpForm || !hibpEmail || !hibpResult) return;
+const ExposureShieldAuth = (function() {
+    // ========== CORE AUTH STATE ==========
+    const STORAGE_KEYS = {
+        TOKEN: 'exposureshield_token',
+        USER: 'exposureshield_user',
+        LEGACY_PLAN: 'user_legacy_plan',
+        PENDING_PLAN: 'pending_legacy_plan',
+        PENDING_EMAIL: 'pending_account_email'
+    };
 
-  const API = "/api/check-email";
-
-  const escapeHtml = (s) => {
-    const d = document.createElement("div");
-    d.textContent = String(s ?? "");
-    return d.innerHTML;
-  };
-
-  const riskLabel = (count) => {
-    if (count >= 8) return { label: "High", color: "#fb7185" };
-    if (count >= 3) return { label: "Medium", color: "#fbbf24" };
-    return { label: "Low", color: "#34d399" };
-  };
-
-  function render(email, breaches) {
-    const list = Array.isArray(breaches) ? breaches : [];
-    const count = list.length;
-    const risk = riskLabel(count);
-
-    if (count === 0) {
-      hibpResult.innerHTML = `
-        <div style="margin-bottom:10px;">
-          <b style="color:#34d399;">Good news:</b>
-          No breaches found for <b>${escapeHtml(email)}</b>.
-        </div>
-        <div style="display:inline-flex; padding:6px 10px; border-radius:999px; border:1px solid rgba(52,211,153,0.3); background:rgba(52,211,153,0.1); color:#34d399; font-weight:800;">
-          Risk Level: Low
-        </div>
-        <div class="hint" style="margin-top:12px; opacity:.75;">Secure check powered by Have I Been Pwned</div>
-      `;
-      return;
+    // ========== PUBLIC API FUNCTIONS ==========
+    
+    // Check if user is logged in
+    function isAuthenticated() {
+        return !!localStorage.getItem(STORAGE_KEYS.TOKEN);
     }
+    
+    // Get current user data
+    function getCurrentUser() {
+        const user = localStorage.getItem(STORAGE_KEYS.USER);
+        try {
+            return user ? JSON.parse(user) : null;
+        } catch (e) {
+            // Corrupted user JSON - clear it to prevent repeated crashes
+            localStorage.removeItem(STORAGE_KEYS.USER);
+            return null;
+        }
+    }
+    
+    // Login function (call this after successful authentication)
+    function login(token, userData) {
+        localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
+        updateHeaderUI();
+        transferPendingData(userData && userData.email ? userData.email : null);
+        return true;
+    }
+    
+    // Logout function
+    function logout() {
+        localStorage.removeItem(STORAGE_KEYS.TOKEN);
+        localStorage.removeItem(STORAGE_KEYS.USER);
+        window.location.href = 'index.html';
+    }
+    
+    // Protect pages that require authentication
+    function requireAuth(options = {}) {
+        const config = {
+            redirectTo: 'login.html',
+            showAlert: false,
+            ...options
+        };
+        
+        if (!isAuthenticated()) {
+            const currentPage = window.location.pathname.split('/').pop();
+            const redirectUrl = `${config.redirectTo}?redirect=${encodeURIComponent(currentPage)}`;
+            
+            if (config.showAlert) {
+                if (confirm('You need to login to access this page. Go to login page?')) {
+                    window.location.href = redirectUrl;
+                }
+            } else {
+                window.location.href = redirectUrl;
+            }
+            return false;
+        }
+        return true;
+    }
+    
+    // ========== UI MANAGEMENT ==========
+    
+    // Update header buttons based on login state
+    function updateHeaderUI() {
+        const authButtons = document.querySelector('.auth-buttons');
+        if (!authButtons) return;
+        
+        if (isAuthenticated()) {
+            const user = getCurrentUser();
 
-    const sorted = [...list].sort((a, b) => {
-      const da = new Date(a?.BreachDate || 0).getTime();
-      const db = new Date(b?.BreachDate || 0).getTime();
-      return db - da;
-    });
+            // If token exists but user is missing/corrupt, force logout to prevent crashes
+            if (!user) {
+                logout();
+                return;
+            }
 
-    const items = sorted.map((b) => {
-      const title = escapeHtml(b?.Title || b?.Name || "Unknown");
-      const date = escapeHtml(b?.BreachDate || "Unknown date");
-      const domain = escapeHtml(b?.Domain || "");
-      const classes = Array.isArray(b?.DataClasses) ? b.DataClasses.slice(0, 4).map(escapeHtml).join(", ") : "";
-      const link = b?.Name ? `https://haveibeenpwned.com/PwnedWebsites#${encodeURIComponent(b.Name)}` : null;
+            authButtons.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: #2563eb; font-weight: 500;">
+                        <i class="fas fa-user-circle"></i> ${user.name || user.email || 'User'}
+                    </span>
+                    <a href="dashboard.html" class="dashboard-link" style="padding: 10px 20px;">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="vault.html" class="auth-button login" style="margin-right: 10px;">
+                        <i class="fas fa-file-archive"></i> Vault
+                    </a>
+                    <button class="auth-button login" onclick="ExposureShieldAuth.logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            `;
+        } else {
+            authButtons.innerHTML = `
+                <a href="login.html" class="auth-button login">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </a>
+                <a href="register.html" class="auth-button signup">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </a>
+            `;
+        }
+    }
+    
+    // ========== LEGACY PLAN MANAGEMENT ==========
+    
+    // Transfer pending legacy plan to user account
+    function transferPendingData(userEmail) {
+        const pendingPlan = localStorage.getItem(STORAGE_KEYS.PENDING_PLAN);
+        const pendingEmail = localStorage.getItem(STORAGE_KEYS.PENDING_EMAIL);
 
-      return `
-        <div style="margin:10px 0; padding:12px; background:rgba(255,255,255,0.03); border-radius:12px; border:1px solid rgba(255,255,255,0.06);">
-          <div style="display:flex; justify-content:space-between; gap:10px; align-items:flex-start;">
-            <div>
-              <div style="font-weight:800; color:rgba(255,255,255,0.92);">${title}</div>
-              <div style="margin-top:4px; font-size:12px; color:rgba(255,255,255,0.70);">
-                ${domain ? `${domain} • ` : ""}${date}${classes ? ` • ${classes}` : ""}
-              </div>
+        // Guard against null/undefined emails and normalize comparison
+        const normalizedUserEmail = (userEmail || '').toLowerCase();
+        const normalizedPendingEmail = (pendingEmail || '').toLowerCase();
+        
+        if (pendingPlan && normalizedUserEmail && normalizedUserEmail === normalizedPendingEmail) {
+            localStorage.setItem(STORAGE_KEYS.LEGACY_PLAN, pendingPlan);
+            localStorage.removeItem(STORAGE_KEYS.PENDING_PLAN);
+            localStorage.removeItem(STORAGE_KEYS.PENDING_EMAIL);
+            return true;
+        }
+        return false;
+    }
+    
+    // Save legacy plan (works for both logged-in and anonymous users)
+    function saveLegacyPlan(planData, userEmail = null) {
+        if (isAuthenticated()) {
+            localStorage.setItem(STORAGE_KEYS.LEGACY_PLAN, JSON.stringify(planData));
+            return { success: true, type: 'user_account' };
+        } else {
+            localStorage.setItem(STORAGE_KEYS.PENDING_PLAN, JSON.stringify(planData));
+            if (userEmail) {
+                localStorage.setItem(STORAGE_KEYS.PENDING_EMAIL, userEmail);
+            }
+            return { success: true, type: 'pending_transfer' };
+        }
+    }
+    
+    // Get user's legacy plan
+    function getLegacyPlan() {
+        const plan = localStorage.getItem(STORAGE_KEYS.LEGACY_PLAN);
+        try {
+            return plan ? JSON.parse(plan) : null;
+        } catch (e) {
+            // Corrupted plan JSON - clear it
+            localStorage.removeItem(STORAGE_KEYS.LEGACY_PLAN);
+            return null;
+        }
+    }
+    
+    // ========== HELPER FUNCTIONS ==========
+    
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div style="padding: 12px 16px; background: ${type === 'success' ? '#10b981' : '#3b82f6'}; 
+                 color: white; border-radius: 8px; margin: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                ${message}
             </div>
-            ${link ? `<a class="btn" style="padding:8px 10px; font-size:12px;" href="${link}" target="_blank" rel="noreferrer">Details</a>` : ""}
-          </div>
-        </div>
-      `;
-    }).join("");
-
-    hibpResult.innerHTML = `
-      <div style="margin-bottom:10px;">
-        <b style="color:#fb7185;">Security Alert</b><br/>
-        Your email <b>${escapeHtml(email)}</b> was found in <b>${count}</b> breach${count !== 1 ? "es" : ""}.
-      </div>
-
-      <div style="display:inline-flex; margin-bottom:12px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.05); color:${risk.color}; font-weight:800;">
-        Risk Level: ${risk.label}
-      </div>
-
-      ${items}
-
-      <div style="margin-top:14px; color:rgba(255,255,255,0.75);">
-        <b>Recommended Actions:</b>
-        <ul style="margin:6px 0 0; padding-left:18px;">
-          <li>Change passwords for affected accounts</li>
-          <li>Enable two-factor authentication (2FA)</li>
-          <li>Use a password manager</li>
-          <li>Monitor accounts for suspicious activity</li>
-        </ul>
-      </div>
-
-      <div class="hint" style="margin-top:12px; opacity:.75;">Secure check powered by Have I Been Pwned</div>
-    `;
-  }
-
-  hibpForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const email = (hibpEmail.value || "").trim();
-    if (!email || !email.includes("@")) {
-      hibpResult.innerHTML = `<div style="color:#fb7185;">Please enter a valid email address.</div>`;
-      return;
+        `;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
     }
+    
+    // ========== INITIALIZATION ==========
+    
+    function init() {
+        // Update header on every page load
+        updateHeaderUI();
+        
+        // Auto-redirect if logged in and on login/register pages
+        const currentPage = window.location.pathname.split('/').pop();
+        if (isAuthenticated()) {
+            const user = getCurrentUser();
 
-    hibpResult.innerHTML = `<div style="color:#38bdf8;">Checking ${escapeHtml(email)}…</div>`;
+            // If token exists but user is missing/corrupt, force logout
+            if (!user) {
+                logout();
+                return;
+            }
 
-    try {
-      const res = await fetch(`${API}?email=${encodeURIComponent(email)}`, {
-        method: "GET",
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
-
-      const data = await res.json().catch(() => null);
-      if (!res.ok) {
-        throw new Error((data && (data.error || data.message)) || `API error: ${res.status}`);
-      }
-
-      render(email, data?.breaches || []);
-    } catch (err) {
-      hibpResult.innerHTML = `<div style="color:#fb7185;">${escapeHtml(err?.message || err)}</div>`;
+            if (currentPage === 'login.html' || currentPage === 'register.html') {
+                window.location.href = 'dashboard.html';
+            }
+            transferPendingData(user.email);
+        }
     }
-  });
+    
+    // ========== PUBLIC API ==========
+    return {
+        // Core auth
+        isAuthenticated,
+        getCurrentUser,
+        login,
+        logout,
+        requireAuth,
+        
+        // UI
+        updateHeaderUI,
+        
+        // Legacy plans
+        saveLegacyPlan,
+        getLegacyPlan,
+        transferPendingData,
+        
+        // Helpers
+        showNotification,
+        
+        // Initialization
+        init
+    };
+})();
 
-  hibpForm.addEventListener("reset", () => {
-    hibpResult.innerHTML = "Enter email above to check for breaches.";
-  });
+// Auto-initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    ExposureShieldAuth.init();
 });
+
+// Make available globally
+window.ExposureShieldAuth = ExposureShieldAuth;

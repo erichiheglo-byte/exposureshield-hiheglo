@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | ExposureShield</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary: #2563eb; --gray: #64748b; --radius: 8px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; padding: 40px 20px; background: #f8fafc; }
+        .container { max-width: 400px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        h1 { margin-bottom: 10px; color: #0f172a; }
+        p { color: var(--gray); margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: var(--radius); }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-weight: 600; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        .footer { text-align: center; margin-top: 30px; color: var(--gray); }
+        .footer a { color: var(--primary); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+        <p>Join ExposureShield to secure your digital legacy</p>
+        
+        <form id="registerForm">
+            <div class="form-group">
+                <input type="text" id="name" placeholder="Full Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password (min 6 chars)" required>
+            </div>
+            <button type="submit">Create Account</button>
+        </form>
+        
+        <div class="footer">
+            <p>Already have an account? <a href="login.html">Sign In</a></p>
+        </div>
+    </div>
+    
+    <script src="/shared.js" defer></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('registerForm');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+
+    if (!name) return alert('Please enter your name');
+    if (!email.includes('@')) return alert('Please enter valid email');
+    if (password.length < 6) return alert('Password must be at least 6 characters');
+
+    try {
+      const r = await fetch('/api/auth-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+
+      const data = await r.json();
+      if (!data.ok) throw new Error(data.error || 'Registration failed');
+
+      // Real token from backend
+      ExposureShieldAuth.login(data.token, data.user);
+
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+
+  // REMOVE demo auto-fill in production:
+  // document.getElementById('name').value = 'Demo User';
+  // document.getElementById('email').value = 'user@exposureshield.com';
+  // document.getElementById('password').value = 'password123';
+});
+</script>
+
+</body>
+</html>
