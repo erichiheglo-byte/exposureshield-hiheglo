@@ -1,19 +1,27 @@
 ﻿// api/_lib/password.js
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 function hashPassword(password) {
-  const salt = crypto.randomBytes(16);
-  const key = crypto.scryptSync(String(password), salt, 64);
-  return `${salt.toString('hex')}:${key.toString('hex')}`;
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync(String(password), salt, 210000, 32, "sha256").toString("hex");
+  return `pbkdf2$sha256$210000$${salt}$${hash}`;
 }
 
 function verifyPassword(password, stored) {
-  const [saltHex, keyHex] = String(stored || '').split(':');
-  if (!saltHex || !keyHex) return false;
-  const salt = Buffer.from(saltHex, 'hex');
-  const key = Buffer.from(keyHex, 'hex');
-  const derived = crypto.scryptSync(String(password), salt, 64);
-  return key.length === derived.length && crypto.timingSafeEqual(key, derived);
+  if (!stored || typeof stored !== "string") return false;
+
+  const parts = stored.split("$");
+  // pbkdf2$sha256$210000$$salt$$hash
+  if (parts.length < 6 || parts[0] !== "pbkdf2") return false;
+
+  const iter = parseInt(parts[2], 10);
+  const salt = parts[4];
+  const hash = parts[5];
+
+  if (!iter || !salt || !hash) return false;
+
+  const test = crypto.pbkdf2Sync(String(password), salt, iter, 32, "sha256").toString("hex");
+  return crypto.timingSafeEqual(Buffer.from(test, "hex"), Buffer.from(hash, "hex"));
 }
 
 module.exports = { hashPassword, verifyPassword };
