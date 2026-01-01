@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head><title>Test</title></head>
+<body>
+    <script>
+        // Mock the API response
+        window.fetch = async function(url) {
+            if (url.includes('jzwelch@msn.com')) {
+                return {
+                    ok: true,
+                    json: async () => ({
+                        ok: true,
+                        email: 'jzwelch@msn.com',
+                        breachCount: 8,
+                        status: 'critical'
+                    })
+                };
+            }
+            return { ok: false };
+        };
+        
+        // Mock jsPDF
+        window.jsPDF = { API: { text: function(t) { console.log('PDF Text:', t); } } };
+        
+        // Your generatePDF function (simplified)
+        window.generatePDF = function(email, breaches, count) {
+            console.log('generatePDF called with:', email, count, 'breaches');
+            // This is what needs fixing
+            const text = `Your email ${email} was found in ${count} breaches, resulting in a High risk level.`;
+            window.jsPDF.API.text(text, 10, 10);
+        };
+    </script>
+    
+    <button onclick="window.generatePDF('jzwelch@msn.com', [], 8)">Test PDF</button>
+    
+    <script>
+        // Apply our minimal fix
+        const origGeneratePDF = window.generatePDF;
+        window.generatePDF = function(email, breaches, count) {
+            fetch(`/api/check-email?email=${email}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        window._currentPDFStatus = data.status;
+                        const origText = window.jsPDF.API.text;
+                        window.jsPDF.API.text = function(text) {
+                            if (window._currentPDFStatus) {
+                                const correctRisk = window._currentPDFStatus.charAt(0).toUpperCase() + 
+                                                   window._currentPDFStatus.slice(1);
+                                text = text.replace('High risk level', `${correctRisk} risk level`);
+                            }
+                            return origText.call(this, text);
+                        };
+                        origGeneratePDF(email, breaches, count);
+                    }
+                });
+        };
+    </script>
+</body>
+</html>

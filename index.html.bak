@@ -801,8 +801,7 @@
         // Global state
         const state = {
             currentEmail: '',
-            currentBreaches: [],
-            currentStatus: 'low' // Store the current API status
+            currentBreaches: []
         };
 
         // Mobile Menu Toggle
@@ -859,10 +858,9 @@
                 // Store in global state
                 state.currentEmail = email;
                 state.currentBreaches = Array.isArray(data?.breaches) ? data.breaches : [];
-                state.currentStatus = data?.status || 'low';
 
                 // Display results with PDF upgrade section
-                displayResults(email, state.currentBreaches, state.currentStatus);
+                displayResults(email, state.currentBreaches);
                 
             } catch (error) {
                 showError("Unable to check email security. Please try again.");
@@ -876,18 +874,17 @@
             return re.test(email);
         }
 
-        function displayResults(email, breaches, apiStatus) {
+        function displayResults(email, breaches) {
             const resultsContainer = document.getElementById('resultsContainer');
             
-            // Use API status for risk calculation
+            // Apply YOUR risk rules: 0=Low, 1=Medium, 2+=High
             const count = breaches.length;
             let riskLevel, riskClass;
             
-            // Map API status to display values
-            if (apiStatus === 'low') {
+            if (count === 0) {
                 riskLevel = 'Low';
                 riskClass = 'risk-low';
-            } else if (apiStatus === 'medium') {
+            } else if (count === 1) {
                 riskLevel = 'Medium';
                 riskClass = 'risk-medium';
             } else {
@@ -1041,7 +1038,6 @@
             document.getElementById('loader').style.display = 'none';
             state.currentEmail = '';
             state.currentBreaches = [];
-            state.currentStatus = 'low';
         }
 
         // PDF Upgrade Functions
@@ -1064,7 +1060,7 @@
             // Set up download button
             const downloadBtn = document.getElementById('downloadPdfBtn');
             if (downloadBtn) {
-                downloadBtn.onclick = () => generateFullPdfReport(email, state.currentBreaches, state.currentStatus);
+                downloadBtn.onclick = () => generateFullPdfReport(email, state.currentBreaches);
             }
         }
 
@@ -1133,7 +1129,7 @@
         }
 
         // COMPLETE PDF REPORT GENERATION (Your 10-section specification)
-        function generateFullPdfReport(email, breaches, status) {
+        function generateFullPdfReport(email, breaches) {
             const { jsPDF } = window.jspdf;
             if (!jsPDF) {
                 alert("PDF library not loaded. Please refresh the page.");
@@ -1181,30 +1177,40 @@
             doc.setTextColor(15, 23, 42);
             doc.text("Executive Summary", 14, 20);
             
-            // Use the passed status parameter for risk calculation
+            // Risk calculation
             const count = breaches.length;
-            let riskLevel = status || 'low';
-            if (count === 1) riskLevel = status || 'medium';
-            if (count >= 2) riskLevel = status || 'high';
-            
-            const displayRiskLevel = riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1);
+            let riskLevel = "Low";
+            if (count === 1) riskLevel = "Medium";
+            if (count >= 2) riskLevel = "High";
             
             doc.setFont("helvetica", "normal");
             doc.setFontSize(12);
-            doc.text(`Overall risk level: ${displayRiskLevel}`, 14, 35);
+            doc.text(`Overall risk level: ${riskLevel}`, 14, 35);
             doc.text(`Total breaches found: ${count}`, 14, 45);
             
-            // Summary paragraph using the status parameter
+            // Summary paragraph
             let summaryText = "";
             if (count === 0) {
-                const riskLevelText = (status || 'low').charAt(0).toUpperCase() + (status || 'low').slice(1);
-                summaryText = `Your email ${maskedEmail} was not found in any known data breaches (${riskLevelText} risk). This indicates good security hygiene. Continue practicing strong password habits and enable two-factor authentication where available.`;
+    // Use API status for consistency
+    const riskLevel = (status || 'low').charAt(0).toUpperCase() + (status || 'low').slice(1);
+    summaryText = `Your email ${maskedEmail} was not found in any known data breaches (${riskLevel} risk). This indicates good security hygiene. Continue practicing strong password habits and enable two-factor authentication where available.`;
             } else if (count === 1) {
-                const riskLevelText = (status || 'medium').charAt(0).toUpperCase() + (status || 'medium').slice(1);
-                summaryText = `Your email ${maskedEmail} was found in 1 confirmed data breach, resulting in a ${riskLevelText} risk level. Immediate password changes and account monitoring are recommended to reduce exposure.`;
+    // Use API status for consistency
+    const riskLevel = (status || 'medium').charAt(0).toUpperCase() + (status || 'medium').slice(1);
+    summaryText = `Your email ${maskedEmail} was found in 1 confirmed data breach, resulting in a ${riskLevel}
+risk level.`; Immediate password changes and account monitoring are recommended to reduce exposure.`;
             } else {
-                const riskLevelText = (status || 'high').charAt(0).toUpperCase() + (status || 'high').slice(1);
-                summaryText = `Your email ${maskedEmail} was found in ${count} confirmed data breaches, resulting in a ${riskLevelText} risk level. Immediate action is required to secure your accounts and prevent credential stuffing attacks.`;
+    // Use API status instead of hardcoding "High"
+    const riskLevel = (status || (count === 0 ? 'low' : 
+                                 count <= 2 ? 'medium' : 
+                                 count <= 6 ? 'high' : 'critical'))
+                     .charAt(0).toUpperCase() + 
+                     (status || (count === 0 ? 'low' : 
+                                count <= 2 ? 'medium' : 
+                                count <= 6 ? 'high' : 'critical')).slice(1);
+    
+    summaryText = `Your email ${maskedEmail} was found in ${count} confirmed data breaches, resulting in
+a ${riskLevel} risk level. Immediate action is required to secure your accounts and prevent credential stuffing attacks.`;
             }
             
             doc.text(summaryText, 14, 55, { maxWidth: pageWidth - 28 });
@@ -1235,12 +1241,12 @@
             doc.setDrawColor(37, 99, 235);
             doc.setFillColor(37, 99, 235);
             doc.rect(14, 145, 180, 8, 'S'); // Border
-            const fillWidth = riskLevel === "low" ? 60 : riskLevel === "medium" ? 120 : 180;
+            const fillWidth = riskLevel === "Low" ? 60 : riskLevel === "Medium" ? 120 : 180;
             doc.rect(14, 145, fillWidth, 8, 'F'); // Fill
             
             doc.setFont("helvetica", "bold");
             doc.setTextColor(255, 255, 255);
-            doc.text(displayRiskLevel, 14 + fillWidth/2, 151, { align: "center" });
+            doc.text(riskLevel, 14 + fillWidth/2, 151, { align: "center" });
             
             doc.setTextColor(15, 23, 42);
             doc.setFontSize(8);
@@ -1531,29 +1537,60 @@
         // Set current year in footer
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-
-    <!-- Clean fix for PDF risk level -->
-    <script>
-        // FIXED PDF RISK LEVEL - Uses API status correctly
-        (function() {
-            const origGeneratePDF = window.generatePDF;
+<!-- ADD THIS BEFORE </body> IN index.html -->
+<script>
+// Override the risk level in PDF generation
+(function() {
+    // Store original function
+    const origGeneratePDF = window.generatePDF;
+    
+    if (origGeneratePDF) {
+        window.generatePDF = function(email, breaches, count) {
+            // Get current API data to know real status
+            const emailInput = document.getElementById('email-input') || 
+                             document.querySelector('input[type="email"]');
+            const currentEmail = emailInput ? emailInput.value : email;
             
-            if (origGeneratePDF) {
-                window.generatePDF = function(email, breaches, count) {
-                    fetch(`/api/check-email?email=${encodeURIComponent(email)}`)
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data.ok && typeof generateFullPdfReport === 'function') {
-                                generateFullPdfReport(email, breaches, data.status);
-                            } else {
-                                origGeneratePDF(email, breaches, count);
+            // Try to fetch fresh status from API
+            fetch(`/api/check-email?email=${encodeURIComponent(currentEmail)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.ok) {
+                        // Monkey-patch jsPDF text method temporarily
+                        const origText = window.jsPDF.API.text;
+                        window.jsPDF.API.text = function(text, x, y, options) {
+                            if (typeof text === 'string') {
+                                // Replace any hardcoded risk levels
+                                text = text.replace('High risk level', 
+                                    `${data.status.charAt(0).toUpperCase() + data.status.slice(1)} risk level`);
+                                text = text.replace('Medium risk level', 
+                                    `${data.status.charAt(0).toUpperCase() + data.status.slice(1)} risk level`);
                             }
-                        })
-                        .catch(() => origGeneratePDF(email, breaches, count));
-                };
-                console.log('✅ PDF using API status');
-            }
-        })();
-    </script>
+                            return origText.call(this, text, x, y, options);
+                        };
+                        
+                        // Call original function
+                        origGeneratePDF(email, breaches, count);
+                        
+                        // Restore original method
+                        setTimeout(() => {
+                            window.jsPDF.API.text = origText;
+                        }, 100);
+                    } else {
+                        // Fallback to original
+                        origGeneratePDF(email, breaches, count);
+                    }
+                })
+                .catch(() => {
+                    // Fallback on error
+                    origGeneratePDF(email, breaches, count);
+                });
+        };
+        console.log('✅ PDF risk level override installed');
+    }
+})();
+</script>
 </body>
 </html>
+
+
