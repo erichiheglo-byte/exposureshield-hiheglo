@@ -1,4 +1,5 @@
-﻿node_modules
-_backup*
-*backup*
-api-backup*
+﻿.next
+node_modules
+*.log
+*.tmp
+.git

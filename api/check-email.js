@@ -1,174 +1,115 @@
-﻿// api/check-email.js - HIBP Email Security Check Endpoint
-function applyCors(req, res, methods = "GET,OPTIONS") {
-  const origin = req.headers.origin || "*";
+﻿const { applyCors } = require("./_lib/cors.js");
+
+function send(res, status, obj) {
+  res.statusCode = status;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify(obj));
+}
+
+function calculateSecurityScore(breachCount) {
+  if (breachCount === 0) return 100;
+  if (breachCount <= 5) return 80;
+  if (breachCount <= 20) return 60;
+  if (breachCount <= 50) return 40;
+  if (breachCount <= 100) return 20;
+  return 10;
+}
+
+function getStatus(score) {
+  if (score >= 80) return "excellent";
+  if (score >= 60) return "good";
+  if (score >= 40) return "fair";
+  if (score >= 20) return "poor";
+  return "critical";
+}
+
+function getRecommendations(breachCount) {
+  const recommendations = [
+    "Use a password manager to generate and store unique passwords",
+    "Enable two-factor authentication on all important accounts",
+    "Use an alias email for non-essential services",
+    "Regularly check haveibeenpwned.com for new breaches",
+    "Consider using a privacy-focused email service"
+  ];
   
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Methods", methods);
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With, Accept, Authorization"
-  );
-
-  if (req.method === "OPTIONS") {
-    res.status(200).end();
-    return true;
+  if (breachCount > 0) {
+    recommendations.unshift("Change passwords for breached services immediately");
   }
-  return false;
-}
-
-function sendJson(res, status, data) {
-  res.status(status).json(data);
-}
-
-function getQueryParam(req, param) {
-  try {
-    const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-    return url.searchParams.get(param) || "";
-  } catch (err) {
-    console.error("URL parsing error:", err);
-    return "";
-  }
-}
-
-export default async function handler(req, res) {
-  if (applyCors(req, res)) return;
   
+  if (breachCount > 10) {
+    recommendations.push("Consider a credit monitoring service");
+  }
+  
+  return recommendations;
+}
+
+module.exports = async function handler(req, res) {
+  if (applyCors(req, res, "GET,OPTIONS")) return;
+
   if (req.method !== "GET") {
-    return sendJson(res, 405, { 
-      ok: false, 
-      error: "Method not allowed. Only GET requests are accepted.",
-      allowed: ["GET"]
-    });
+    return send(res, 405, { ok: false, error: "Method not allowed" });
   }
-  
+
   try {
-    const rawEmail = getQueryParam(req, "email").trim();
-    const email = rawEmail.toLowerCase();
-    
-    if (!email) {
-      return sendJson(res, 400, { 
-        ok: false, 
-        error: "Missing email parameter",
-        usage: "/api/check-email?email=user@example.com"
-      });
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const email = (url.searchParams.get("email") || "").toString().trim();
+
+    if (!email) return send(res, 400, { ok: false, error: "Missing email parameter." });
+
+    const apiKey = (process.env.HIBP_API_KEY || "").toString().trim();
+    if (!apiKey) {
+      return send(res, 500, { ok: false, error: "HIBP_API_KEY not configured" });
     }
-    
-    if (!email.includes("@") || !email.includes(".")) {
-      return sendJson(res, 400, { 
-        ok: false, 
-        error: "Invalid email format",
-        email: email
-      });
-    }
-    
-    const hibpApiKey = (process.env.HIBP_API_KEY || "").toString().trim();
-    if (!hibpApiKey) {
-      console.error("HIBP_API_KEY is not configured");
-      return sendJson(res, 500, { 
-        ok: false, 
-        error: "Security service configuration error",
-        message: "Please contact support"
-      });
-    }
-    
-    const hibpUrl = `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`;
-    
-    console.log(`Checking HIBP for: ${email}`);
-    
-    const response = await fetch(hibpUrl, {
+
+    const hibpUrl =
+      `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`;
+
+    const r = await fetch(hibpUrl, {
       method: "GET",
       headers: {
-        "hibp-api-key": hibpApiKey,
-        "user-agent": "ExposureShield/1.0 (https://www.exposureshield.com; support@exposureshield.com)",
-        "Accept": "application/json"
+        "hibp-api-key": apiKey,
+        "user-agent": "ExposureShield (support@exposureshield.com)",
+        "accept": "application/json"
       }
     });
-    
-    if (response.status === 404) {
-      return sendJson(res, 200, {
-        ok: true,
-        email: email,
+
+    if (r.status === 404) {
+      return send(res, 200, { 
+        ok: true, 
+        email, 
         breaches: [],
-        message: "No known breaches found for this email",
+        breachCount: 0,
         securityScore: 100,
-        status: "secure"
+        status: "excellent",
+        message: "No breaches found. Your email appears secure!",
+        recommendations: ["Continue using strong, unique passwords", "Enable two-factor authentication"],
+        timestamp: new Date().toISOString()
       });
     }
-    
-    if (response.status === 429) {
-      return sendJson(res, 429, {
-        ok: false,
-        error: "Rate limited by security service",
-        message: "Please try again in a few moments",
-        email: email,
-        status: "rate_limited"
-      });
+
+    if (!r.ok) {
+      const text = await r.text().catch(() => "");
+      return send(res, r.status, { ok: false, error: "HIBP request failed", details: text.slice(0, 200) });
     }
+
+    const breaches = await r.json();
+    const breachCount = breaches.length;
+    const securityScore = calculateSecurityScore(breachCount);
+    const status = getStatus(securityScore);
     
-    if (!response.ok) {
-      const errorText = await response.text().catch(() => "Unknown error");
-      console.error(`HIBP API error ${response.status}: ${errorText}`);
-      
-      return sendJson(res, response.status, {
-        ok: false,
-        error: "Security check service error",
-        statusCode: response.status,
-        email: email,
-        status: "service_error"
-      });
-    }
-    
-    const breaches = await response.json();
-    
-    const processedBreaches = Array.isArray(breaches) ? breaches.map(breach => ({
-      name: breach.Name || "Unknown",
-      domain: breach.Domain || "",
-      breachDate: breach.BreachDate || "",
-      addedDate: breach.AddedDate || "",
-      description: breach.Description || "",
-      dataClasses: breach.DataClasses || []
-    })) : [];
-    
-    const breachCount = processedBreaches.length;
-    let securityScore = 100;
-    
-    if (breachCount > 0) {
-      securityScore = Math.max(10, 100 - (breachCount * 15));
-    }
-    
-    let status = "secure";
-    if (breachCount > 5) status = "critical";
-    else if (breachCount > 2) status = "warning";
-    else if (breachCount > 0) status = "compromised";
-    
-    return sendJson(res, 200, {
-      ok: true,
-      email: email,
-      breaches: processedBreaches,
-      breachCount: breachCount,
-      securityScore: securityScore,
-      status: status,
-      message: breachCount === 1 ? 
-        "1 data breach found" : 
-        `${breachCount} data breaches found`,
-      recommendations: breachCount > 0 ? [
-        "Change your password for this email",
-        "Enable two-factor authentication",
-        "Use unique passwords for different services"
-      ] : [
-        "Continue using strong, unique passwords"
-      ]
+    return send(res, 200, { 
+      ok: true, 
+      email, 
+      breaches,
+      breachCount,
+      securityScore,
+      status,
+      message: `${breachCount} data breach${breachCount === 1 ? '' : 'es'} found`,
+      recommendations: getRecommendations(breachCount),
+      timestamp: new Date().toISOString()
     });
-    
-  } catch (error) {
-    console.error("Email check error:", error);
-    
-    return sendJson(res, 500, {
-      ok: false,
-      error: "Unable to perform security check",
-      message: "Please try again or contact support"
-    });
+  } catch (err) {
+    console.error("check-email error:", err);
+    return send(res, 500, { ok: false, error: "Unable to check email security. Please try again." });
   }
-}
+};
