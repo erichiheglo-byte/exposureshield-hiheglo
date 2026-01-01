@@ -1,4 +1,4 @@
-// api/auth/login.js
+﻿// api/auth/login.js
 const { applyCors } = require("../_lib/cors.js");
 const { getUserByEmail } = require("../_lib/store.js");
 const { signJwt } = require("../_lib/jwt.js");
@@ -17,6 +17,11 @@ function readJsonBody(req) {
     });
     req.on("error", reject);
   });
+}
+
+// Handles both sync and async implementations
+async function resolveMaybePromise(v) {
+  return v && typeof v.then === "function" ? await v : v;
 }
 
 module.exports = async function handler(req, res) {
@@ -38,7 +43,7 @@ module.exports = async function handler(req, res) {
   let body;
   try {
     body = await readJsonBody(req);
-  } catch (e) {
+  } catch {
     res.statusCode = 400;
     return res.end(JSON.stringify({ ok: false, error: "Invalid JSON body" }));
   }
@@ -57,7 +62,21 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
   }
 
-  const ok = verifyPassword(password, user.passwordHash);
+  // Prevent crashes if the stored record is missing/invalid
+  const hash = user.passwordHash;
+  if (!hash || typeof hash !== "string") {
+    res.statusCode = 401;
+    return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
+  }
+
+  let ok = false;
+  try {
+    ok = await resolveMaybePromise(verifyPassword(password, hash));
+  } catch {
+    res.statusCode = 401;
+    return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
+  }
+
   if (!ok) {
     res.statusCode = 401;
     return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));

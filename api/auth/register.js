@@ -20,6 +20,11 @@ function readJsonBody(req) {
   });
 }
 
+// Handles both sync and async implementations
+async function resolveMaybePromise(v) {
+  return v && typeof v.then === "function" ? await v : v;
+}
+
 module.exports = async function handler(req, res) {
   if (applyCors(req, res, "POST,OPTIONS")) return;
 
@@ -59,19 +64,36 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: "User already exists" }));
   }
 
+  let passwordHash;
+  try {
+    passwordHash = await resolveMaybePromise(hashPassword(password));
+  } catch {
+    res.statusCode = 500;
+    return res.end(JSON.stringify({ ok: false, error: "Password hashing failed" }));
+  }
+
+  if (!passwordHash || typeof passwordHash !== "string") {
+    res.statusCode = 500;
+    return res.end(JSON.stringify({ ok: false, error: "Password hashing failed" }));
+  }
+
   const now = new Date().toISOString();
   const user = {
     id: crypto.randomUUID(),
     email,
     name: username || email.split("@")[0],
-    passwordHash: hashPassword(password),
+    passwordHash,
     createdAt: now,
     updatedAt: now,
   };
 
   await createUser(user);
 
-  const token = signJwt({ sub: user.id, email: user.email }, jwtSecret, { expiresInSeconds: 60 * 60 * 24 * 7 });
+  const token = signJwt(
+    { sub: user.id, email: user.email },
+    jwtSecret,
+    { expiresInSeconds: 60 * 60 * 24 * 7 }
+  );
 
   const safeUser = { ...user };
   delete safeUser.passwordHash;
