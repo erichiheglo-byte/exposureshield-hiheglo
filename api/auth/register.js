@@ -100,3 +100,5 @@ module.exports = async function handler(req, res) {
   res.statusCode = 200;
   return res.end(JSON.stringify({ ok: true, token, user: safeUser }));
 };
+
+
