@@ -1,83 +1,58 @@
-const { applyCors } = require("../_lib/cors.js");
-const { getRefreshToken, deleteRefreshToken, storeRefreshToken } = require("../_lib/auth/refresh-store.js");
-const { verifyJwt, signJwt } = require("../_lib/jwt.js");
+import { applyCors } from '../_lib/cors.js'
+import { verifyToken, generateToken } from '../_lib/jwt.js'
+import { getStore } from '../_lib/store.js'
 
-function readJsonBody(req) {
-  return new Promise((resolve, reject) => {
-    let raw = "";
-    req.on("data", (chunk) => (raw += chunk));
-    req.on("end", () => {
-      try {
-        resolve(raw ? JSON.parse(raw) : {});
-      } catch (e) {
-        reject(e);
-      }
-    });
-    req.on("error", reject);
-  });
-}
+const store = getStore()
 
-module.exports = async function handler(req, res) {
-  if (applyCors(req, res, "POST,OPTIONS")) return;
-
-  res.setHeader("Content-Type", "application/json");
-
-  if (req.method !== "POST") {
-    res.statusCode = 405;
-    return res.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
+export default async function handler(req, res) {
+  await applyCors(req, res)
+  
+  if (req.method !== 'POST') {
+    return res.status(405).json({ ok: false, error: 'Method not allowed' })
   }
-
+  
   try {
-    const body = await readJsonBody(req);
-    const { refreshToken } = body;
-
+    const { refreshToken } = req.body
+    
     if (!refreshToken) {
-      res.statusCode = 400;
-      return res.end(JSON.stringify({ ok: false, error: "Refresh token required" }));
+      return res.status(400).json({ ok: false, error: 'Refresh token required' })
     }
-
-    // Verify the refresh token exists and is valid
-    const tokenData = await getRefreshToken(refreshToken);
-    if (!tokenData) {
-      res.statusCode = 401;
-      return res.end(JSON.stringify({ ok: false, error: "Invalid refresh token" }));
+    
+    // Verify refresh token
+    const decoded = verifyToken(refreshToken, process.env.JWT_REFRESH_SECRET)
+    
+    // Get user from store
+    const user = await store.users.get(decoded.userId)
+    
+    if (!user) {
+      return res.status(401).json({ ok: false, error: 'User not found' })
     }
-
-    // Delete used refresh token (one-time use)
-    await deleteRefreshToken(refreshToken);
-
-    const jwtSecret = String(process.env.JWT_SECRET || "").trim();
-    if (!jwtSecret) {
-      res.statusCode = 500;
-      return res.end(JSON.stringify({ ok: false, error: "JWT_SECRET not configured" }));
-    }
-
-    // Issue new access token (1 hour)
-    const newAccessToken = signJwt(
-      { sub: tokenData.userId, email: tokenData.email },
-      jwtSecret,
-      { expiresInSeconds: 60 * 60 }
-    );
-
-    // Issue new refresh token (7 days)
-    const newRefreshToken = require("crypto").randomBytes(64).toString("hex");
-    await storeRefreshToken(newRefreshToken, {
-      userId: tokenData.userId,
-      email: tokenData.email,
-      createdAt: new Date().toISOString()
-    });
-
-    res.statusCode = 200;
-    return res.end(JSON.stringify({
+    
+    // Generate new tokens
+    const token = generateToken(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      '7d'
+    )
+    
+    const newRefreshToken = generateToken(
+      { userId: user.id },
+      process.env.JWT_REFRESH_SECRET,
+      '30d'
+    )
+    
+    return res.status(200).json({
       ok: true,
-      token: newAccessToken,
+      token,
       refreshToken: newRefreshToken,
-      expiresIn: 3600 // 1 hour in seconds
-    }));
-
+      user: {
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt
+      }
+    })
+    
   } catch (error) {
-    console.error("Refresh error:", error);
-    res.statusCode = 500;
-    return res.end(JSON.stringify({ ok: false, error: "Internal server error" }));
+    return res.status(401).json({ ok: false, error: 'Invalid refresh token' })
   }
-};
+}

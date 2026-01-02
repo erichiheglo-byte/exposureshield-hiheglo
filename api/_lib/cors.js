@@ -1,21 +1,44 @@
-﻿const applyCors = (req, res, methods = "GET,POST,OPTIONS") => {
-  const origin = (req.headers.origin || "*").toString();
-
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Methods", methods);
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, X-Requested-With, Accept, Authorization"
-  );
-
-  if (req.method === "OPTIONS") {
-    res.statusCode = 200;
-    res.end();
-    return true;
+﻿// api/_lib/cors.js - CORS middleware for Vercel Serverless Functions
+export function applyCors(req, res) {
+  // Allowed origins (add your frontend domains)
+  const allowedOrigins = [
+    'https://www.exposureshield.com',
+    'https://exposureshield.com',
+    'http://localhost:3000',
+    'http://localhost:5173' // Vite dev server
+  ]
+  
+  const origin = req.headers.origin
+  
+  // Set CORS headers
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin)
+  } else {
+    // For development, you might want to allow all origins
+    // In production, be more restrictive
+    res.setHeader('Access-Control-Allow-Origin', '*')
   }
-  return false;
-};
+  
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return true // Return true to indicate preflight handled
+  }
+  
+  return false // Return false to continue with normal request
+}
 
-module.exports = { applyCors };
+// Alternative: Middleware style
+export const corsMiddleware = (handler) => async (req, res) => {
+  const isPreflight = applyCors(req, res)
+  if (!isPreflight) {
+    return handler(req, res)
+  }
+}
+
+// For CommonJS (if you're using require instead of import)
+module.exports = { applyCors, corsMiddleware }
