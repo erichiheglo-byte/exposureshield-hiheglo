@@ -78,16 +78,20 @@
       box-shadow:0 0 0 3px rgba(37,99,235,0.12);
     }
 
-    .row{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
     .hint{
       font-size:12px;
       color:var(--muted);
       margin-top:6px;
+    }
+    
+    .username-hint {
+      font-size:11px;
+      color:#f59e0b;
+      margin-top:4px;
+      display:none;
+    }
+    .username-hint.show {
+      display:block;
     }
 
     .status{
@@ -169,7 +173,8 @@
     <form id="registerForm" novalidate>
       <div class="form-group">
         <label for="name">Full Name</label>
-        <input type="text" id="name" autocomplete="name" placeholder="Your name" required />
+        <input type="text" id="name" autocomplete="name" placeholder="Your name (e.g., John Doe)" required />
+        <div class="username-hint" id="usernameHint">Username will be: <span id="usernamePreview"></span></div>
       </div>
 
       <div class="form-group">
@@ -200,8 +205,6 @@
     </div>
   </div>
 
-  <script src="/shared.js" defer></script>
-
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const form = document.getElementById("registerForm");
@@ -212,6 +215,8 @@
       const submitBtn = document.getElementById("submitBtn");
       const btnText = document.getElementById("btnText");
       const btnSpinner = document.getElementById("btnSpinner");
+      const usernameHint = document.getElementById("usernameHint");
+      const usernamePreview = document.getElementById("usernamePreview");
 
       function setBusy(isBusy) {
         submitBtn.disabled = isBusy;
@@ -226,9 +231,30 @@
       }
 
       function isValidEmail(email) {
-        // Simple validation (server does strict validation)
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
+
+      function formatUsername(fullName) {
+        // Convert to lowercase, replace spaces with underscores, remove special chars
+        return fullName
+          .toLowerCase()
+          .replace(/\s+/g, '_')
+          .replace(/[^a-z0-9_.-]/g, '')
+          .substring(0, 30);
+      }
+
+      function updateUsernamePreview() {
+        const name = String(nameEl.value || "").trim();
+        if (name.length > 0) {
+          const username = formatUsername(name);
+          usernamePreview.textContent = username;
+          usernameHint.classList.add('show');
+        } else {
+          usernameHint.classList.remove('show');
+        }
+      }
+
+      nameEl.addEventListener('input', updateUsernamePreview);
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -237,22 +263,36 @@
         const name = String(nameEl.value || "").trim();
         const email = String(emailEl.value || "").trim().toLowerCase();
         const password = String(passEl.value || "");
+        const username = formatUsername(name);
 
+        // Frontend validation
         if (!name) return showStatus("error", "Please enter your full name.");
         if (!isValidEmail(email)) return showStatus("error", "Please enter a valid email address.");
         if (password.length < 8) return showStatus("error", "Password must be at least 8 characters long.");
+        
+        // Validate username format (matches backend regex)
+        const usernameRegex = /^[a-zA-Z0-9_.-]+$/;
+        if (!usernameRegex.test(username) || username.length < 2) {
+          return showStatus("error", "Name contains invalid characters. Please use only letters, numbers, dots, hyphens, or underscores.");
+        }
 
         setBusy(true);
 
         try {
-          const r = await fetch("/api/auth/register", {
+          // CRITICAL: Correct endpoint (NOT /api/auth-register)
+          const res = await fetch("/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password, username: name })
+            body: JSON.stringify({ 
+              email, 
+              password, 
+              username: username, // Use formatted username
+              name: name // Keep original name for display
+            })
           });
 
-          // Always read as text first to avoid JSON parse crashes
-          const text = await r.text();
+          // SAFE JSON PARSING - prevents "Unexpected token" crashes
+          const text = await res.text();
           let data;
           try {
             data = JSON.parse(text);
@@ -260,33 +300,34 @@
             throw new Error("Server did not return JSON. Response:\n" + text);
           }
 
-          if (!r.ok || !data || data.ok !== true) {
-            const msg = (data && data.error) ? data.error : ("Registration failed (HTTP " + r.status + ")");
+          if (!res.ok || !data || data.ok !== true) {
+            const msg = (data && data.error) ? data.error : ("Registration failed (HTTP " + res.status + ")");
             throw new Error(msg);
           }
 
-          // Store token & user using your shared auth helper (if available)
-          if (window.ExposureShieldAuth && typeof ExposureShieldAuth.login === "function") {
-            ExposureShieldAuth.login(data.token, data.user);
-          } else {
-            // Fallback storage
-            localStorage.setItem("es_token", data.token || "");
-            localStorage.setItem("es_user", JSON.stringify(data.user || {}));
-          }
+          // Store token & user data (Essential for keeping user logged in)
+          localStorage.setItem("es_token", data.token || "");
+          localStorage.setItem("es_user", JSON.stringify(data.user || {}));
+          
+          // Also store in sessionStorage for immediate access
+          sessionStorage.setItem("es_token", data.token || "");
 
-          showStatus("success", "Account created successfully. Redirecting...");
+          showStatus("success", "Account created successfully! Redirecting to dashboard...");
 
-          // Redirect
+          // Redirect after 1 second
           setTimeout(() => {
             window.location.href = "dashboard.html";
-          }, 500);
+          }, 1000);
 
         } catch (err) {
-          showStatus("error", err.message || "Registration failed.");
+          showStatus("error", err.message || "Registration failed. Please try again.");
         } finally {
           setBusy(false);
         }
       });
+      
+      // Initial username preview
+      updateUsernamePreview();
     });
   </script>
 </body>
