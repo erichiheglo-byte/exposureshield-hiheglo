@@ -1,9 +1,11 @@
-﻿const { applyCors } = require("../_lib/cors.js");
+const { applyCors } = require("../_lib/cors.js");
 const { getUserByEmail } = require("../_lib/store.js");
 const { signJwt } = require("../_lib/jwt.js");
 const { verifyPassword } = require("../_lib/password.js");
 const rateLimit = require("express-rate-limit");
 const slowDown = require("express-slow-down");
+const crypto = require("crypto");
+const { storeRefreshToken } = require("../_lib/auth/refresh-store.js");
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
@@ -155,17 +157,34 @@ module.exports = async function handler(req, res) {
       return res.end(JSON.stringify({ ok: false, error: "Invalid email or password" }));
     }
 
+    const now = new Date().toISOString();
+    
+    // Access token: 1 hour
     const token = signJwt(
       { sub: user.id, email: user.email },
       jwtSecret,
-      { expiresInSeconds: 60 * 60 * 24 * 7 }
+      { expiresInSeconds: 60 * 60 }
     );
+
+    // Refresh token: 7 days (stored securely)
+    const refreshToken = crypto.randomBytes(64).toString("hex");
+    await storeRefreshToken(refreshToken, {
+      userId: user.id,
+      email: user.email,
+      createdAt: now
+    });
 
     const safeUser = { ...user };
     delete safeUser.passwordHash;
 
     res.statusCode = 200;
-    return res.end(JSON.stringify({ ok: true, token, user: safeUser }));
+    return res.end(JSON.stringify({ 
+      ok: true, 
+      token, 
+      refreshToken, 
+      user: safeUser,
+      expiresIn: 3600 // 1 hour in seconds
+    }));
   } catch (e) {
     // Fatal catch-all: ensures you never get an empty-body 500 again
     try {

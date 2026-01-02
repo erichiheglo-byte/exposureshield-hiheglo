@@ -1,9 +1,11 @@
-﻿const { applyCors } = require("../_lib/cors.js");
+const { applyCors } = require("../_lib/cors.js");
 const { getUserByEmail, createUser } = require("../_lib/store.js");
 const { signJwt } = require("../_lib/jwt.js");
 const { hashPassword } = require("../_lib/password.js");
 const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");
+const { storeRefreshToken } = require("../_lib/auth/refresh-store.js");
+const { sendVerificationEmail } = require("../_lib/email-service.js");
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
@@ -117,26 +119,57 @@ module.exports = async function handler(req, res) {
   }
 
   const now = new Date().toISOString();
+  const verificationToken = crypto.randomBytes(32).toString("hex");
+  const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
+  
   const user = {
     id: crypto.randomUUID(),
     email,
     name: username || email.split("@")[0],
     passwordHash,
+    emailVerified: false,
+    verificationToken,
+    verificationTokenExpires,
     createdAt: now,
     updatedAt: now,
   };
 
   await createUser(user);
 
+  // Send verification email (non-blocking)
+  sendVerificationEmail(email, verificationToken).catch(err => {
+    console.error("Failed to send verification email:", err);
+    // Don't fail registration if email fails
+  });
+
+  // Access token: 1 hour
   const token = signJwt(
     { sub: user.id, email: user.email },
     jwtSecret,
-    { expiresInSeconds: 60 * 60 * 24 * 7 }
+    { expiresInSeconds: 60 * 60 }
   );
+
+  // Refresh token: 7 days (stored securely)
+  const refreshToken = crypto.randomBytes(64).toString("hex");
+  await storeRefreshToken(refreshToken, {
+    userId: user.id,
+    email: user.email,
+    createdAt: now
+  });
 
   const safeUser = { ...user };
   delete safeUser.passwordHash;
+  delete safeUser.verificationToken;
+  delete safeUser.verificationTokenExpires;
 
-  res.statusCode = 200;
-  return res.end(JSON.stringify({ ok: true, token, user: safeUser }));
+  res.statusCode = 201;
+  return res.end(JSON.stringify({ 
+    ok: true, 
+    token, 
+    refreshToken, 
+    user: safeUser,
+    expiresIn: 3600, // 1 hour in seconds
+    emailVerificationRequired: true,
+    message: "Account created! Please check your email to verify your account."
+  }));
 };
