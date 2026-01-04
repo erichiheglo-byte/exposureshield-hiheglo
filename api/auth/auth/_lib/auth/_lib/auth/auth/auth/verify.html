@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Verification | ExposureShield</title>
+</head>
+<body>
+<h2>Verifying your account…</h2>
+
+<script>
+const token = new URLSearchParams(window.location.search).get("token");
+
+fetch("/api/auth/verify?token=" + token)
+  .then(r => r.json())
+  .then(d => {
+    document.body.innerHTML = d.ok
+      ? "<h2>✅ Email verified! You may now use premium features.</h2>"
+      : "<h2>❌ Verification failed or expired.</h2>";
+  });
+</script>
+</body>
+</html>

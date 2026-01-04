@@ -6,3 +6,7 @@
 node_modules/
 
 *.bak_*
+
+# local backups
+*.bak
+
