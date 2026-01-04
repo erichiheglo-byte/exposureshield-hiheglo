@@ -1,0 +1,4 @@
+﻿Legacy moved to:
+C:\Users\erich\legacyshield-security\frontend\legacy.html
+
+ExposureShield keeps only a placeholder /legacy.html to avoid broken links.
