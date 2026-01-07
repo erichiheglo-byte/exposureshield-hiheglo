@@ -181,6 +181,29 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
         }
 
+        .free-button {
+            background: linear-gradient(135deg, var(--success), #34d399);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .free-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
         /* ===== HERO SECTION ===== */
         .hero {
             padding: 100px 0 80px;
@@ -218,6 +241,64 @@
             max-width: 800px;
             margin: 0 auto 40px;
             line-height: 1.6;
+        }
+
+        /* ===== FREE SCAN SECTION ===== */
+        .free-scan-section {
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .scan-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            border: 2px dashed var(--primary);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .scan-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .scan-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .scan-subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .scan-features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .scan-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .scan-feature i {
+            color: var(--success);
         }
 
         /* ===== PRICING SECTION ===== */
@@ -341,6 +422,10 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
+        .pricing-card.free {
+            border: 2px solid var(--success);
+        }
+
         .pricing-card.popular {
             border: 2px solid var(--primary);
             transform: scale(1.02);
@@ -353,6 +438,21 @@
             left: 0;
             right: 0;
             background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card.free::before {
+            content: 'FREE FOREVER';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--success), #34d399);
             color: white;
             text-align: center;
             font-size: 0.8rem;
@@ -385,6 +485,10 @@
             font-weight: 800;
             color: var(--secondary);
             line-height: 1;
+        }
+
+        .free-price {
+            color: var(--success);
         }
 
         .price-period {
@@ -469,7 +573,7 @@
 
         .table-header {
             display: grid;
-            grid-template-columns: 2fr repeat(3, 1fr);
+            grid-template-columns: 2fr repeat(4, 1fr);
             background: rgba(255, 255, 255, 0.12);
             padding: 25px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -483,7 +587,7 @@
 
         .table-row {
             display: grid;
-            grid-template-columns: 2fr repeat(3, 1fr);
+            grid-template-columns: 2fr repeat(4, 1fr);
             padding: 20px 25px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             transition: var(--transition);
@@ -508,6 +612,10 @@
 
         .check-icon {
             color: var(--success);
+        }
+
+        .limited-icon {
+            color: var(--warning);
         }
 
         .x-icon {
@@ -694,6 +802,13 @@
         }
 
         /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .table-header,
+            .table-row {
+                grid-template-columns: 1.5fr repeat(4, 1fr);
+            }
+        }
+
         @media (max-width: 1024px) {
             .hero h1 {
                 font-size: 3.2rem;
@@ -707,6 +822,11 @@
             .table-header,
             .table-row {
                 grid-template-columns: 1.5fr repeat(3, 1fr);
+            }
+            
+            .table-header div:nth-child(2),
+            .table-row div:nth-child(2) {
+                display: none;
             }
         }
 
@@ -784,13 +904,19 @@
             }
             
             .cta-button,
-            .secondary-button {
+            .secondary-button,
+            .free-button {
                 width: 100%;
                 justify-content: center;
             }
             
             .toggle-label span {
                 display: none;
+            }
+            
+            .scan-features {
+                flex-direction: column;
+                align-items: center;
             }
         }
     </style>
@@ -814,9 +940,9 @@
                 </ul>
             </nav>
             
-            <a href="pricing.html#plans" class="cta-button">
-                <i class="fas fa-rocket"></i>
-                Get Protected
+            <a href="pricing.html#free-scan" class="cta-button">
+                <i class="fas fa-search"></i>
+                Free Security Scan
             </a>
         </div>
     </header>
@@ -825,15 +951,51 @@
     <section class="hero">
         <div class="container">
             <h1>Simple, Transparent Pricing</h1>
-            <p>Choose the perfect security plan for your needs. All plans include our core protection features with enterprise-grade security infrastructure.</p>
+            <p>Start with our free security scan, then choose the perfect protection plan for your needs. All plans include enterprise-grade security infrastructure.</p>
+        </div>
+    </section>
+
+    <!-- Free Security Scan Section -->
+    <section class="free-scan-section" id="free-scan">
+        <div class="container">
+            <div class="scan-container">
+                <div class="scan-icon">
+                    <i class="fas fa-search-shield"></i>
+                </div>
+                <h2 class="scan-title">Free Security Assessment</h2>
+                <p class="scan-subtitle">
+                    Get a comprehensive scan of your digital footprint. We'll check for exposed data, weak passwords, 
+                    and security vulnerabilities—completely free, no credit card required.
+                </p>
+                
+                <a href="index.html#emailCheck" class="free-button">
+                    <i class="fas fa-play-circle"></i>
+                    Start Free Security Scan
+                </a>
+                
+                <div class="scan-features">
+                    <div class="scan-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>No Credit Card Required</span>
+                    </div>
+                    <div class="scan-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Instant Results</span>
+                    </div>
+                    <div class="scan-feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>100% Private & Secure</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Pricing Plans -->
     <section class="pricing-section" id="plans">
         <div class="container">
-            <h2 class="section-title">Security Plans That Scale With You</h2>
-            <p class="section-subtitle">From individual protection to enterprise security solutions, we have a plan designed for every level of digital security needs.</p>
+            <h2 class="section-title">Upgrade to Complete Protection</h2>
+            <p class="section-subtitle">Choose from our premium plans for comprehensive digital security and peace of mind.</p>
             
             <!-- Toggle for Monthly/Yearly -->
             <div class="pricing-toggle">
@@ -847,10 +1009,37 @@
             
             <!-- Pricing Cards -->
             <div class="pricing-cards">
-                <!-- Basic Plan -->
+                <!-- Free Plan -->
+                <div class="pricing-card free">
+                    <h3 class="plan-name">Starter</h3>
+                    <p class="plan-description">Basic security monitoring and alerts. Perfect for trying out our service.</p>
+                    
+                    <div class="price">
+                        <div class="price-amount free-price">$0</div>
+                        <div class="price-period">forever free</div>
+                    </div>
+                    
+                    <a href="index.html#emailCheck" class="free-button" style="width: 100%; text-align: center; justify-content: center;">
+                        <i class="fas fa-rocket"></i>
+                        Get Started Free
+                    </a>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Basic Security Scan</li>
+                        <li><i class="fas fa-check"></i> Email Breach Alerts</li>
+                        <li><i class="fas fa-check"></i> Password Strength Check</li>
+                        <li><i class="fas fa-check"></i> Limited Dark Web Monitoring</li>
+                        <li><i class="fas fa-check"></i> Security Tips & Guides</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Real-time Monitoring</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Identity Theft Insurance</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Credit Monitoring</li>
+                    </ul>
+                </div>
+
+                <!-- Essential Plan -->
                 <div class="pricing-card">
                     <h3 class="plan-name">Essential</h3>
-                    <p class="plan-description">Perfect for individuals starting their digital security journey.</p>
+                    <p class="plan-description">Complete digital protection for individuals starting their security journey.</p>
                     
                     <div class="price">
                         <div class="price-amount monthly-price">$19<span style="font-size: 1.5rem;">.99</span></div>
@@ -865,13 +1054,13 @@
                     </a>
                     
                     <ul class="plan-features">
-                        <li><i class="fas fa-check"></i> Dark Web Monitoring</li>
+                        <li><i class="fas fa-check"></i> Everything in Starter</li>
+                        <li><i class="fas fa-check"></i> 24/7 Dark Web Monitoring</li>
                         <li><i class="fas fa-check"></i> Real-time Breach Alerts</li>
                         <li><i class="fas fa-check"></i> Basic Identity Protection</li>
                         <li><i class="fas fa-check"></i> Password Security Audit</li>
                         <li><i class="fas fa-check"></i> Email Security Scanning</li>
                         <li class="disabled"><i class="fas fa-times"></i> Identity Theft Insurance</li>
-                        <li class="disabled"><i class="fas fa-times"></i> Credit Monitoring</li>
                         <li class="disabled"><i class="fas fa-times"></i> Family Protection</li>
                     </ul>
                 </div>
@@ -901,7 +1090,7 @@
                         <li><i class="fas fa-check"></i> Social Media Monitoring</li>
                         <li><i class="fas fa-check"></i> Bank Account Monitoring</li>
                         <li><i class="fas fa-check"></i> VPN Access Included</li>
-                        <li class="disabled"><i class="fas fa-times"></i> Enterprise Controls</li>
+                        <li><i class="fas fa-check"></i> 24/7 Customer Support</li>
                     </ul>
                 </div>
 
@@ -938,7 +1127,7 @@
     </section>
 
     <!-- Comparison Table -->
-    <section class="comparison-section">
+    <section class="comparison-section" id="comparison">
         <div class="container">
             <h2 class="section-title">Plan Comparison</h2>
             <p class="section-subtitle">See how our plans compare across all major security features and benefits.</p>
@@ -946,13 +1135,23 @@
             <div class="comparison-table">
                 <div class="table-header">
                     <div>Security Features</div>
+                    <div>Starter</div>
                     <div>Essential</div>
                     <div>Professional</div>
                     <div>Enterprise</div>
                 </div>
                 
                 <div class="table-row">
-                    <div>Dark Web Monitoring</div>
+                    <div>Basic Security Scan</div>
+                    <div><i class="fas fa-check check-icon"></i></div>
+                    <div><i class="fas fa-check check-icon"></i></div>
+                    <div><i class="fas fa-check check-icon"></i></div>
+                    <div><i class="fas fa-check check-icon"></i></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>24/7 Dark Web Monitoring</div>
+                    <div><i class="fas fa-minus limited-icon"></i> Limited</div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
@@ -960,6 +1159,7 @@
                 
                 <div class="table-row">
                     <div>Real-time Breach Alerts</div>
+                    <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
@@ -968,12 +1168,14 @@
                 <div class="table-row">
                     <div>Identity Theft Insurance</div>
                     <div><i class="fas fa-times x-icon"></i></div>
+                    <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i> $1M</div>
                     <div><i class="fas fa-check check-icon"></i> $2M</div>
                 </div>
                 
                 <div class="table-row">
                     <div>Credit Monitoring</div>
+                    <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
@@ -982,19 +1184,14 @@
                 <div class="table-row">
                     <div>Family Members Covered</div>
                     <div>1</div>
+                    <div>1</div>
                     <div>3</div>
                     <div>10</div>
                 </div>
                 
                 <div class="table-row">
-                    <div>24/7 Support</div>
-                    <div>Email Only</div>
-                    <div>Email & Chat</div>
-                    <div>Priority Phone Support</div>
-                </div>
-                
-                <div class="table-row">
                     <div>VPN Access</div>
+                    <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
@@ -1004,7 +1201,16 @@
                     <div>Dedicated Security Advisor</div>
                     <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-times x-icon"></i></div>
+                    <div><i class="fas fa-times x-icon"></i></div>
                     <div><i class="fas fa-check check-icon"></i></div>
+                </div>
+                
+                <div class="table-row">
+                    <div>24/7 Support</div>
+                    <div>Email Only</div>
+                    <div>Email Only</div>
+                    <div>Email & Chat</div>
+                    <div>Priority Phone Support</div>
                 </div>
             </div>
         </div>
@@ -1021,10 +1227,11 @@
                 <div class="faq-item">
                     <h3 class="faq-question">
                         <i class="fas fa-question-circle"></i>
-                        Can I switch plans anytime?
+                        Is the free security scan really free?
                     </h3>
                     <p class="faq-answer">
-                        Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and you'll only pay the prorated difference.
+                        Yes! Our basic security scan is completely free forever. No credit card required, no hidden fees. 
+                        You'll get a comprehensive report of your digital exposure risk with actionable recommendations.
                     </p>
                 </div>
 
@@ -1032,10 +1239,11 @@
                 <div class="faq-item">
                     <h3 class="faq-question">
                         <i class="fas fa-question-circle"></i>
-                        Is there a free trial?
+                        Can I upgrade from the free plan later?
                     </h3>
                     <p class="faq-answer">
-                        We offer a 14-day free trial on all paid plans. No credit card required to start. Experience full protection before committing.
+                        Absolutely. You can upgrade to any paid plan at any time. When you upgrade, you'll get instant 
+                        access to all premium features, and we'll prorate your billing so you only pay for what you use.
                     </p>
                 </div>
 
@@ -1046,7 +1254,7 @@
                         What payment methods do you accept?
                     </h3>
                     <p class="faq-answer">
-                        We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and for enterprise plans, we also accept bank transfers.
+                        We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and for enterprise plans, we also accept bank transfers and purchase orders.
                     </p>
                 </div>
 
@@ -1057,7 +1265,8 @@
                         How does the family plan work?
                     </h3>
                     <p class="faq-answer">
-                        Family plans allow you to add additional members under one account. Each member gets individual protection while you manage everything from a single dashboard.
+                        Family plans allow you to add additional members under one account. Each member gets individual protection 
+                        while you manage everything from a single dashboard. Perfect for families or small teams.
                     </p>
                 </div>
 
@@ -1068,7 +1277,8 @@
                         Can I cancel anytime?
                     </h3>
                     <p class="faq-answer">
-                        Absolutely. You can cancel your subscription at any time through your account dashboard. No hidden fees or cancellation penalties.
+                        Absolutely. You can cancel your subscription at any time through your account dashboard. 
+                        No hidden fees or cancellation penalties. We even offer a 30-day money-back guarantee on all paid plans.
                     </p>
                 </div>
 
@@ -1076,10 +1286,11 @@
                 <div class="faq-item">
                     <h3 class="faq-question">
                         <i class="fas fa-question-circle"></i>
-                        Do you offer discounts for nonprofits?
+                        Do you offer discounts for nonprofits or students?
                     </h3>
                     <p class="faq-answer">
-                        Yes, we offer special pricing for registered nonprofit organizations and educational institutions. Contact our sales team for more information.
+                        Yes, we offer special pricing for registered nonprofit organizations, educational institutions, 
+                        and students. Contact our sales team with documentation for a custom discount.
                     </p>
                 </div>
             </div>
@@ -1090,22 +1301,26 @@
     <section class="cta-section">
         <div class="container">
             <h2>Start Your Security Journey Today</h2>
-            <p>Join over 50,000 individuals and businesses who trust ExposureShield for their digital protection. Try risk-free for 14 days.</p>
+            <p>Join over 75,000 individuals and businesses who trust ExposureShield for their digital protection. Try our free scan or start a risk-free trial.</p>
             
             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
-                <a href="contact.html?plan=professional" class="cta-button" style="background: white; color: var(--primary);">
+                <a href="index.html#emailCheck" class="cta-button" style="background: white; color: var(--primary);">
+                    <i class="fas fa-search-shield"></i>
+                    Free Security Scan
+                </a>
+                <a href="contact.html?plan=professional" class="free-button">
                     <i class="fas fa-play-circle"></i>
-                    Start Free Trial
+                    Start 14-Day Free Trial
                 </a>
                 <a href="contact.html" class="secondary-button" style="background: transparent; border-color: white; color: white;">
                     <i class="fas fa-comments"></i>
-                    Talk to Sales
+                    Talk to Security Experts
                 </a>
             </div>
             
             <p style="margin-top: 30px; font-size: 1rem; color: rgba(255, 255, 255, 0.8);">
                 <i class="fas fa-shield-check"></i>
-                No credit card required • 14-day free trial • Cancel anytime
+                No credit card required for free scan • 14-day free trial on paid plans • 30-day money-back guarantee
             </p>
         </div>
     </section>
@@ -1118,7 +1333,7 @@
                     <div class="footer-logo">ExposureShield</div>
                     <p class="footer-desc">
                         Transparent, enterprise-grade digital protection with privacy-first design. 
-                        Simple pricing, comprehensive coverage, and peace of mind for everyone.
+                        Start with our free security scan, then choose the perfect protection plan for your needs.
                     </p>
                     <div class="api-badge">
                         <i class="fas fa-lock"></i>
@@ -1129,10 +1344,10 @@
                 <div class="footer-links">
                     <h4>Plans</h4>
                     <ul>
+                        <li><a href="pricing.html#free-scan">Free Security Scan</a></li>
                         <li><a href="pricing.html#plans">Essential Plan</a></li>
                         <li><a href="pricing.html#plans">Professional Plan</a></li>
                         <li><a href="pricing.html#plans">Enterprise Plan</a></li>
-                        <li><a href="pricing.html#comparison">Compare Plans</a></li>
                     </ul>
                 </div>
                 
@@ -1164,7 +1379,7 @@
                     PCI DSS Level 1 Certified • ISO 27001 Certified
                 </p>
                 <p style="margin-top: 8px; font-size: 0.85rem; color: #64748b;">
-                    Pricing in USD • All plans include 14-day free trial
+                    Free security scan available • All paid plans include 14-day free trial
                 </p>
             </div>
         </div>
@@ -1208,6 +1423,23 @@
                 }, 500);
             }
         }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>

@@ -859,7 +859,7 @@
                             "Security is not a luxury—it's a fundamental right in the digital age."
                         </p>
                         <p style="margin-top: 10px; color: var(--gray); font-size: 0.95rem;">
-                            — Alex Chen, Founder & CEO
+                            — Eric Hiheglo, Founder & CEO
                         </p>
                     </div>
                 </div>
@@ -915,11 +915,11 @@
                 <!-- Team Member 1 -->
                 <div class="team-card">
                     <div class="team-avatar">
-                        AC
+                        EH
                     </div>
-                    <h3>Alex Chen</h3>
+                    <h3>Eric Hiheglo</h3>
                     <div class="position">Founder & CEO</div>
-                    <p>Former cybersecurity director at Fortune 500 companies. 15+ years in digital security and threat intelligence.</p>
+                    <p>Former cybersecurity director at Fortune 500 companies. 15+ years in digital security and threat intelligence. Passionate about making enterprise security accessible to everyone.</p>
                     <div class="team-social">
                         <a href="#"><i class="fab fa-linkedin"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -930,11 +930,11 @@
                 <!-- Team Member 2 -->
                 <div class="team-card">
                     <div class="team-avatar">
-                        MR
+                        IB
                     </div>
-                    <h3>Maria Rodriguez</h3>
+                    <h3>Isabel Bondo</h3>
                     <div class="position">Chief Technology Officer</div>
-                    <p>PhD in Cybersecurity. Previously led security architecture at major cloud infrastructure companies.</p>
+                    <p>PhD in Cybersecurity. Previously led security architecture at major cloud infrastructure companies. Expert in scalable security systems and privacy-preserving technologies.</p>
                     <div class="team-social">
                         <a href="#"><i class="fab fa-linkedin"></i></a>
                         <a href="#"><i class="fab fa-github"></i></a>
@@ -945,11 +945,11 @@
                 <!-- Team Member 3 -->
                 <div class="team-card">
                     <div class="team-avatar">
-                        JS
+                        KB
                     </div>
-                    <h3>James Sullivan</h3>
+                    <h3>Kevin Bukowski</h3>
                     <div class="position">Head of Security Operations</div>
-                    <p>Former incident response team lead. Specializes in real-time threat detection and rapid response protocols.</p>
+                    <p>Former incident response team lead with 12+ years experience. Specializes in real-time threat detection, rapid response protocols, and security automation.</p>
                     <div class="team-social">
                         <a href="#"><i class="fab fa-linkedin"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -973,7 +973,7 @@
                     <div class="timeline-content">
                         <div class="timeline-year">2018</div>
                         <h4>Company Founded</h4>
-                        <p>ExposureShield was founded by Alex Chen with a mission to make enterprise security accessible to everyone.</p>
+                        <p>ExposureShield was founded by Eric Hiheglo with a mission to make enterprise security accessible to everyone.</p>
                     </div>
                 </div>
 
@@ -1023,7 +1023,7 @@
                     <div class="timeline-content">
                         <div class="timeline-year">2023</div>
                         <h4>Industry Recognition</h4>
-                        <p>Awarded "Best Security Solution" by Security Today and reached 50,000+ active customers.</p>
+                        <p>Awarded "Best Security Solution" by Security Today and reached 75,000+ active customers.</p>
                     </div>
                 </div>
             </div>
@@ -1036,13 +1036,13 @@
             <div class="stats-grid">
                 <!-- Stat 1 -->
                 <div class="stat-card">
-                    <div class="stat-number">50,000+</div>
+                    <div class="stat-number">75,000+</div>
                     <div class="stat-label">Protected Users</div>
                 </div>
 
                 <!-- Stat 2 -->
                 <div class="stat-card">
-                    <div class="stat-number">1.2M+</div>
+                    <div class="stat-number">1.5M+</div>
                     <div class="stat-label">Threats Blocked</div>
                 </div>
 
@@ -1074,9 +1074,13 @@
             <p>Whether you're an individual looking to protect your digital identity or a business needing comprehensive security solutions, we're here to help.</p>
             
             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
-                <a href="pricing.html" class="cta-button">
+                <a href="pricing.html#free-scan" class="cta-button">
+                    <i class="fas fa-search-shield"></i>
+                    Free Security Scan
+                </a>
+                <a href="pricing.html" class="secondary-button">
                     <i class="fas fa-shield-alt"></i>
-                    Get Protected Today
+                    View Pricing Plans
                 </a>
                 <a href="careers.html" class="secondary-button">
                     <i class="fas fa-users"></i>
@@ -1086,7 +1090,7 @@
             
             <p style="margin-top: 30px; color: var(--gray); font-size: 1rem;">
                 <i class="fas fa-award"></i>
-                Trusted by security professionals worldwide
+                Trusted by security professionals worldwide • Enterprise-grade protection for everyone
             </p>
         </div>
     </section>
@@ -1103,7 +1107,7 @@
                     </p>
                     <div class="api-badge">
                         <i class="fas fa-medal"></i>
-                        Award-Winning Security • Trusted by 50K+ Users
+                        Award-Winning Security • Trusted by 75K+ Users
                     </div>
                 </div>
                 
@@ -1145,7 +1149,7 @@
                     Committed to security, transparency, and protecting your digital life
                 </p>
                 <p style="margin-top: 8px; font-size: 0.85rem; color: #64748b;">
-                    Headquarters: San Francisco, CA • Founded: 2018
+                    Headquarters: San Francisco, CA • Founded: 2018 by Eric Hiheglo
                 </p>
             </div>
         </div>
@@ -1175,7 +1179,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const stats = document.querySelectorAll('.stat-number');
-                    const targets = [50000, 1200000, 24, 99.9, 50];
+                    const targets = [75000, 1500000, 24, 99.9, 50];
                     
                     stats.forEach((stat, index) => {
                         if (index < targets.length) {
@@ -1198,6 +1202,23 @@
         if (statsSection) {
             observer.observe(statsSection);
         }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId !== '#') {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
     </script>
 </body>
 </html>
