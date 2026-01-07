@@ -3,196 +3,875 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | ExposureShield</title>
-    <!-- Add same styling as index.html -->
+    <title>Contact Us | ExposureShield - Professional Cybersecurity Solutions</title>
+    
+    <!-- Font Awesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--secondary);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            gap: 30px;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        /* ===== BUTTONS ===== */
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .secondary-button {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--gray-light);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .secondary-button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .contact-hero {
+            padding: 100px 0 60px;
+            text-align: center;
+            background: 
+                radial-gradient(800px 300px at 15% 20%, rgba(37, 99, 235, 0.08), transparent 60%),
+                radial-gradient(800px 300px at 85% 25%, rgba(59, 130, 246, 0.06), transparent 55%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+
+        .contact-hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            letter-spacing: -0.03em;
+        }
+
+        .contact-hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ===== CONTACT FORM ===== */
+        .contact-form-section {
+            max-width: 900px;
+            margin: 0 auto 100px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 60px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .form-container h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--secondary);
+            letter-spacing: -0.02em;
+        }
+
+        .form-container > p {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        /* Form Styles */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .required-star {
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 18px 22px;
+            border: 2px solid var(--gray-light);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 180px;
+            line-height: 1.6;
+        }
+
+        .form-submit {
+            margin-top: 20px;
+        }
+
+        .form-note {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* Messages */
+        .success-message {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            padding: 50px 40px;
+            border-radius: var(--radius);
+            border: 1px solid #86efac;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            padding: 50px 40px;
+            border-radius: var(--radius);
+            border: 1px solid #fca5a5;
+            text-align: center;
+            display: none;
+        }
+
+        /* ===== CONTACT METHODS ===== */
+        .contact-methods-section {
+            margin: 100px 0;
+        }
+
+        .contact-methods-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 16px;
+            color: var(--secondary);
+            letter-spacing: -0.02em;
+        }
+
+        .contact-methods-section > p {
+            color: var(--gray);
+            margin-bottom: 60px;
+            font-size: 1.15rem;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .contact-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .contact-method-card {
+            background: white;
+            padding: 40px 32px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-method-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .contact-method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .contact-icon {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1));
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-method-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .contact-info {
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .contact-hero h1 {
+                font-size: 3.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .contact-hero {
+                padding: 80px 0 40px;
+            }
+            
+            .contact-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .contact-hero .subtitle {
+                font-size: 1.15rem;
+            }
+            
+            .form-container {
+                padding: 40px 24px;
+            }
+            
+            .form-container h2 {
+                font-size: 2rem;
+            }
+            
+            .contact-methods-section h2 {
+                font-size: 2rem;
+            }
+            
+            .contact-methods-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .contact-method-card {
+                padding: 30px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 16px 18px;
+            }
+            
+            .cta-button,
+            .secondary-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header (same as index.html) -->
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </a>
+            
+            <a href="index.html" class="secondary-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+        </div>
+    </header>
 
-    <main class="container">
-        <section class="contact-hero">
-            <h1>Get in Touch</h1>
-            <p class="subtitle">Need help with your scan, have questions about our service, or want to discuss business options? We're here to help.</p>
-        </section>
+    <!-- Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <h1>Professional Security Support</h1>
+            <p class="subtitle">Need assistance with your security scan, have questions about our enterprise solutions, or want to discuss custom security implementations? Our team is ready to help.</p>
+        </div>
+    </section>
 
-        <section class="contact-options">
-            <div class="contact-grid">
-                <!-- Support -->
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Support & Help</h3>
-                    <p>For questions about your scan results, PDF report, or technical issues.</p>
-                    
-                    <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@exposureshield.com</p>
-                        <p><i class="fas fa-clock"></i> <strong>Response time:</strong> Typically within 24 hours</p>
-                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Scan questions, report issues, technical help</p>
-                    </div>
-                    
-                    <a href="mailto:support@exposureshield.com?subject=Support%20Request" class="cta-button">
-                        <i class="fas fa-paper-plane"></i> Email Support
-                    </a>
-                </div>
-
-                <!-- Business -->
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3>Business & Teams</h3>
-                    <p>For volume scanning, enterprise solutions, or custom implementations.</p>
-                    
-                    <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> business@exposureshield.com</p>
-                        <p><i class="fas fa-clock"></i> <strong>Response time:</strong> Within 1 business day</p>
-                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Volume discounts, API access, custom needs</p>
-                    </div>
-                    
-                    <a href="mailto:business@exposureshield.com?subject=Business%20Inquiry" class="secondary-button">
-                        <i class="fas fa-comments"></i> Contact Business Team
-                    </a>
-                </div>
-
-                <!-- Security -->
-                <div class="contact-card">
-                    <div class="contact-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Security & Privacy</h3>
-                    <p>For security researchers, vulnerability reports, or privacy questions.</p>
-                    
-                    <div class="contact-details">
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> security@exposureshield.com</p>
-                        <p><i class="fas fa-lock"></i> <strong>Encryption:</strong> PGP key available on request</p>
-                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Security reports, privacy concerns, researchers</p>
-                    </div>
-                    
-                    <a href="mailto:security@exposureshield.com?subject=Security%20Inquiry" class="secondary-button">
-                        <i class="fas fa-shield"></i> Contact Security Team
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="contact-form-section">
+    <!-- Contact Form Section -->
+    <section class="contact-form-section">
+        <div class="container">
             <div class="form-container">
                 <h2>Send Us a Message</h2>
-                <p>Prefer to use a contact form? Fill out the details below and we'll get back to you.</p>
+                <p>Fill out the form below and our security team will respond promptly. All communications are encrypted and handled with strict confidentiality.</p>
                 
-                <form id="contactForm" class="contact-form">
+                <!-- Formspree Form -->
+                <form id="contactForm" class="contact-form" action="https://formspree.io/f/xeeoykzk" method="POST">
+                    <!-- Name Field -->
                     <div class="form-group">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your name">
+                        <label for="name">
+                            Your Name
+                            <span class="required-star">*</span>
+                        </label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
                     </div>
                     
+                    <!-- Email Field -->
                     <div class="form-group">
-                        <label for="email">Email Address</label>
+                        <label for="email">
+                            Email Address
+                            <span class="required-star">*</span>
+                        </label>
                         <input type="email" id="email" name="email" required placeholder="you@example.com">
                     </div>
                     
+                    <!-- Phone Field -->
                     <div class="form-group">
-                        <label for="category">What's this about?</label>
+                        <label for="phone">Phone Number (Optional)</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(207) 992-7874">
+                    </div>
+                    
+                    <!-- Company Field -->
+                    <div class="form-group">
+                        <label for="company">Company/Organization (Optional)</label>
+                        <input type="text" id="company" name="company" placeholder="Your company name">
+                    </div>
+                    
+                    <!-- Category Field -->
+                    <div class="form-group">
+                        <label for="category">
+                            Inquiry Type
+                            <span class="required-star">*</span>
+                        </label>
                         <select id="category" name="category" required>
                             <option value="">Select a category</option>
-                            <option value="support">Support & Help</option>
-                            <option value="business">Business Inquiry</option>
-                            <option value="security">Security Question</option>
-                            <option value="billing">Billing & Refunds</option>
-                            <option value="other">Other</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="sales">Sales & Pricing</option>
+                            <option value="enterprise">Enterprise Solutions</option>
+                            <option value="security">Security Consultation</option>
+                            <option value="compliance">Compliance & Auditing</option>
+                            <option value="partnership">Partnership Opportunities</option>
+                            <option value="other">Other Inquiry</option>
                         </select>
                     </div>
                     
+                    <!-- Priority Field -->
                     <div class="form-group">
-                        <label for="message">Your Message</label>
-                        <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+                        <label for="priority">Priority Level</label>
+                        <select id="priority" name="priority">
+                            <option value="low">Low - General inquiry</option>
+                            <option value="medium" selected>Medium - Need response within 24 hours</option>
+                            <option value="high">High - Urgent security matter</option>
+                            <option value="critical">Critical - Immediate assistance needed</option>
+                        </select>
                     </div>
                     
+                    <!-- Message Field -->
+                    <div class="form-group">
+                        <label for="message">
+                            Your Message
+                            <span class="required-star">*</span>
+                        </label>
+                        <textarea id="message" name="message" required placeholder="Please describe how we can assist you. Include any relevant details about your security needs..."></textarea>
+                    </div>
+                    
+                    <!-- Hidden Fields for Formspree -->
+                    <input type="hidden" name="_subject" value="ExposureShield Contact Form Submission">
+                    <input type="hidden" name="_replyto" value="" id="replyTo">
+                    <input type="text" name="_gotcha" style="display:none;" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="_next" value="https://exposureshield.com/contact.html?success=true">
+                    <input type="hidden" name="_format" value="plain">
+                    
+                    <!-- Submit Button -->
                     <div class="form-submit">
                         <button type="submit" class="cta-button">
-                            <i class="fas fa-paper-plane"></i> Send Message
+                            <i class="fas fa-paper-plane"></i>
+                            Send Secure Message
                         </button>
                         <p class="form-note">
-                            <i class="fas fa-lock"></i> Your information is secure. We don't share your data with third parties.
+                            <i class="fas fa-lock"></i>
+                            Your information is encrypted and processed securely. We never share your data.
                         </p>
                     </div>
                 </form>
                 
-                <div id="formSuccess" class="success-message" style="display: none;">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Message Sent Successfully!</h3>
-                    <p>Thank you for contacting us. We'll get back to you as soon as possible.</p>
+                <!-- Success Message -->
+                <div id="formSuccess" class="success-message">
+                    <div style="text-align: center;">
+                        <i class="fas fa-check-circle" style="font-size: 4rem; color: #10b981; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: var(--secondary); font-size: 1.8rem;">Message Sent Successfully!</h3>
+                        <p style="color: var(--gray); margin-bottom: 25px; font-size: 1.1rem; line-height: 1.6;">
+                            Thank you for contacting ExposureShield. Our security team has received your message and will respond within 24 hours.
+                        </p>
+                        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                            <a href="index.html" class="secondary-button">
+                                <i class="fas fa-home"></i>
+                                Back to Home
+                            </a>
+                            <a href="#contactForm" class="cta-button" onclick="resetForm()">
+                                <i class="fas fa-plus"></i>
+                                Send Another Message
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Error Message -->
+                <div id="formError" class="error-message">
+                    <div style="text-align: center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ef4444; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: var(--secondary); font-size: 1.8rem;">Unable to Send Message</h3>
+                        <p id="errorText" style="color: var(--gray); margin-bottom: 25px; font-size: 1.1rem;">
+                            There was an error sending your message. Please try again or contact us directly.
+                        </p>
+                        <button onclick="showForm()" class="secondary-button">
+                            <i class="fas fa-rotate-left"></i>
+                            Try Again
+                        </button>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="faq-preview">
-            <h2>Common Questions</h2>
+    <!-- Direct Contact Methods -->
+    <section class="contact-methods-section">
+        <div class="container">
+            <h2>Direct Contact Methods</h2>
+            <p>For immediate assistance or specific inquiries, contact us directly:</p>
             
-            <div class="faq-items">
-                <div class="faq-item">
-                    <h3>How quickly will you respond?</h3>
-                    <p>Support requests typically get a response within 24 hours. Business inquiries within 1 business day.</p>
+            <div class="contact-methods-grid">
+                <div class="contact-method-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Primary Contact</h3>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong><br>contact@exposureshield.com</p>
+                        <p><strong>Response Time:</strong><br>Within 24 hours</p>
+                        <p><strong>Best For:</strong><br>General inquiries, support, sales</p>
+                    </div>
+                    <a href="mailto:contact@exposureshield.com" class="secondary-button">
+                        <i class="fas fa-paper-plane"></i>
+                        Email Contact
+                    </a>
                 </div>
                 
-                <div class="faq-item">
-                    <h3>Do you offer phone support?</h3>
-                    <p>Currently, we offer email support only. This helps us provide thorough, documented responses and maintain security standards.</p>
+                <div class="contact-method-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone Support</h3>
+                    <div class="contact-info">
+                        <p><strong>Phone:</strong><br>(207) 992-7874</p>
+                        <p><strong>Hours:</strong><br>Mon-Fri, 9am-5pm EST</p>
+                        <p><strong>Best For:</strong><br>Urgent matters, enterprise clients</p>
+                    </div>
+                    <a href="tel:2079927874" class="secondary-button">
+                        <i class="fas fa-phone"></i>
+                        Call Now
+                    </a>
                 </div>
                 
-                <div class="faq-item">
-                    <h3>Can you help me with a specific breach?</h3>
-                    <p>We can help you understand your exposure and provide general remediation guidance. For specific account issues, you'll need to contact the affected service directly.</p>
+                <div class="contact-method-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Enterprise Support</h3>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong><br>enterprise@exposureshield.com</p>
+                        <p><strong>Response:</strong><br>Dedicated account manager</p>
+                        <p><strong>Best For:</strong><br>Business partnerships, bulk scanning</p>
+                    </div>
+                    <a href="mailto:enterprise@exposureshield.com" class="cta-button">
+                        <i class="fas fa-handshake"></i>
+                        Enterprise Inquiry
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: var(--secondary); color: white; padding: 60px 0 30px; margin-top: 80px;">
+        <div class="container">
+            <div style="text-align: center;">
+                <div class="footer-logo" style="font-family: 'Poppins', sans-serif; font-size: 1.9rem; font-weight: 800; margin-bottom: 20px; color: white;">
+                    ExposureShield
+                </div>
+                <p style="color: #cbd5e1; margin-bottom: 25px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                    Enterprise-grade security monitoring with privacy-first design. Protecting digital identities with transparency and compliance.
+                </p>
+                <div style="display: inline-flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.1); padding: 12px 24px; border-radius: 50px; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.12);">
+                    <i class="fas fa-key"></i>
+                    <span style="font-size: 0.95rem;">Secure Communications • GDPR & CCPA Compliant</span>
                 </div>
             </div>
             
-            <div class="faq-link">
-                <p>More questions? Check our <a href="faq.html">complete FAQ</a>.</p>
+            <div style="text-align: center; padding-top: 40px; border-top: 1px solid #334155; margin-top: 40px; color: #94a3b8; font-size: 0.9rem;">
+                <p>© <span id="currentYear"></span> ExposureShield Security Solutions. All rights reserved.</p>
+                <p style="margin-top: 10px;">
+                    <i class="fas fa-shield-alt"></i>
+                    Security-focused engineering • Privacy-first architecture
+                </p>
             </div>
-        </section>
+        </div>
+    </footer>
 
-        <section class="quick-links">
-            <h2>Quick Links</h2>
-            <div class="link-grid">
-                <a href="index.html#emailCheck" class="link-card">
-                    <i class="fas fa-search"></i>
-                    <span>Run a Free Scan</span>
-                </a>
-                
-                <a href="faq.html" class="link-card">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Visit FAQ</span>
-                </a>
-                
-                <a href="status.html" class="link-card">
-                    <i class="fas fa-signal"></i>
-                    <span>Check System Status</span>
-                </a>
-                
-                <a href="privacy.html" class="link-card">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Privacy Policy</span>
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer (same as index.html) -->
-
+    <!-- JavaScript -->
     <script>
-        // Simple form handling
-        document.getElementById('contactForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
             
-            // In production, this would submit to your backend
-            // For demo purposes, just show success message
+            const contactForm = document.getElementById('contactForm');
+            const formSuccess = document.getElementById('formSuccess');
+            const formError = document.getElementById('formError');
+            const errorText = document.getElementById('errorText');
+            const emailField = document.getElementById('email');
+            const replyToField = document.getElementById('replyTo');
             
-            document.getElementById('contactForm').style.display = 'none';
-            document.getElementById('formSuccess').style.display = 'block';
+            // Auto-set reply-to from email field
+            emailField.addEventListener('input', function() {
+                replyToField.value = this.value;
+            });
             
-            // Optional: Scroll to success message
-            document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth' });
+            // Handle URL parameters for success/error
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.get('success') === 'true') {
+                // Formspree redirect success
+                contactForm.style.display = 'none';
+                formSuccess.style.display = 'block';
+                
+                // Clear URL parameters
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            if (urlParams.get('error')) {
+                // Formspree redirect error
+                contactForm.style.display = 'none';
+                formError.style.display = 'block';
+                
+                // Clear URL parameters
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            // Form validation before submission
+            contactForm.addEventListener('submit', function(e) {
+                // Basic validation
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const category = document.getElementById('category').value;
+                const message = document.getElementById('message').value.trim();
+                const honeypot = document.querySelector('input[name="_gotcha"]').value;
+                
+                // Honeypot check
+                if (honeypot) {
+                    e.preventDefault();
+                    showSuccess(); // Fake success to spammer
+                    return false;
+                }
+                
+                // Required fields validation
+                if (!name || !email || !category || !message) {
+                    e.preventDefault();
+                    showError('Please fill in all required fields marked with *');
+                    return false;
+                }
+                
+                // Email validation
+                if (!validateEmail(email)) {
+                    e.preventDefault();
+                    showError('Please enter a valid email address.');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Securely...';
+                submitBtn.disabled = true;
+                
+                // Optional: You can add AJAX submission here instead of form action
+                /*
+                e.preventDefault();
+                try {
+                    const formData = new FormData(contactForm);
+                    const response = await fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        showSuccess();
+                    } else {
+                        showError('There was an error sending your message. Please try again.');
+                    }
+                } catch (error) {
+                    showError('Network error. Please check your connection and try again.');
+                } finally {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+                */
+            });
+            
+            // Helper functions
+            window.showForm = function() {
+                contactForm.style.display = 'block';
+                formSuccess.style.display = 'none';
+                formError.style.display = 'none';
+                
+                // Scroll to form
+                contactForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            };
+            
+            window.resetForm = function() {
+                contactForm.reset();
+                showForm();
+            };
+            
+            window.showSuccess = function() {
+                contactForm.style.display = 'none';
+                formError.style.display = 'none';
+                formSuccess.style.display = 'block';
+                
+                // Scroll to success message
+                setTimeout(() => {
+                    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            };
+            
+            window.showError = function(message) {
+                if (errorText) errorText.textContent = message;
+                formError.style.display = 'block';
+                contactForm.style.display = 'none';
+                
+                // Scroll to error message
+                setTimeout(() => {
+                    formError.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            };
+            
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        e.preventDefault();
+                        
+                        // Calculate header offset
+                        const headerOffset = 80;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
         });
     </script>
 </body>
