@@ -1,50 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pricing - ExposureShield</title>
-  <link rel="canonical" href="https://www.exposureshield.com/pricing" />
-
-  <link rel="stylesheet" href="/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | ExposureShield</title>
+    <!-- Add same styling as index.html -->
 </head>
 <body>
-    <body data-page="pricing">
+    <!-- Header (same as index.html) -->
 
-    <div id="shared-header"></div>
-  <div class="container">
-    <header>
-      <h1>Pricing</h1>
-      <p class="tagline">Choose the plan that fits your needs.</p>
-      <p class="subtitle">Secure monitoring, legacy planning, or the complete suite.</p>
-    </header>
+    <main class="container">
+        <section class="pricing-hero">
+            <h1>Simple, Transparent Pricing</h1>
+            <p class="subtitle">Start free. Pay only for the detailed PDF report when you need it. No subscriptions, no surprises.</p>
+            
+            <div class="trust-badges">
+                <span class="badge"><i class="fas fa-lock"></i> No credit card for free scan</span>
+                <span class="badge"><i class="fas fa-sync"></i> 30-day refund policy</span>
+                <span class="badge"><i class="fas fa-shield"></i> Privacy-first design</span>
+            </div>
+        </section>
 
-    <section class="scanner">
-      <h2>Plans</h2>
-      <ul style="margin-top: 12px; padding-left: 18px; color: #cbd5e1;">
-        <li><strong>Security Protection:</strong> $4.99 / month</li>
-        <li><strong>Legacy Planning:</strong> $7.99 / month</li>
-        <li><strong>Complete Suite:</strong> $9.99 / month</li>
-        <li><strong>Annual:</strong> Save 20%</li>
-      </ul>
+        <section class="pricing-plans">
+            <div class="pricing-grid">
+                <!-- Free Tier -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Free Scan</h3>
+                        <div class="price">$0</div>
+                        <p class="price-subtitle">Always free</p>
+                    </div>
+                    
+                    <div class="plan-description">
+                        <p>Perfect for checking your current exposure and getting basic guidance.</p>
+                    </div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Email exposure check</li>
+                        <li><i class="fas fa-check"></i> Risk level assessment</li>
+                        <li><i class="fas fa-check"></i> Breach count & details</li>
+                        <li><i class="fas fa-check"></i> Basic action checklist</li>
+                        <li><i class="fas fa-check"></i> Privacy-first processing</li>
+                    </ul>
+                    
+                    <div class="plan-cta">
+                        <a href="index.html#emailCheck" class="cta-button full-width">
+                            <i class="fas fa-search"></i> Start Free Scan
+                        </a>
+                        <p class="fine-print">No account required</p>
+                    </div>
+                </div>
 
-      <p style="margin-top: 16px; color:#cbd5e1;">
-        Payments are currently in demo mode. Stripe will be enabled in production.
-      </p>
+                <!-- PDF Report -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">Most Popular</div>
+                    
+                    <div class="plan-header">
+                        <h3>PDF Report</h3>
+                        <div class="price">$4.99</div>
+                        <p class="price-subtitle">One-time purchase</p>
+                    </div>
+                    
+                    <div class="plan-description">
+                        <p>Detailed report for documentation, compliance, or personal records.</p>
+                    </div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Everything in Free Scan</li>
+                        <li><i class="fas fa-check"></i> Detailed PDF export</li>
+                        <li><i class="fas fa-check"></i> Breach timeline summary</li>
+                        <li><i class="fas fa-check"></i> Step-by-step remediation</li>
+                        <li><i class="fas fa-check"></i> Security best practices guide</li>
+                        <li><i class="fas fa-check"></i> Printable checklist</li>
+                    </ul>
+                    
+                    <div class="value-note">
+                        <i class="fas fa-star"></i>
+                        <span>Perfect for security documentation or compliance needs</span>
+                    </div>
+                    
+                    <div class="plan-cta">
+                        <p class="how-it-works">Run a free scan first, then unlock the PDF report</p>
+                        <a href="index.html#emailCheck" class="cta-button full-width accent">
+                            <i class="fas fa-file-pdf"></i> Scan & Unlock Report
+                        </a>
+                        <p class="fine-print">Secure PayPal checkout</p>
+                    </div>
+                </div>
 
-      <div style="margin-top: 18px;">
-        <a href="/" class="back-button" style="display:inline-block;text-decoration:none;">
-          ← Back to ExposureShield
-        </a>
-      </div>
-    </section>
+                <!-- Business -->
+                <div class="pricing-card">
+                    <div class="plan-header">
+                        <h3>Business & Teams</h3>
+                        <div class="price">Custom</div>
+                        <p class="price-subtitle">Volume discounts</p>
+                    </div>
+                    
+                    <div class="plan-description">
+                        <p>For teams needing consistent reporting, workflows, or compliance documentation.</p>
+                    </div>
+                    
+                    <ul class="plan-features">
+                        <li><i class="fas fa-check"></i> Everything in PDF Report</li>
+                        <li><i class="fas fa-check"></i> Bulk scanning options</li>
+                        <li><i class="fas fa-check"></i> Custom report templates</li>
+                        <li><i class="fas fa-check"></i> Team management dashboard</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> API access available</li>
+                    </ul>
+                    
+                    <div class="plan-cta">
+                        <a href="contact.html" class="secondary-button full-width">
+                            <i class="fas fa-envelope"></i> Contact Sales
+                        </a>
+                        <p class="fine-print">Typically responds within 1 business day</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <footer>
-      © 2025 ExposureShield • contact@exposureshield.com
-    </footer>
-  </div>
-  <div id="shared-footer"></div>
-<script src="/shared.js" defer></script>
+        <section class="faq-section">
+            <h2>Common Questions</h2>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>Do I need to create an account?</h3>
+                    <p>No. Our free scan works without any account creation. The PDF report purchase uses your email for delivery, but no password or account is required.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>How does the PDF report work?</h3>
+                    <p>After your free scan, you can choose to unlock the detailed PDF report for $4.99. The report generates instantly and includes all findings plus remediation steps.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>What payment methods do you accept?</h3>
+                    <p>We use PayPal for secure payments. You don't need a PayPal account—you can pay with credit/debit card through PayPal's checkout.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Is there a refund policy?</h3>
+                    <p>Yes. If you're unsatisfied with your PDF report for any reason, contact us within 30 days for a full refund. See our Refund Policy for details.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Do you offer discounts?</h3>
+                    <p>We offer volume discounts for educational institutions, nonprofits, and businesses purchasing multiple reports. Contact us for pricing.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Can I scan multiple emails?</h3>
+                    <p>The free scan works for individual emails. For scanning multiple addresses (like team members), contact us about our business options.</p>
+                </div>
+            </div>
+        </section>
 
+        <section class="enterprise-cta">
+            <h2>Need Enterprise Solutions?</h2>
+            <p>Custom integrations, volume licensing, or dedicated support for your organization.</p>
+            <a href="contact.html" class="secondary-button">
+                <i class="fas fa-comments"></i> Talk to Our Team
+            </a>
+        </section>
+    </main>
+
+    <!-- Footer (same as index.html) -->
 </body>
 </html>

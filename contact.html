@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | ExposureShield</title>
+    <!-- Add same styling as index.html -->
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+
+    <main class="container">
+        <section class="contact-hero">
+            <h1>Get in Touch</h1>
+            <p class="subtitle">Need help with your scan, have questions about our service, or want to discuss business options? We're here to help.</p>
+        </section>
+
+        <section class="contact-options">
+            <div class="contact-grid">
+                <!-- Support -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Support & Help</h3>
+                    <p>For questions about your scan results, PDF report, or technical issues.</p>
+                    
+                    <div class="contact-details">
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@exposureshield.com</p>
+                        <p><i class="fas fa-clock"></i> <strong>Response time:</strong> Typically within 24 hours</p>
+                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Scan questions, report issues, technical help</p>
+                    </div>
+                    
+                    <a href="mailto:support@exposureshield.com?subject=Support%20Request" class="cta-button">
+                        <i class="fas fa-paper-plane"></i> Email Support
+                    </a>
+                </div>
+
+                <!-- Business -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Business & Teams</h3>
+                    <p>For volume scanning, enterprise solutions, or custom implementations.</p>
+                    
+                    <div class="contact-details">
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> business@exposureshield.com</p>
+                        <p><i class="fas fa-clock"></i> <strong>Response time:</strong> Within 1 business day</p>
+                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Volume discounts, API access, custom needs</p>
+                    </div>
+                    
+                    <a href="mailto:business@exposureshield.com?subject=Business%20Inquiry" class="secondary-button">
+                        <i class="fas fa-comments"></i> Contact Business Team
+                    </a>
+                </div>
+
+                <!-- Security -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Security & Privacy</h3>
+                    <p>For security researchers, vulnerability reports, or privacy questions.</p>
+                    
+                    <div class="contact-details">
+                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> security@exposureshield.com</p>
+                        <p><i class="fas fa-lock"></i> <strong>Encryption:</strong> PGP key available on request</p>
+                        <p><i class="fas fa-check"></i> <strong>Best for:</strong> Security reports, privacy concerns, researchers</p>
+                    </div>
+                    
+                    <a href="mailto:security@exposureshield.com?subject=Security%20Inquiry" class="secondary-button">
+                        <i class="fas fa-shield"></i> Contact Security Team
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-form-section">
+            <div class="form-container">
+                <h2>Send Us a Message</h2>
+                <p>Prefer to use a contact form? Fill out the details below and we'll get back to you.</p>
+                
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="you@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">What's this about?</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="support">Support & Help</option>
+                            <option value="business">Business Inquiry</option>
+                            <option value="security">Security Question</option>
+                            <option value="billing">Billing & Refunds</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+                    </div>
+                    
+                    <div class="form-submit">
+                        <button type="submit" class="cta-button">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                        <p class="form-note">
+                            <i class="fas fa-lock"></i> Your information is secure. We don't share your data with third parties.
+                        </p>
+                    </div>
+                </form>
+                
+                <div id="formSuccess" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Message Sent Successfully!</h3>
+                    <p>Thank you for contacting us. We'll get back to you as soon as possible.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-preview">
+            <h2>Common Questions</h2>
+            
+            <div class="faq-items">
+                <div class="faq-item">
+                    <h3>How quickly will you respond?</h3>
+                    <p>Support requests typically get a response within 24 hours. Business inquiries within 1 business day.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Do you offer phone support?</h3>
+                    <p>Currently, we offer email support only. This helps us provide thorough, documented responses and maintain security standards.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <h3>Can you help me with a specific breach?</h3>
+                    <p>We can help you understand your exposure and provide general remediation guidance. For specific account issues, you'll need to contact the affected service directly.</p>
+                </div>
+            </div>
+            
+            <div class="faq-link">
+                <p>More questions? Check our <a href="faq.html">complete FAQ</a>.</p>
+            </div>
+        </section>
+
+        <section class="quick-links">
+            <h2>Quick Links</h2>
+            <div class="link-grid">
+                <a href="index.html#emailCheck" class="link-card">
+                    <i class="fas fa-search"></i>
+                    <span>Run a Free Scan</span>
+                </a>
+                
+                <a href="faq.html" class="link-card">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Visit FAQ</span>
+                </a>
+                
+                <a href="status.html" class="link-card">
+                    <i class="fas fa-signal"></i>
+                    <span>Check System Status</span>
+                </a>
+                
+                <a href="privacy.html" class="link-card">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Privacy Policy</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (same as index.html) -->
+
+    <script>
+        // Simple form handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In production, this would submit to your backend
+            // For demo purposes, just show success message
+            
+            document.getElementById('contactForm').style.display = 'none';
+            document.getElementById('formSuccess').style.display = 'block';
+            
+            // Optional: Scroll to success message
+            document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
