@@ -3,6 +3,9 @@
   "builds": [
     { "src": "api/legacy-index.js", "use": "@vercel/node" },
     { "src": "api/check-email.js", "use": "@vercel/node" },
+    { "src": "api/paypal-webhook.js", "use": "@vercel/node" },
+    { "src": "api/cron-monitor.js", "use": "@vercel/node" },
+    { "src": "server.js", "use": "@vercel/node" },
     { "src": "**/*", "use": "@vercel/static" }
   ],
   "routes": [
@@ -11,8 +14,24 @@
       "dest": "/api/check-email.js"
     },
     {
+      "src": "^/api/paypal-webhook",
+      "dest": "/api/paypal-webhook.js"
+    },
+    {
+      "src": "^/api/cron-monitor",
+      "dest": "/api/cron-monitor.js"
+    },
+    {
       "src": "^/api/(.*)",
       "dest": "/api/legacy-index.js"
+    },
+    {
+      "src": "^/monitor-webhook",
+      "dest": "/api/paypal-webhook.js"
+    },
+    {
+      "src": "^/run-monitoring",
+      "dest": "/api/cron-monitor.js"
     },
     { "src": "^/privacy$", "dest": "/privacy.html" },
     { "src": "^/terms$", "dest": "/terms.html" },
@@ -21,9 +40,22 @@
     { "src": "^/pricing$", "dest": "/pricing.html" },
     { "src": "^/payment-demo$", "dest": "/payment-demo.html" },
     { "src": "^/payment-success$", "dest": "/payment-success.html" },
+    {
+      "src": "^/api/v1/(.*)",
+      "dest": "/server.js"
+    },
     { "src": ".*", "dest": "/index.html" }
   ],
   "env": {
     "STRIPE_ENABLED": "false"
-  }
+  },
+  "crons": [
+    { 
+      "path": "/api/cron-monitor", 
+      "schedule": "0 */6 * * *",
+      "headers": {
+        "Authorization": "Bearer YOUR_CRON_SECRET"
+      }
+    }
+  ]
 }

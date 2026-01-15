@@ -1,7 +1,7 @@
 {
   "name": "exposureshield-backend",
   "version": "2.0.0",
-  "description": "ExposureShield Production Backend API",
+  "description": "ExposureShield Production Backend API with Essential Monitoring",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,24 +9,31 @@
     "test": "node test-email.js",
     "deploy": "vercel --prod",
     "logs": "vercel logs",
-    "env:check": "node -e \"console.log('Checking env vars...'); const required = ['ZOHO_USER', 'ZOHO_PASS', 'HIBP_API_KEY', 'JWT_SECRET']; required.forEach(v => console.log(v + ':', process.env[v] ? '✓' : '✗'));\""
+    "env:check": "node -e \"console.log('Checking env vars...'); const required = ['ZOHO_USER', 'ZOHO_PASS', 'HIBP_API_KEY', 'JWT_SECRET', 'UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN', 'RESEND_API_KEY', 'PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET', 'PAYPAL_WEBHOOK_ID']; required.forEach(v => console.log(v + ':', process.env[v] ? '✓' : '✗'));\"",
+    "monitor:test": "node test-monitoring.js",
+    "monitor:run": "node cron-monitor.js"
   },
   "keywords": [
     "security",
     "email",
     "api",
     "exposureshield",
-    "cybersecurity"
+    "cybersecurity",
+    "monitoring"
   ],
   "author": "ExposureShield",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "nodemailer": "^6.9.3",
+    "@upstash/redis": "^1.22.0",
     "cors": "^2.8.5",
-    "helmet": "^7.0.0",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "express-rate-limit": "^6.7.0",
-    "dotenv": "^16.0.3"
+    "helmet": "^7.0.0",
+    "nodemailer": "^6.9.3",
+    "redis": "^4.6.7",
+    "resend": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
