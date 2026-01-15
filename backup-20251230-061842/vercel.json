@@ -1,38 +1,27 @@
 ﻿{
   "version": 2,
   "builds": [
-    { "src": "api/legacy-index.js", "use": "@vercel/node" },
-    { "src": "api/check-email.js", "use": "@vercel/node" },
-    { "src": "api/paypal-webhook.js", "use": "@vercel/node" },
-    { "src": "api/cron-monitor.js", "use": "@vercel/node" },
     { "src": "server.js", "use": "@vercel/node" },
-    { "src": "**/*", "use": "@vercel/static" }
+    { "src": "api/admin/*.js", "use": "@vercel/node" },
+    { "src": "api/monitoring/*.js", "use": "@vercel/node" },
+    { "src": "api/cron/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "^/api/check-email",
-      "dest": "/api/check-email.js"
-    },
-    {
-      "src": "^/api/paypal-webhook",
-      "dest": "/api/paypal-webhook.js"
-    },
-    {
-      "src": "^/api/cron-monitor",
-      "dest": "/api/cron-monitor.js"
-    },
-    {
-      "src": "^/api/(.*)",
-      "dest": "/api/legacy-index.js"
-    },
-    {
-      "src": "^/monitor-webhook",
-      "dest": "/api/paypal-webhook.js"
-    },
-    {
-      "src": "^/run-monitoring",
-      "dest": "/api/cron-monitor.js"
-    },
+    // API Routes - Essential Monitoring System
+    { "src": "^/api/admin/(.*)$", "dest": "/api/admin/$1.js" },
+    { "src": "^/api/monitoring/(.*)$", "dest": "/api/monitoring/$1.js" },
+    { "src": "^/api/cron/(.*)$", "dest": "/api/cron/$1.js" },
+    
+    // Legacy Routes (Your existing server.js endpoints)
+    { "src": "^/api/check-email$", "dest": "/server.js" },
+    { "src": "^/api/contact$", "dest": "/server.js" },
+    { "src": "^/api/essential/(.*)$", "dest": "/server.js" },
+    { "src": "^/api/health$", "dest": "/server.js" },
+    { "src": "^/api/status$", "dest": "/server.js" },
+    { "src": "^/api/paypal-webhook$", "dest": "/server.js" },
+    { "src": "^/api/generate-pdf$", "dest": "/server.js" },
+    
+    // Public Pages
     { "src": "^/privacy$", "dest": "/privacy.html" },
     { "src": "^/terms$", "dest": "/terms.html" },
     { "src": "^/refund$", "dest": "/refund.html" },
@@ -40,22 +29,45 @@
     { "src": "^/pricing$", "dest": "/pricing.html" },
     { "src": "^/payment-demo$", "dest": "/payment-demo.html" },
     { "src": "^/payment-success$", "dest": "/payment-success.html" },
-    {
-      "src": "^/api/v1/(.*)",
-      "dest": "/server.js"
-    },
+    { "src": "^/essential-pricing$", "dest": "/essential-pricing.html" },
+    { "src": "^/dashboard$", "dest": "/dashboard.html" },
+    
+    // Health Check (Public)
+    { "src": "^/health$", "dest": "/health.html" },
+    
+    // Default route - must be last
     { "src": ".*", "dest": "/index.html" }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/monitor",
+      "schedule": "0 */6 * * *",
+      "headers": {
+        "x-vercel-cron": "1"
+      }
+    }
   ],
   "env": {
     "STRIPE_ENABLED": "false"
   },
-  "crons": [
-    { 
-      "path": "/api/cron-monitor", 
-      "schedule": "0 */6 * * *",
-      "headers": {
-        "Authorization": "Bearer YOUR_CRON_SECRET"
-      }
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Credentials", "value": "true" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+        { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
     }
   ]
 }
