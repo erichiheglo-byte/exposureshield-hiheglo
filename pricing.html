@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AUAc3W4RxfuN-04c8Cla4J7lv_WqpspCtx6rK8PtBdj3WBAJdVO79PDrlacB14QHLfcIxclv2DioD_Sg&vault=true&intent=subscription"></script>
+    
     <style>
         /* ===== VARIABLES ===== */
         :root {
@@ -531,6 +534,19 @@
             color: var(--gray-light);
         }
 
+        /* ===== COMING SOON BADGE ===== */
+        .coming-soon-badge {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: rgba(148, 163, 184, 0.15);
+            color: #64748b;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+        }
+
         /* ===== COMPARISON TABLE ===== */
         .comparison-section {
             margin: 100px 0;
@@ -1048,11 +1064,9 @@
                         <div class="price-note yearly-price" style="display: none;">Billed annually as $191.88</div>
                     </div>
                     
-                    <a href="contact.html?plan=essential" class="cta-button" style="width: 100%; text-align: center; justify-content: center;">
-                        <i class="fas fa-shield-alt"></i>
-                        Start Protection
-                    </a>
-                    
+                    <!-- PayPal Subscription Button Container -->
+                    <div id="paypal-button-container-P-0KD687013E312715HNFUOUEY" style="margin-top: 20px;"></div>
+
                     <ul class="plan-features">
                         <li><i class="fas fa-check"></i> Everything in Starter</li>
                         <li><i class="fas fa-check"></i> 24/7 Dark Web Monitoring</li>
@@ -1068,6 +1082,7 @@
                 <!-- Pro Plan (Most Popular) -->
                 <div class="pricing-card popular">
                     <h3 class="plan-name">Professional</h3>
+                    <div class="coming-soon-badge">Coming Soon</div>
                     <p class="plan-description">Complete protection for professionals and small families.</p>
                     
                     <div class="price">
@@ -1077,10 +1092,12 @@
                         <div class="price-note yearly-price" style="display: none;">Billed annually as $383.88</div>
                     </div>
                     
-                    <a href="contact.html?plan=professional" class="cta-button" style="width: 100%; text-align: center; justify-content: center; background: white; color: var(--primary);">
-                        <i class="fas fa-crown"></i>
-                        Get Professional Plan
-                    </a>
+                    <button class="secondary-button"
+                        style="width: 100%; text-align: center; justify-content: center; cursor: not-allowed; opacity: 0.75;"
+                        disabled>
+                        <i class="fas fa-clock"></i>
+                        Coming Soon
+                    </button>
                     
                     <ul class="plan-features">
                         <li><i class="fas fa-check"></i> Everything in Essential</li>
@@ -1097,6 +1114,7 @@
                 <!-- Enterprise Plan -->
                 <div class="pricing-card">
                     <h3 class="plan-name">Enterprise</h3>
+                    <div class="coming-soon-badge">Coming Soon</div>
                     <p class="plan-description">Advanced security for businesses and large families.</p>
                     
                     <div class="price">
@@ -1106,10 +1124,12 @@
                         <div class="price-note yearly-price" style="display: none;">Billed annually as $767.88</div>
                     </div>
                     
-                    <a href="contact.html?plan=enterprise" class="cta-button" style="width: 100%; text-align: center; justify-content: center;">
-                        <i class="fas fa-building"></i>
-                        Contact for Business
-                    </a>
+                    <button class="secondary-button"
+                        style="width: 100%; text-align: center; justify-content: center; cursor: not-allowed; opacity: 0.75;"
+                        disabled>
+                        <i class="fas fa-clock"></i>
+                        Coming Soon
+                    </button>
                     
                     <ul class="plan-features">
                         <li><i class="fas fa-check"></i> Everything in Professional</li>
@@ -1242,8 +1262,7 @@
                         Can I upgrade from the free plan later?
                     </h3>
                     <p class="faq-answer">
-                        Absolutely. You can upgrade to any paid plan at any time. When you upgrade, you'll get instant 
-                        access to all premium features, and we'll prorate your billing so you only pay for what you use.
+                        Absolutely. You can upgrade to the Essential plan at any time through our website. Professional and Enterprise plans will be available soon.
                     </p>
                 </div>
 
@@ -1254,7 +1273,7 @@
                         What payment methods do you accept?
                     </h3>
                     <p class="faq-answer">
-                        We accept all major credit cards (Visa, MasterCard, American Express), PayPal, and for enterprise plans, we also accept bank transfers and purchase orders.
+                        We accept PayPal for the Essential plan. Professional and Enterprise plans will accept additional payment methods when they launch.
                     </p>
                 </div>
 
@@ -1277,8 +1296,7 @@
                         Can I cancel anytime?
                     </h3>
                     <p class="faq-answer">
-                        Absolutely. You can cancel your subscription at any time through your account dashboard. 
-                        No hidden fees or cancellation penalties. We even offer a 30-day money-back guarantee on all paid plans.
+                        Yes. You can cancel your subscription through PayPal. For Professional and Enterprise plans, cancellation options will be available when they launch.
                     </p>
                 </div>
 
@@ -1301,16 +1319,16 @@
     <section class="cta-section">
         <div class="container">
             <h2>Start Your Security Journey Today</h2>
-            <p>Join over 75,000 individuals and businesses who trust ExposureShield for their digital protection. Try our free scan or start a risk-free trial.</p>
+            <p>Join thousands of individuals who trust ExposureShield for their digital protection. Try our free scan or subscribe to our Essential plan.</p>
             
             <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
                 <a href="index.html#emailCheck" class="cta-button" style="background: white; color: var(--primary);">
                     <i class="fas fa-search-shield"></i>
                     Free Security Scan
                 </a>
-                <a href="contact.html?plan=professional" class="free-button">
+                <a href="#plans" class="free-button">
                     <i class="fas fa-play-circle"></i>
-                    Start 14-Day Free Trial
+                    View Paid Plans
                 </a>
                 <a href="contact.html" class="secondary-button" style="background: transparent; border-color: white; color: white;">
                     <i class="fas fa-comments"></i>
@@ -1320,7 +1338,7 @@
             
             <p style="margin-top: 30px; font-size: 1rem; color: rgba(255, 255, 255, 0.8);">
                 <i class="fas fa-shield-check"></i>
-                No credit card required for free scan • 14-day free trial on paid plans • 30-day money-back guarantee
+                No credit card required for free scan • Professional & Enterprise plans coming soon
             </p>
         </div>
     </section>
@@ -1376,10 +1394,10 @@
                 <p>© <span id="currentYear"></span> ExposureShield Security Solutions. All rights reserved.</p>
                 <p style="margin-top: 12px; color: #94a3b8; font-size: 0.9rem;">
                     <i class="fas fa-shield-alt"></i>
-                    PCI DSS Level 1 Certified • ISO 27001 Certified
+                    Professional & Enterprise plans coming soon • Essential plan available now
                 </p>
                 <p style="margin-top: 8px; font-size: 0.85rem; color: #64748b;">
-                    Free security scan available • All paid plans include 14-day free trial
+                    Free security scan available • PayPal payments for Essential plan
                 </p>
             </div>
         </div>
@@ -1440,6 +1458,31 @@
                 }
             });
         });
+
+        // Render PayPal subscription button for Essential
+        if (window.paypal && document.getElementById("paypal-button-container-P-0KD687013E312715HNFUOUEY")) {
+            paypal.Buttons({
+                style: {
+                    shape: "rect",
+                    color: "gold",
+                    layout: "vertical",
+                    label: "subscribe"
+                },
+                createSubscription: function (data, actions) {
+                    return actions.subscription.create({
+                        plan_id: "P-0KD687013E312715HNFUOUEY"
+                    });
+                },
+                onApprove: function (data) {
+                    // Redirect to your success page (optional)
+                    window.location.href = "success-essential.html?sub_id=" + data.subscriptionID;
+                },
+                onError: function (err) {
+                    console.error('PayPal subscription error:', err);
+                    alert('There was an error processing your subscription. Please try again or contact support.');
+                }
+            }).render("#paypal-button-container-P-0KD687013E312715HNFUOUEY");
+        }
     </script>
 </body>
 </html>
