@@ -1626,161 +1626,145 @@
 
     <!-- PayPal Donation Script -->
     <script>
-        // ExposureShield - PayPal Donation Link (Production)
-        const PAYPAL_DONATE_BASE = "https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS";
+  // Set current year
+  const yearEl = document.getElementById("currentYear");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-        function buildDonateUrl(amount) {
-            // PayPal NCP links can accept query params; if PayPal ignores them, it still works.
-            // This keeps your code simple and stable.
-            const url = new URL(PAYPAL_DONATE_BASE);
-            if (amount && Number(amount) > 0) {
-                url.searchParams.set("amount", String(parseInt(amount, 10)));
-            }
-            // Optional: lightweight reference for your own analytics/debugging
-            url.searchParams.set("src", "exposureshield");
-            url.searchParams.set("type", "donation");
-            return url.toString();
+  // PayPal Donation Link (Production)
+  const PAYPAL_DONATE_BASE = "https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS";
+
+  function buildDonateUrl(amount) {
+    const url = new URL(PAYPAL_DONATE_BASE);
+    if (amount && Number(amount) > 0) url.searchParams.set("amount", String(parseInt(amount, 10)));
+    url.searchParams.set("src", "exposureshield");
+    url.searchParams.set("type", "donation");
+    return url.toString();
+  }
+
+  function openPayPal(amount) {
+    const finalUrl = buildDonateUrl(amount);
+    window.open(finalUrl, "_blank", "noopener,noreferrer");
+  }
+
+  // Custom amount display
+  const customAmountInput = document.getElementById("customAmount");
+  const customAmountDisplay = document.getElementById("customAmountDisplay");
+  const customDonateBtn = document.getElementById("customDonateBtn");
+
+  function clampAmount(v) {
+    let amount = parseInt(v || "0", 10);
+    if (isNaN(amount) || amount < 1) amount = 1;
+    if (amount > 10000) amount = 10000;
+    return amount;
+  }
+
+  if (customAmountInput && customAmountDisplay) {
+    customAmountInput.addEventListener("input", function () {
+      const amount = clampAmount(this.value);
+      this.value = amount;
+      customAmountDisplay.textContent = "$" + amount;
+    });
+  }
+
+  // Custom donate button (only affects this button)
+  if (customDonateBtn && customAmountInput) {
+    customDonateBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const amount = clampAmount(customAmountInput.value);
+      openPayPal(amount);
+    });
+  }
+
+  // Tier buttons - FIXED VERSION
+  document.querySelectorAll(".donate-tier").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event bubbling
+      
+      const amount = clampAmount(this.getAttribute("data-amount"));
+      const originalHtml = this.innerHTML;
+      const originalText = this.innerText || this.textContent;
+
+      // UI feedback only for THIS button
+      this.disabled = true;
+      this.innerHTML = '<i class="fab fa-paypal"></i> Opening PayPal...';
+      
+      // Add a temporary visual indicator
+      this.style.opacity = "0.8";
+      this.style.cursor = "wait";
+
+      // Open PayPal immediately
+      openPayPal(amount);
+
+      // Restore button after delay (only if still disabled)
+      setTimeout(() => {
+        if (this.disabled) {
+          this.disabled = false;
+          this.innerHTML = originalHtml;
+          this.style.opacity = "1";
+          this.style.cursor = "pointer";
         }
+      }, 1500);
+    });
+  });
 
-        function goDonate(amount) {
-            const finalUrl = buildDonateUrl(amount);
-            window.open(finalUrl, "_blank", "noopener,noreferrer");
+  // Quick amount buttons (just sets the input; no payment action)
+  document.querySelectorAll(".quick-amount").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const amount = clampAmount(this.getAttribute("data-amount"));
+      if (customAmountInput) customAmountInput.value = amount;
+      if (customAmountDisplay) customAmountDisplay.textContent = "$" + amount;
+    });
+  });
+
+  // FAQ Accordion
+  document.querySelectorAll(".faq-question").forEach((question) => {
+    question.addEventListener("click", function () {
+      const answer = this.nextElementSibling;
+      const icon = this.querySelector("i");
+
+      answer.classList.toggle("show");
+      if (icon) {
+        icon.classList.toggle("fa-chevron-down");
+        icon.classList.toggle("fa-chevron-up");
+      }
+
+      document.querySelectorAll(".faq-answer").forEach((otherAnswer) => {
+        if (otherAnswer !== answer) {
+          otherAnswer.classList.remove("show");
+          const otherIcon = otherAnswer.previousElementSibling?.querySelector("i");
+          if (otherIcon) {
+            otherIcon.classList.remove("fa-chevron-up");
+            otherIcon.classList.add("fa-chevron-down");
+          }
         }
+      });
+    });
+  });
 
-        // Set current year
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        
-        // Update custom amount display
-        const customAmountInput = document.getElementById('customAmount');
-        const customAmountDisplay = document.getElementById('customAmountDisplay');
-        
-        customAmountInput.addEventListener('input', function() {
-            let value = parseInt(this.value) || 0;
-            if (value < 1) value = 1;
-            if (value > 10000) value = 10000;
-            this.value = value;
-            customAmountDisplay.textContent = '$' + value;
-        });
-        
-        // Tier donate buttons
-        document.querySelectorAll(".donate-tier").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                const amount = parseInt(btn.getAttribute("data-amount") || "0", 10);
-                
-                // Show toast notification
-                const toast = document.getElementById('donationToast');
-                toast.classList.add('show');
-                
-                // Disable button temporarily
-                btn.disabled = true;
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening PayPal...';
-                
-                setTimeout(() => {
-                    goDonate(amount);
-                    
-                    // Reset button after delay
-                    setTimeout(() => {
-                        btn.disabled = false;
-                        btn.innerHTML = originalHTML;
-                        toast.classList.remove('show');
-                    }, 2000);
-                }, 500);
-            });
-        });
-
-        // Custom donate
-        const customDonateBtn = document.getElementById("customDonateBtn");
-
-        if (customDonateBtn && customAmountInput) {
-            customDonateBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                let amount = parseInt(customAmountInput.value || "0", 10);
-                if (isNaN(amount) || amount < 1) amount = 1;
-                if (amount > 10000) amount = 10000;
-                
-                // Show toast notification
-                const toast = document.getElementById('donationToast');
-                toast.classList.add('show');
-                
-                // Disable button temporarily
-                customDonateBtn.disabled = true;
-                const originalHTML = customDonateBtn.innerHTML;
-                customDonateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening PayPal...';
-                
-                setTimeout(() => {
-                    goDonate(amount);
-                    
-                    // Reset button after delay
-                    setTimeout(() => {
-                        customDonateBtn.disabled = false;
-                        customDonateBtn.innerHTML = originalHTML;
-                        toast.classList.remove('show');
-                    }, 2000);
-                }, 500);
-            });
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (href !== '#') {
+        e.preventDefault();
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
         }
+      }
+    });
+  });
 
-        // Quick amounts
-        document.querySelectorAll(".quick-amount").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                const amount = parseInt(btn.getAttribute("data-amount") || "0", 10);
-                if (customAmountInput && amount > 0) {
-                    customAmountInput.value = amount;
-                    customAmountDisplay.textContent = "$" + amount;
-                }
-            });
-        });
-        
-        // FAQ Accordion
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', function() {
-                const answer = this.nextElementSibling;
-                const icon = this.querySelector('i');
-                
-                // Toggle current answer
-                answer.classList.toggle('show');
-                icon.classList.toggle('fa-chevron-down');
-                icon.classList.toggle('fa-chevron-up');
-                
-                // Close other answers
-                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
-                    if (otherAnswer !== answer) {
-                        otherAnswer.classList.remove('show');
-                        otherAnswer.previousElementSibling.querySelector('i').classList.remove('fa-chevron-up');
-                        otherAnswer.previousElementSibling.querySelector('i').classList.add('fa-chevron-down');
-                    }
-                });
-            });
-        });
-        
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#') {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(href);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
-        });
-        
-        // Initialize with some FAQs open
-        document.addEventListener('DOMContentLoaded', function() {
-            // Open first FAQ by default
-            const firstQuestion = document.querySelector('.faq-question');
-            if (firstQuestion) {
-                firstQuestion.click();
-            }
-        });
-    </script>
+  // Open first FAQ by default
+  document.addEventListener("DOMContentLoaded", function () {
+    const firstQuestion = document.querySelector(".faq-question");
+    if (firstQuestion) firstQuestion.click();
+  });
+</script>
 </body>
 </html>
