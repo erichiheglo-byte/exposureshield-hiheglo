@@ -1258,10 +1258,10 @@
                         <li><i class="fas fa-check"></i> Identity Theft Insurance</li>
                         <li><i class="fas fa-check"></i> Family Protection</li>
                     </ul>
-                    <a href="#emailCheck" class="cta-button" style="width: 100%; margin-top: 30px; justify-content: center; background: linear-gradient(135deg, var(--accent), #8b5cf6);">
-                        <i class="fas fa-crown"></i>
-                        Start Protection
-                    </a>
+                    <div id="paypal-button-container-P-0KD687013E312715HNFUOUEY"
+     style="margin-top: 30px;">
+</div>
+
                 </div>
                 
                 <div class="pricing-card">
@@ -2387,5 +2387,30 @@ Security Best Practices:
             });
         });
     </script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AUAc3W4RxfuN-04c8Cla4J7lv_WqpspCtx6rK8PtBdj3WBAJdVO79PDrlacB14QHLfcIxclv2DioD_Sg&vault=true&intent=subscription"></script>
+
+<script>
+  paypal.Buttons({
+    style: {
+      shape: 'rect',
+      color: 'gold',
+      layout: 'vertical',
+      label: 'subscribe'
+    },
+    createSubscription: function (data, actions) {
+      return actions.subscription.create({
+        plan_id: 'P-0KD687013E312715HNFUOUEY'
+      });
+    },
+    onApprove: function (data) {
+      // REAL subscription ID from PayPal
+      console.log("Subscription approved:", data.subscriptionID);
+
+      // Optional: redirect to success page
+      window.location.href = "success-essential.html?sub_id=" + data.subscriptionID;
+    }
+  }).render('#paypal-button-container-P-0KD687013E312715HNFUOUEY');
+</script>
+
 </body>
 </html>
