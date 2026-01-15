@@ -970,6 +970,12 @@
                     <li><a href="about.html">About</a></li>
                     <li><a href="donate.html" class="active">Donate</a></li>
                     <li><a href="contact.html">Contact</a></li>
+                    <li>
+                        <a href="https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS" target="_blank" rel="noopener noreferrer" class="donate-button">
+                            <i class="fas fa-heart"></i>
+                            Donate
+                        </a>
+                    </li>
                 </ul>
             </nav>
             
@@ -1618,7 +1624,29 @@
         </div>
     </footer>
 
+    <!-- PayPal Donation Script -->
     <script>
+        // ExposureShield - PayPal Donation Link (Production)
+        const PAYPAL_DONATE_BASE = "https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS";
+
+        function buildDonateUrl(amount) {
+            // PayPal NCP links can accept query params; if PayPal ignores them, it still works.
+            // This keeps your code simple and stable.
+            const url = new URL(PAYPAL_DONATE_BASE);
+            if (amount && Number(amount) > 0) {
+                url.searchParams.set("amount", String(parseInt(amount, 10)));
+            }
+            // Optional: lightweight reference for your own analytics/debugging
+            url.searchParams.set("src", "exposureshield");
+            url.searchParams.set("type", "donation");
+            return url.toString();
+        }
+
+        function goDonate(amount) {
+            const finalUrl = buildDonateUrl(amount);
+            window.open(finalUrl, "_blank", "noopener,noreferrer");
+        }
+
         // Set current year
         document.getElementById('currentYear').textContent = new Date().getFullYear();
         
@@ -1634,26 +1662,75 @@
             customAmountDisplay.textContent = '$' + value;
         });
         
-        // Custom donate button
-        document.getElementById('customDonateBtn').addEventListener('click', function() {
-            const amount = parseInt(customAmountInput.value) || 25;
-            handleDonation(amount);
-        });
-        
         // Tier donate buttons
-        document.querySelectorAll('.donate-tier').forEach(button => {
-            button.addEventListener('click', function() {
-                const amount = parseInt(this.getAttribute('data-amount')) || 15;
-                handleDonation(amount);
+        document.querySelectorAll(".donate-tier").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const amount = parseInt(btn.getAttribute("data-amount") || "0", 10);
+                
+                // Show toast notification
+                const toast = document.getElementById('donationToast');
+                toast.classList.add('show');
+                
+                // Disable button temporarily
+                btn.disabled = true;
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening PayPal...';
+                
+                setTimeout(() => {
+                    goDonate(amount);
+                    
+                    // Reset button after delay
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML = originalHTML;
+                        toast.classList.remove('show');
+                    }, 2000);
+                }, 500);
             });
         });
-        
-        // Quick amount buttons
-        document.querySelectorAll('.quick-amount').forEach(button => {
-            button.addEventListener('click', function() {
-                const amount = parseInt(this.getAttribute('data-amount'));
-                customAmountInput.value = amount;
-                customAmountDisplay.textContent = '$' + amount;
+
+        // Custom donate
+        const customDonateBtn = document.getElementById("customDonateBtn");
+
+        if (customDonateBtn && customAmountInput) {
+            customDonateBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                let amount = parseInt(customAmountInput.value || "0", 10);
+                if (isNaN(amount) || amount < 1) amount = 1;
+                if (amount > 10000) amount = 10000;
+                
+                // Show toast notification
+                const toast = document.getElementById('donationToast');
+                toast.classList.add('show');
+                
+                // Disable button temporarily
+                customDonateBtn.disabled = true;
+                const originalHTML = customDonateBtn.innerHTML;
+                customDonateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Opening PayPal...';
+                
+                setTimeout(() => {
+                    goDonate(amount);
+                    
+                    // Reset button after delay
+                    setTimeout(() => {
+                        customDonateBtn.disabled = false;
+                        customDonateBtn.innerHTML = originalHTML;
+                        toast.classList.remove('show');
+                    }, 2000);
+                }, 500);
+            });
+        }
+
+        // Quick amounts
+        document.querySelectorAll(".quick-amount").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                const amount = parseInt(btn.getAttribute("data-amount") || "0", 10);
+                if (customAmountInput && amount > 0) {
+                    customAmountInput.value = amount;
+                    customAmountDisplay.textContent = "$" + amount;
+                }
             });
         });
         
@@ -1678,55 +1755,6 @@
                 });
             });
         });
-        
-        // Handle donation function
-        function handleDonation(amount) {
-            // Show toast notification
-            const toast = document.getElementById('donationToast');
-            toast.classList.add('show');
-            
-            // Disable buttons to prevent double-click
-            document.querySelectorAll('.donate-button').forEach(btn => {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            });
-            
-            // Track donation attempt
-            console.log(`Donation attempted: $${amount}`);
-            
-            // Simulate processing delay
-            setTimeout(() => {
-                // In production, this would redirect to actual payment processor
-                const paypalUrl = `https://www.paypal.com/donate?hosted_button_id=YOUR_BUTTON_ID&amount=${amount}`;
-                
-                // For demo purposes, show success message
-                toast.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>Secure Payment Portal</strong>
-                        <div style="font-size: 0.9rem; opacity: 0.9;">In production: Redirecting to PayPal for $${amount} donation.</div>
-                    </div>
-                `;
-                
-                // In production, uncomment this line:
-                // window.location.href = paypalUrl;
-                
-                // Reset buttons after 3 seconds (for demo)
-                setTimeout(() => {
-                    document.querySelectorAll('.donate-button').forEach(btn => {
-                        btn.disabled = false;
-                        const amount = btn.getAttribute('data-amount') || 'Custom';
-                        if (amount === 'Custom') {
-                            btn.innerHTML = `<i class="fab fa-paypal"></i> Donate <span id="customAmountDisplay">$${customAmountInput.value}</span>`;
-                        } else {
-                            btn.innerHTML = `<i class="fab fa-paypal"></i> Donate $${amount}`;
-                        }
-                    });
-                    
-                    toast.classList.remove('show');
-                }, 3000);
-            }, 1500);
-        }
         
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
