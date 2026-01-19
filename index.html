@@ -606,6 +606,73 @@
             flex-shrink: 0;
         }
 
+        /* LegacyShield Section - NEW */
+        .legacy-section {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            padding: 80px 0;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+            margin: 100px 0;
+        }
+
+        .legacy-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        }
+
+        .legacy-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .legacy-benefit {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 40px 32px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .legacy-benefit:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .legacy-benefit-icon {
+            font-size: 3rem;
+            color: #8b5cf6;
+            margin-bottom: 25px;
+        }
+
+        .legacy-benefit h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .legacy-benefit p {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .legacy-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+
         /* Pricing Section - Enhanced */
         .pricing {
             margin: 100px 0;
@@ -984,6 +1051,7 @@
             }
             
             .services-grid,
+            .legacy-benefits,
             .pricing-grid,
             .compliance-grid,
             .contact-methods {
@@ -1056,6 +1124,8 @@
                     <li><a href="index.html" class="active">Home</a></li>
                     <li><a href="services.html">Services</a></li>
                     <li><a href="pricing.html">Pricing</a></li>
+                    <!-- LegacyShield link added here -->
+                    <li><a href="/legacy/">LegacyShield</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="donate.html">Donate</a></li>
                     <li><a href="contact.html">Contact</a></li>
@@ -1210,6 +1280,59 @@
                         <li><i class="fas fa-check"></i> Account takeover prevention</li>
                     </ul>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LegacyShield Marketing Section - NEW -->
+    <section class="legacy-section" id="legacy">
+        <div class="container" style="position: relative; z-index: 1;">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h2 style="font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; margin-bottom: 16px; color: white; letter-spacing: -0.02em;">
+                    <i class="fas fa-hourglass-end" style="color: #8b5cf6; margin-right: 15px;"></i>
+                    LegacyShield – Protect Your Digital Legacy
+                </h2>
+                <p style="font-size: 1.3rem; color: #cbd5e1; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                    Securely store instructions, beneficiaries, and critical documents — accessible only to you and trusted parties.
+                    Ensure your digital presence is handled according to your wishes.
+                </p>
+            </div>
+            
+            <div class="legacy-benefits">
+                <div class="legacy-benefit">
+                    <div class="legacy-benefit-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Beneficiary Management</h3>
+                    <p>Designate trusted contacts to access your accounts and digital assets when needed.</p>
+                </div>
+                
+                <div class="legacy-benefit">
+                    <div class="legacy-benefit-icon">
+                        <i class="fas fa-file-shield"></i>
+                    </div>
+                    <h3>Secure Document Storage</h3>
+                    <p>Store wills, trust documents, and important instructions with military-grade encryption.</p>
+                </div>
+                
+                <div class="legacy-benefit">
+                    <div class="legacy-benefit-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Access Control</h3>
+                    <p>Control exactly who can access what information and when, with detailed permission settings.</p>
+                </div>
+            </div>
+            
+            <div class="legacy-cta">
+                <a href="/legacy/" class="cta-button" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 16px 45px; font-size: 1.2rem; margin-right: 16px;">
+                    <i class="fas fa-plus-circle"></i>
+                    Create Your Legacy Plan
+                </a>
+                <a href="#legacy-features" class="secondary-button" style="background: rgba(255, 255, 255, 0.15); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 16px 45px; font-size: 1.2rem; backdrop-filter: blur(10px);">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More
+                </a>
             </div>
         </div>
     </section>

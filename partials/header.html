@@ -1,24 +1,44 @@
-﻿<nav class="nav">
-  <!-- Services dropdown -->
-  <div class="nav-item dropdown">
-    <button class="nav-link dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-      Services
-    </button>
-    <div class="dropdown-menu">
-      <a href="/" class="dropdown-link" data-nav="home">
-        Active Security
-      </a>
-     <!-- <a href="/legacy" class="dropdown-link" data-nav="legacy">
-        Digital Legacy
-      </a>-->
-    </div>
-  </div>
-
-  <!-- Pricing -->
-  <a href="/pricing" class="nav-link" data-nav="pricing">Pricing</a>
-
-  <!-- Legal -->
-  <a href="/privacy" class="nav-link" data-nav="privacy">Privacy</a>
-  <a href="/terms" class="nav-link" data-nav="terms">Terms</a>
-  <a href="/refund" class="nav-link" data-nav="refund">Refund</a>
-</nav>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExposureShield - Proactive Privacy Protection</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="description" content="Monitor and protect against data breaches, identity theft, and unauthorized exposure. Secure your digital footprint with AI-powered privacy tools.">
+    <meta name="keywords" content="privacy, security, data breach, identity theft, digital footprint, cybersecurity">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <!-- ... rest of your header code ... -->
+            
+            <!-- Add LegacyShield to main navigation -->
+            <nav id="mainNav" aria-label="Primary navigation">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <!-- ADD LegacyShield link here -->
+                    <li><a href="/legacy/">LegacyShield</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- ... rest of your header code ... -->
+        </nav>
+    </header>
+</body>
+</html>
