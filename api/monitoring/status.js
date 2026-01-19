@@ -1,21 +1,14 @@
-﻿// api/monitoring/status.js - UPDATED WITH AUTH
+﻿// api/monitoring/status.js - Protected with email masking
 export default async function handler(req, res) {
   try {
-    // AUTHENTICATION - Protect this endpoint
+    // AUTHENTICATION REQUIRED
     const expected = process.env.CRON_SECRET || "";
     const auth = req.headers.authorization || "";
     const bearer = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    const secret = bearer || req.query.secret || "";
     
-    // Optional: allow query param for easier testing (remove in production)
-    const querySecret = req.query.secret || "";
-    const secret = bearer || querySecret;
-    
-    if (expected && secret !== expected) {
-      return res.status(401).json({ 
-        ok: false, 
-        error: "Unauthorized",
-        message: "Valid CRON_SECRET required"
-      });
+    if (!expected || secret !== expected) {
+      return res.status(401).json({ ok: false, error: "Unauthorized" });
     }
 
     const UPSTASH_URL = process.env.UPSTASH_REDIS_REST_URL;
@@ -25,68 +18,46 @@ export default async function handler(req, res) {
       return res.status(500).json({ ok: false, error: "Upstash not configured" });
     }
 
-    async function upstash(path) {
-      const res = await fetch(`${UPSTASH_URL}${path}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${UPSTASH_TOKEN}` },
-      });
-      return res.json();
-    }
-
-    async function redisSMembers(key) {
-      const r = await upstash(`/smembers/${encodeURIComponent(key)}`);
-      return Array.isArray(r?.result) ? r.result : [];
-    }
-
-    async function redisGetJson(key) {
-      const r = await upstash(`/get/${encodeURIComponent(key)}`);
-      const val = r?.result;
-      if (!val) return null;
-      try { return JSON.parse(val); } catch { return null; }
-    }
-
-    // Get all data
-    const [activeSubscribers, lastRun, totalSubscribers] = await Promise.all([
-      redisSMembers("monitor:active"),
-      redisGetJson("monitor:last"),
-      redisSMembers("all:subscribers")
-    ]);
-
-    // Don't expose actual emails in response - only counts
+    // Get active subscribers
+    const membersRes = await fetch(`${UPSTASH_URL}/smembers/monitor:active`, {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${UPSTASH_TOKEN}` }
+    });
+    
+    const membersData = await membersRes.json();
+    const emails = Array.isArray(membersData?.result) ? membersData.result : [];
+    
+    // Mask emails for privacy unless full=true
+    const showFull = req.query.full === "true" || req.query.full === "1";
+    const subscriberDisplay = showFull 
+      ? emails 
+      : emails.map(email => {
+          const [user, domain] = email.split('@');
+          return `${user.substring(0, 3)}***@${domain}`;
+        });
+    
     return res.status(200).json({
       ok: true,
       system: "ExposureShield Essential Monitoring",
       status: "active",
       timestamp: new Date().toISOString(),
       stats: {
-        activeSubscribers: activeSubscribers.length,
-        totalSubscribers: totalSubscribers.length,
+        activeSubscribers: emails.length,
         plan: "essential",
         price: "$19.99/month",
         cronSchedule: "Every 6 hours",
-        lastRun: lastRun ? {
-          timestamp: lastRun.timestamp,
-          processed: lastRun.processed,
-          alerted: lastRun.alerted,
-          duration: lastRun.durationSeconds
-        } : null
+        environment: process.env.VERCEL_ENV || "production"
       },
-      // Show first 3 emails only (for admin verification)
-      subscriberSample: activeSubscribers.slice(0, 3),
-      configuration: {
-        hasRedis: !!(UPSTASH_URL && UPSTASH_TOKEN),
-        hasHIBP: !!process.env.HIBP_API_KEY,
-        hasResend: !!process.env.RESEND_API_KEY,
-        environment: process.env.VERCEL_ENV || "development"
+      subscribers: subscriberDisplay,
+      subscriberCount: emails.length,
+      _meta: {
+        privacy: "Emails masked by default. Add ?full=1 to see full addresses.",
+        requiresAuth: true
       }
     });
-
+    
   } catch (error) {
     console.error("Monitoring status error:", error);
-    return res.status(500).json({
-      ok: false,
-      error: "Failed to fetch monitoring status",
-      message: error.message
-    });
+    return res.status(500).json({ ok: false, error: "Server error", message: error.message });
   }
 }

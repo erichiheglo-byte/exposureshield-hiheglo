@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LegacyShield | Secure Digital Legacy</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/legacy/legacy.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="container" style="padding: 18px 0;">
+      <h1 style="margin:0;">LegacyShield</h1>
+      <p style="margin:6px 0 0; opacity:.85;">Secure your digital legacy, beneficiaries, and instructions.</p>
+      <div style="margin-top:10px;">
+        <a href="/dashboard.html">← Back to Dashboard</a>
+      </div>
+    </header>
+
+    <main class="container" style="padding: 18px 0 50px;">
+      <div class="card" style="padding:16px;">
+        <h2 style="margin-top:0;">Your Legacy Plan</h2>
+
+        <div class="grid" style="display:grid; gap:12px; grid-template-columns: 1fr 1fr;">
+          <div>
+            <label><b>Full Name</b></label><br/>
+            <input id="fullName" type="text" style="width:100%; padding:10px;" />
+          </div>
+          <div>
+            <label><b>Emergency Contact</b></label><br/>
+            <input id="emergencyContact" type="text" style="width:100%; padding:10px;" placeholder="Name + phone/email" />
+          </div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <label><b>Notes / Instructions</b></label><br/>
+          <textarea id="notes" rows="6" style="width:100%; padding:10px;" placeholder="Key instructions for your executor/trustee..."></textarea>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:14px; align-items:center;">
+          <button id="saveBtn" class="btn">Save Legacy Plan</button>
+          <span id="statusMsg" style="opacity:.85;"></span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/legacy/legacy.js"></script>
+</body>
+</html>
