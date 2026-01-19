@@ -1,67 +1,36 @@
-﻿$path = ".\dashboard.html"
-$html = Get-Content $path -Raw
-
-# If function already exists, do nothing
-if ($html -match "function\s+apiLegacyGet") {
-  Write-Host "✅ apiLegacyGet already exists. No changes made." -ForegroundColor Green
-  return
-}
-
-# Define function text (edit only the URL if your endpoint differs)
-$fn = @"
-  
-  // LegacyShield API: Get user's legacy data (auth must match dashboard session)
-  async function apiLegacyGet() {
-    const res = await fetch("/api/legacy/get", {
-      method: "GET",
-      headers: { "Accept": "application/json" },
-      cache: "no-store",
-      credentials: "include"
-    });
-
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok) {
-      const msg = (data && (data.error || data.message))
-        ? (data.error || data.message)
-        : ("Legacy API error: " + res.status);
-      throw new Error(msg);
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>LegacyShield Dashboard</title>
+    <!-- Your existing head content here -->
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <div id="content"></div>
+    
+    <script>
+    // LegacyShield API: Get user's legacy data
+    async function apiLegacyGet() {
+        const res = await fetch("/api/legacy/get", {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+            credentials: "include",
+            cache: "no-store"
+        });
+        
+        const data = await res.json().catch(() => null);
+        
+        if (!res.ok) {
+            const msg = (data && (data.error || data.message))
+                ? (data.error || data.message)
+                : ("Legacy API error: " + res.status);
+            throw new Error(msg);
+        }
+        
+        return data;
     }
-
-    return data;
-  }
-
-"@
-
-# Insert before the last </script>
-$idx = $html.LastIndexOf("</script>")
-if ($idx -lt 0) {
-  throw "Could not find </script> tag in dashboard.html. Paste the bottom of your dashboard.html and I will place it correctly."
-}
-
-$newHtml = $html.Insert($idx, $fn)
-
-Set-Content -Path $path -Value $newHtml -Encoding UTF8
-Write-Host "✅ Inserted apiLegacyGet before last 
-  // LegacyShield API: Get user's legacy data (auth must match dashboard session)
-  async function apiLegacyGet() {
-    const res = await fetch("/api/legacy/get", {
-      method: "GET",
-      headers: { "Accept": "application/json" },
-      cache: "no-store",
-      credentials: "include"
-    });
-
-    const data = await res.json().catch(() => null);
-
-    if (!res.ok) {
-      const msg = (data && (data.error || data.message))
-        ? (data.error || data.message)
-        : ("Legacy API error: " + res.status);
-      throw new Error(msg);
-    }
-
-    return data;
-  }
-</script> and saved dashboard.html" -ForegroundColor Green
-
+    
+    // Your other existing JavaScript code here
+    </script>
+</body>
+</html>
