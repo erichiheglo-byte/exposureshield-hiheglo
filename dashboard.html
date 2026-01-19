@@ -1,414 +1,503 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | ExposureShield - Secure Your Digital Legacy</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #0f172a;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --gray-light: #e2e8f0;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --radius: 12px;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            color: var(--secondary);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-        }
-        .logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .dashboard-header {
-            padding: 40px 0 20px;
-        }
-        .dashboard-header h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        .dashboard-header p {
-            color: var(--gray);
-            font-size: 1.1rem;
-        }
-        .welcome-banner {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: white;
-            padding: 30px;
-            border-radius: var(--radius);
-            margin-bottom: 30px;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
-            margin: 30px 0;
-        }
-        .dashboard-card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--gray-light);
-            transition: all 0.3s ease;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            border-color: var(--primary);
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .card-header i {
-            font-size: 2rem;
-            color: var(--primary);
-            background: rgba(37, 99, 235, 0.1);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-header h3 {
-            font-size: 1.4rem;
-            color: var(--secondary);
-        }
-        .card-stats {
-            display: flex;
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .stat {
-            text-align: center;
-            flex: 1;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 24px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 15px;
-        }
-        .btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-        .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--gray-light);
-        }
-        .btn-secondary:hover {
-            border-color: var(--primary);
-        }
-        .legacy-status {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: var(--radius);
-            padding: 20px;
-            margin: 20px 0;
-        }
-        .status-complete { background: #f0fdf4; border-color: #bbf7d0; }
-        .status-none { background: #f1f5f9; border-color: #e2e8f0; }
-        .footer {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--gray);
-            margin-top: 60px;
-            border-top: 1px solid var(--gray-light);
-        }
-        @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .dashboard-header h1 { font-size: 2rem; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | ExposureShield - Secure Your Digital Legacy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0f172a;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      color: var(--secondary);
+      min-height: 100vh;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .dashboard-header { padding: 40px 0 20px; }
+    .dashboard-header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .dashboard-header p { color: var(--gray); font-size: 1.1rem; }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 30px;
+      border-radius: var(--radius);
+      margin-bottom: 30px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+
+    .dashboard-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--gray-light);
+      transition: all 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+      border-color: var(--primary);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .card-header i {
+      font-size: 2rem;
+      color: var(--primary);
+      background: rgba(37, 99, 235, 0.1);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-header h3 { font-size: 1.4rem; color: var(--secondary); }
+
+    .card-stats { display: flex; gap: 20px; margin: 20px 0; }
+    .stat { text-align: center; flex: 1; }
+    .stat-number { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 0.9rem; color: var(--gray); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      margin-top: 15px;
+      user-select: none;
+    }
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+    .btn-secondary {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--gray-light);
+    }
+    .btn-secondary:hover { border-color: var(--primary); }
+
+    .legacy-status {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .status-complete { background: #f0fdf4; border-color: #bbf7d0; }
+    .status-none { background: #f1f5f9; border-color: #e2e8f0; }
+    .status-error { background: #fff7ed; border-color: #fed7aa; }
+
+    .muted { color: var(--gray); }
+
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--gray);
+      margin-top: 60px;
+      border-top: 1px solid var(--gray-light);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .dashboard-header h1 { font-size: 2rem; }
+    }
+  </style>
 </head>
+
 <body>
-    <header>
-        <div class="container header-content">
-            <a href="index.html" class="logo">
-                <i class="fas fa-shield-alt"></i>
-                ExposureShield
-            </a>
-            <div class="auth-buttons">
-                <!-- Will be populated by shared.js -->
-            </div>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="dashboard-header">
-            <h1>Your Digital Legacy Dashboard</h1>
-            <p>Manage your legacy plan, documents, and beneficiaries in one secure place.</p>
-        </div>
-        
-        <div id="welcomeMessage" class="welcome-banner">
-            <!-- Will be populated by JavaScript -->
-        </div>
-        
-        <div class="dashboard-grid">
-            <!-- Legacy Plan Card -->
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <i class="fas fa-file-contract"></i>
-                    <div>
-                        <h3>Digital Legacy Plan</h3>
-                        <p>Secure your digital assets</p>
-                    </div>
-                </div>
-                <div id="legacyPlanStatus" class="legacy-status status-none">
-                    <p><strong>Status:</strong> No legacy plan created yet</p>
-                    <p>Create your plan to ensure your digital assets are protected and transferred correctly.</p>
-                </div>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <a href="legacy.html" class="btn">
-                        <i class="fas fa-plus-circle"></i> Create Plan
-                    </a>
-                    <button onclick="loadLegacyPlan()" class="btn btn-secondary">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Document Vault Card -->
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <i class="fas fa-file-archive"></i>
-                    <div>
-                        <h3>Document Vault</h3>
-                        <p>Secure document storage</p>
-                    </div>
-                </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-number" id="docCount">0</div>
-                        <div class="stat-label">Documents</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" id="vaultSize">0 MB</div>
-                        <div class="stat-label">Storage Used</div>
-                    </div>
-                </div>
-                <p>Store wills, IDs, certificates, and other important documents securely.</p>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <a href="vault.html" class="btn">
-                        <i class="fas fa-eye"></i> View Vault
-                    </a>
-                    <button onclick="uploadDocument()" class="btn btn-secondary">
-                        <i class="fas fa-upload"></i> Upload
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Beneficiaries Card -->
-            <div class="dashboard-card">
-                <div class="card-header">
-                    <i class="fas fa-users"></i>
-                    <div>
-                        <h3>Beneficiaries</h3>
-                        <p>Manage who inherits your assets</p>
-                    </div>
-                </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-number" id="beneficiaryCount">0</div>
-                        <div class="stat-label">Primary</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number" id="trusteeCount">0</div>
-                        <div class="stat-label">Trustees</div>
-                    </div>
-                </div>
-                <p>Designate who will receive your digital assets and who will manage the process.</p>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <button onclick="manageBeneficiaries()" class="btn">
-                        <i class="fas fa-user-edit"></i> Manage
-                    </button>
-                    <a href="legacy.html#step3" class="btn btn-secondary">
-                        <i class="fas fa-user-plus"></i> Add
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Recent Activity -->
-        <div class="dashboard-card" style="margin-top: 40px;">
-            <div class="card-header">
-                <i class="fas fa-history"></i>
-                <div>
-                    <h3>Recent Activity</h3>
-                    <p>Your account timeline</p>
-                </div>
-            </div>
-            <div id="activityTimeline" style="margin-top: 20px;">
-                <div style="padding: 15px; border-bottom: 1px solid var(--gray-light);">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span><i class="fas fa-sign-in-alt"></i> Account logged in</span>
-                        <span style="color: var(--gray); font-size: 0.9rem;">Just now</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>ExposureShield • Bank-level security • Your legacy is protected</p>
-        </div>
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">
+        <i class="fas fa-shield-alt"></i>
+        ExposureShield
+      </a>
+      <div class="auth-buttons">
+        <!-- shared.js populates this -->
+      </div>
     </div>
-    
-    <script src="/shared.js" defer></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // REQUIRE AUTHENTICATION
-        if (!ExposureShieldAuth.requireAuth({ showAlert: true })) {
-            return;
+  </header>
+
+  <div class="container">
+    <div class="dashboard-header">
+      <h1>Your Security & Legacy Dashboard</h1>
+      <p>Manage ExposureShield monitoring and LegacyShield planning in one secure place.</p>
+    </div>
+
+    <div id="welcomeMessage" class="welcome-banner">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="dashboard-grid">
+
+      <!-- NEW: LegacyShield (Integrated) Card -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <i class="fas fa-shield-heart"></i>
+          <div>
+            <h3>LegacyShield (Integrated)</h3>
+            <p class="muted">Your digital legacy plan, securely saved in your account</p>
+          </div>
+        </div>
+
+        <div id="legacyPlanStatus" class="legacy-status status-none">
+          <p><strong>Status:</strong> Checking your legacy plan...</p>
+          <p class="muted">If you have no plan yet, you can create one in seconds.</p>
+        </div>
+
+        <div style="display:flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+          <!-- THIS IS THE BUTTON YOU ASKED FOR -->
+          <a class="btn" href="/legacy/">
+            <i class="fas fa-folder-open"></i> Open LegacyShield
+          </a>
+
+          <button type="button" onclick="loadLegacyPlan()" class="btn btn-secondary">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+
+        <div style="margin-top: 10px; font-size: 0.95rem; color: var(--gray);">
+          Tip: LegacyShield requires login. If you are not logged in, it will redirect to Login.
+        </div>
+      </div>
+
+      <!-- Document Vault Card -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <i class="fas fa-file-archive"></i>
+          <div>
+            <h3>Document Vault</h3>
+            <p class="muted">Secure document storage</p>
+          </div>
+        </div>
+
+        <div class="card-stats">
+          <div class="stat">
+            <div class="stat-number" id="docCount">0</div>
+            <div class="stat-label">Documents</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" id="vaultSize">0 MB</div>
+            <div class="stat-label">Storage Used</div>
+          </div>
+        </div>
+
+        <p class="muted">Store wills, IDs, certificates, and other important documents securely.</p>
+
+        <div style="display:flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+          <a href="vault.html" class="btn">
+            <i class="fas fa-eye"></i> View Vault
+          </a>
+          <button type="button" onclick="uploadDocument()" class="btn btn-secondary">
+            <i class="fas fa-upload"></i> Upload
+          </button>
+        </div>
+      </div>
+
+      <!-- Beneficiaries Card (now driven by saved Legacy plan if present) -->
+      <div class="dashboard-card">
+        <div class="card-header">
+          <i class="fas fa-users"></i>
+          <div>
+            <h3>Beneficiaries</h3>
+            <p class="muted">Manage who inherits your assets</p>
+          </div>
+        </div>
+
+        <div class="card-stats">
+          <div class="stat">
+            <div class="stat-number" id="beneficiaryCount">0</div>
+            <div class="stat-label">Beneficiaries</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number" id="trusteeCount">0</div>
+            <div class="stat-label">Trustees</div>
+          </div>
+        </div>
+
+        <p class="muted">Designate who will receive your digital assets and who will manage the process.</p>
+
+        <div style="display:flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;">
+          <a class="btn" href="/legacy/">
+            <i class="fas fa-user-edit"></i> Manage in LegacyShield
+          </a>
+          <a class="btn btn-secondary" href="/legacy/">
+            <i class="fas fa-user-plus"></i> Add
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="dashboard-card" style="margin-top: 40px;">
+      <div class="card-header">
+        <i class="fas fa-history"></i>
+        <div>
+          <h3>Recent Activity</h3>
+          <p class="muted">Your account timeline</p>
+        </div>
+      </div>
+
+      <div id="activityTimeline" style="margin-top: 20px;">
+        <div style="padding: 15px; border-bottom: 1px solid var(--gray-light);">
+          <div style="display:flex; justify-content: space-between; gap: 10px;">
+            <span><i class="fas fa-sign-in-alt"></i> Dashboard opened</span>
+            <span style="color: var(--gray); font-size: 0.9rem;">Just now</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>ExposureShield • Bank-level security • Your digital life and legacy are protected</p>
+    </div>
+  </div>
+
+  <script src="/shared.js" defer></script>
+  <script>
+    // ---- Helpers ----
+    function getToken() {
+      // Try common keys first (adjust if your login uses a different key)
+      return localStorage.getItem("token") ||
+             localStorage.getItem("access_token") ||
+             localStorage.getItem("jwt") ||
+             "";
+    }
+
+    async function apiLegacyGet() {
+      const token = getToken();
+      const res = await fetch("/api/legacy/get", {
+        method: "GET",
+        headers: { "Authorization": "Bearer " + token }
+      });
+      return res.json();
+    }
+
+    function setLegacyStatusNone() {
+      const statusEl = document.getElementById("legacyPlanStatus");
+      statusEl.className = "legacy-status status-none";
+      statusEl.innerHTML = `
+        <p><strong>Status:</strong> No legacy plan created yet</p>
+        <p class="muted">Click <b>Open LegacyShield</b> to create your plan and keep it saved in your account.</p>
+      `;
+      document.getElementById("beneficiaryCount").textContent = "0";
+      document.getElementById("trusteeCount").textContent = "0";
+    }
+
+    function setLegacyStatusComplete(plan) {
+      const statusEl = document.getElementById("legacyPlanStatus");
+      const updatedAt = plan && plan.updatedAt ? new Date(plan.updatedAt) : null;
+      const updatedText = updatedAt ? updatedAt.toLocaleString() : "Unknown";
+
+      statusEl.className = "legacy-status status-complete";
+      statusEl.innerHTML = `
+        <p><strong>Status:</strong> Legacy plan saved</p>
+        <p class="muted">Last updated: ${updatedText}</p>
+        <div style="margin-top: 12px; display:flex; gap: 10px; flex-wrap: wrap;">
+          <a class="btn" href="/legacy/" style="padding: 8px 16px; font-size: 0.95rem;">
+            <i class="fas fa-edit"></i> Edit in LegacyShield
+          </a>
+          <button type="button" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.95rem;" onclick="downloadLegacyPlanJson()">
+            <i class="fas fa-download"></i> Export JSON
+          </button>
+        </div>
+      `;
+
+      const beneficiaries = Array.isArray(plan?.beneficiaries) ? plan.beneficiaries.length : 0;
+      const trustees = Array.isArray(plan?.trustees) ? plan.trustees.length : 0;
+      document.getElementById("beneficiaryCount").textContent = String(beneficiaries);
+      document.getElementById("trusteeCount").textContent = String(trustees);
+
+      // cache locally for export button (safe; do not store secrets here)
+      window.__legacyPlanCache = plan || null;
+    }
+
+    function setLegacyStatusError(message) {
+      const statusEl = document.getElementById("legacyPlanStatus");
+      statusEl.className = "legacy-status status-error";
+      statusEl.innerHTML = `
+        <p><strong>Status:</strong> Unable to load legacy plan</p>
+        <p class="muted">${message || "Please refresh or open LegacyShield to continue."}</p>
+      `;
+    }
+
+    // ---- Page init ----
+    document.addEventListener("DOMContentLoaded", async function () {
+      // REQUIRE AUTHENTICATION (your existing logic)
+      if (window.ExposureShieldAuth && typeof ExposureShieldAuth.requireAuth === "function") {
+        if (!ExposureShieldAuth.requireAuth({ showAlert: true })) return;
+      } else {
+        // fallback: if token missing, redirect
+        if (!getToken()) {
+          window.location.href = "/login.html?next=" + encodeURIComponent("/dashboard.html");
+          return;
         }
-        
-        // Load user data
-        const user = ExposureShieldAuth.getCurrentUser();
-        if (user) {
-            updateWelcomeMessage(user);
-            updateUserStats();
-            loadLegacyPlan();
-        }
+      }
+
+      // Load user data (using your existing shared.js)
+      let user = null;
+      if (window.ExposureShieldAuth && typeof ExposureShieldAuth.getCurrentUser === "function") {
+        user = ExposureShieldAuth.getCurrentUser();
+      }
+
+      if (user) {
+        updateWelcomeMessage(user);
+      } else {
+        // minimal welcome when user is not available
+        updateWelcomeMessage({ name: "there", email: "" });
+      }
+
+      updateUserStats();
+      await loadLegacyPlan();
     });
-    
+
     function updateWelcomeMessage(user) {
-        const welcomeEl = document.getElementById('welcomeMessage');
-        const hour = new Date().getHours();
-        let greeting = 'Good morning';
-        if (hour >= 12 && hour < 17) greeting = 'Good afternoon';
-        if (hour >= 17) greeting = 'Good evening';
-        
-        welcomeEl.innerHTML = `
-            <h2>${greeting}, ${user.name}!</h2>
-            <p>Welcome to your ExposureShield dashboard. Everything you need to manage your digital legacy is here.</p>
-            <div style="margin-top: 15px; font-size: 0.9rem; color: #94a3b8;">
-                <i class="fas fa-envelope"></i> ${user.email}
-            </div>
-        `;
+      const welcomeEl = document.getElementById("welcomeMessage");
+      const hour = new Date().getHours();
+      let greeting = "Good morning";
+      if (hour >= 12 && hour < 17) greeting = "Good afternoon";
+      if (hour >= 17) greeting = "Good evening";
+
+      const safeName = (user && user.name) ? user.name : "there";
+      const safeEmail = (user && user.email) ? user.email : "";
+
+      welcomeEl.innerHTML = `
+        <h2>${greeting}, ${safeName}!</h2>
+        <p>Welcome to your ExposureShield dashboard. Manage your monitoring and your digital legacy in one place.</p>
+        ${safeEmail ? `
+          <div style="margin-top: 15px; font-size: 0.9rem; color: #94a3b8;">
+            <i class="fas fa-envelope"></i> ${safeEmail}
+          </div>
+        ` : ``}
+      `;
     }
-    
+
     function updateUserStats() {
-        // Update document count
-        const docs = JSON.parse(localStorage.getItem('user_documents') || '[]');
-        document.getElementById('docCount').textContent = docs.length;
-        document.getElementById('vaultSize').textContent = 
-            (docs.reduce((acc, doc) => acc + (doc.size || 0), 0) / (1024*1024)).toFixed(1) + ' MB';
+      // Your current vault uses localStorage. Keep it for now.
+      const docs = JSON.parse(localStorage.getItem("user_documents") || "[]");
+      document.getElementById("docCount").textContent = String(docs.length);
+
+      const totalBytes = docs.reduce((acc, doc) => acc + (Number(doc.size || 0) || 0), 0);
+      document.getElementById("vaultSize").textContent = (totalBytes / (1024 * 1024)).toFixed(1) + " MB";
     }
-    
-    function loadLegacyPlan() {
-        const legacyPlan = ExposureShieldAuth.getLegacyPlan();
-        const statusEl = document.getElementById('legacyPlanStatus');
-        
-        if (legacyPlan) {
-            statusEl.className = 'legacy-status status-complete';
-            statusEl.innerHTML = `
-                <p><strong>Status:</strong> Legacy plan created</p>
-                <p>Last updated: ${new Date(legacyPlan.metadata?.created).toLocaleDateString()}</p>
-                <div style="margin-top: 15px;">
-                    <a href="legacy.html" class="btn" style="padding: 8px 16px; font-size: 0.9rem;">
-                        <i class="fas fa-edit"></i> Edit Plan
-                    </a>
-                    <button onclick="downloadLegacyPlan()" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-            `;
-            
-            // Update beneficiary counts
-            document.getElementById('beneficiaryCount').textContent = 
-                legacyPlan.beneficiaries?.primary ? 1 : 0;
-            document.getElementById('trusteeCount').textContent = 
-                legacyPlan.beneficiaries?.trustee ? 1 : 0;
+
+    async function loadLegacyPlan() {
+      // Show loading state
+      const statusEl = document.getElementById("legacyPlanStatus");
+      statusEl.className = "legacy-status status-none";
+      statusEl.innerHTML = `<p><strong>Status:</strong> Loading...</p><p class="muted">Please wait.</p>`;
+
+      const token = getToken();
+      if (!token) {
+        setLegacyStatusError("You are not logged in. Please login again.");
+        return;
+      }
+
+      try {
+        const data = await apiLegacyGet();
+        if (!data || !data.ok) {
+          setLegacyStatusError((data && data.error) ? data.error : "Unknown error");
+          return;
         }
+
+        if (!data.plan) {
+          setLegacyStatusNone();
+          return;
+        }
+
+        setLegacyStatusComplete(data.plan);
+      } catch (e) {
+        setLegacyStatusError("Network error. Please refresh and try again.");
+      }
     }
-    
+
     function uploadDocument() {
-        alert('Redirecting to document vault...');
-        window.location.href = 'vault.html';
+      window.location.href = "vault.html";
     }
-    
-    function manageBeneficiaries() {
-        window.location.href = 'legacy.html#step3';
+
+    function downloadLegacyPlanJson() {
+      const plan = window.__legacyPlanCache || null;
+      if (!plan) {
+        alert("No legacy plan found to export.");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(plan, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ExposureShield-Legacy-Plan.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
-    
-    function downloadLegacyPlan() {
-        const plan = ExposureShieldAuth.getLegacyPlan();
-        if (!plan) {
-            alert('No legacy plan found.');
-            return;
-        }
-        
-        const blob = new Blob([JSON.stringify(plan, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `ExposureShield-Legacy-Plan.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        alert('Legacy plan downloaded as JSON.');
-    }
-    </script>
+  </script>
 </body>
 </html>
