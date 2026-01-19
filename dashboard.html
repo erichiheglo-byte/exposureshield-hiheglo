@@ -42,4 +42,26 @@ if ($idx -lt 0) {
 $newHtml = $html.Insert($idx, $fn)
 
 Set-Content -Path $path -Value $newHtml -Encoding UTF8
-Write-Host "✅ Inserted apiLegacyGet before last </script> and saved dashboard.html" -ForegroundColor Green
+Write-Host "✅ Inserted apiLegacyGet before last 
+  // LegacyShield API: Get user's legacy data (auth must match dashboard session)
+  async function apiLegacyGet() {
+    const res = await fetch("/api/legacy/get", {
+      method: "GET",
+      headers: { "Accept": "application/json" },
+      cache: "no-store",
+      credentials: "include"
+    });
+
+    const data = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      const msg = (data && (data.error || data.message))
+        ? (data.error || data.message)
+        : ("Legacy API error: " + res.status);
+      throw new Error(msg);
+    }
+
+    return data;
+  }
+</script> and saved dashboard.html" -ForegroundColor Green
+
