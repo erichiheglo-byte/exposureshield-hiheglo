@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LegacyShield | ExposureShield - Secure Your Digital Legacy</title>
+  <link rel="stylesheet" href="/legacy/legacy.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="legacy-header">
+      <h1><i class="fas fa-shield-heart"></i> LegacyShield</h1>
+      <p>Secure your digital legacy. Store instructions, beneficiaries, and critical documents for your loved ones.</p>
+      <div id="planStatus" class="status-message status-info">
+        Loading your legacy plan...
+      </div>
+    </header>
+
+    <!-- Main Form -->
+    <main class="legacy-form">
+      <form id="legacyPlanForm">
+        <!-- Personal Information -->
+        <div class="form-group">
+          <label for="fullName"><i class="fas fa-user"></i> Your Full Name</label>
+          <input type="text" id="fullName" placeholder="John Doe" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email"><i class="fas fa-envelope"></i> Contact Email</label>
+          <input type="email" id="email" placeholder="john@example.com" required>
+        </div>
+
+        <!-- Instructions -->
+        <div class="form-group">
+          <label for="instructions"><i class="fas fa-file-alt"></i> Instructions to Beneficiaries</label>
+          <textarea id="instructions" placeholder="Important instructions for your beneficiaries about your digital assets, accounts, and wishes..." rows="6"></textarea>
+        </div>
+
+        <!-- Beneficiaries Section -->
+        <div class="beneficiary-section">
+          <h3 class="section-title">
+            <i class="fas fa-users"></i> Beneficiaries
+          </h3>
+          <div id="beneficiariesContainer">
+            <!-- Dynamic beneficiary fields will be added here -->
+          </div>
+          <button type="button" id="addBeneficiary" class="btn btn-secondary">
+            <i class="fas fa-user-plus"></i> Add Beneficiary
+          </button>
+        </div>
+
+        <!-- Trustees Section -->
+        <div class="beneficiary-section">
+          <h3 class="section-title">
+            <i class="fas fa-user-shield"></i> Trustees
+          </h3>
+          <p style="color: var(--gray); margin-bottom: 20px; font-size: 0.95rem;">
+            Trustees are responsible for managing and distributing your digital assets according to your instructions.
+          </p>
+          <div id="trusteesContainer">
+            <!-- Dynamic trustee fields will be added here -->
+          </div>
+          <button type="button" id="addTrustee" class="btn btn-secondary">
+            <i class="fas fa-user-plus"></i> Add Trustee
+          </button>
+        </div>
+
+        <!-- Digital Assets -->
+        <div class="beneficiary-section">
+          <h3 class="section-title">
+            <i class="fas fa-key"></i> Digital Assets & Accounts
+          </h3>
+          <div class="form-group">
+            <label for="accounts"><i class="fas fa-lock"></i> Important Accounts (emails, social media, etc.)</label>
+            <textarea id="accounts" placeholder="List important accounts and access instructions..." rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="documents"><i class="fas fa-file-contract"></i> Important Documents Location</label>
+            <textarea id="documents" placeholder="Where to find important documents (wills, deeds, etc.)..." rows="4"></textarea>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div style="margin-top: 40px; text-align: center;">
+          <button type="button" id="saveLegacyPlan" class="btn btn-success" style="padding: 15px 40px; font-size: 1.1rem;">
+            <i class="fas fa-save"></i> Save Legacy Plan
+          </button>
+          <div id="saveStatus" class="status-message" style="margin-top: 15px;"></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- Footer -->
+    <footer class="legacy-footer">
+      <p>
+        <i class="fas fa-shield-alt"></i> Your data is encrypted and stored securely. 
+        Only you and your designated trustees can access this information.
+      </p>
+      <p style="margin-top: 10px; font-size: 0.9rem;">
+        <a href="/dashboard.html" class="btn btn-secondary btn-small">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="/legacy/legacy.js"></script>
+  <script>
+    // Form management logic
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add beneficiary button
+      document.getElementById('addBeneficiary').addEventListener('click', function() {
+        addBeneficiaryField();
+      });
+      
+      // Add trustee button
+      document.getElementById('addTrustee').addEventListener('click', function() {
+        addTrusteeField();
+      });
+      
+      // Add initial beneficiary field
+      addBeneficiaryField();
+      addTrusteeField();
+    });
+    
+    function addBeneficiaryField() {
+      const container = document.getElementById('beneficiariesContainer');
+      const index = container.children.length + 1;
+      
+      const beneficiaryHTML = `
+        <div class="beneficiary-item">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="margin: 0; color: var(--secondary);">Beneficiary ${index}</h4>
+            <button type="button" class="btn btn-danger btn-small remove-beneficiary">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="beneficiary_name_${index}">Full Name</label>
+            <input type="text" id="beneficiary_name_${index}" placeholder="Jane Smith">
+          </div>
+          <div class="form-group">
+            <label for="beneficiary_email_${index}">Email</label>
+            <input type="email" id="beneficiary_email_${index}" placeholder="jane@example.com">
+          </div>
+          <div class="form-group">
+            <label for="beneficiary_relationship_${index}">Relationship</label>
+            <input type="text" id="beneficiary_relationship_${index}" placeholder="Spouse, Child, Friend, etc.">
+          </div>
+          <div class="form-group">
+            <label for="beneficiary_notes_${index}">Notes/Instructions</label>
+            <textarea id="beneficiary_notes_${index}" placeholder="Special instructions for this beneficiary..." rows="2"></textarea>
+          </div>
+        </div>
+      `;
+      
+      container.insertAdjacentHTML('beforeend', beneficiaryHTML);
+      
+      // Add remove functionality
+      const newItem = container.lastElementChild;
+      const removeBtn = newItem.querySelector('.remove-beneficiary');
+      removeBtn.addEventListener('click', function() {
+        if (container.children.length > 1) {
+          container.removeChild(newItem);
+          renumberBeneficiaries();
+        }
+      });
+    }
+    
+    function addTrusteeField() {
+      const container = document.getElementById('trusteesContainer');
+      const index = container.children.length + 1;
+      
+      const trusteeHTML = `
+        <div class="beneficiary-item">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="margin: 0; color: var(--secondary);">Trustee ${index}</h4>
+            <button type="button" class="btn btn-danger btn-small remove-trustee">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="trustee_name_${index}">Full Name</label>
+            <input type="text" id="trustee_name_${index}" placeholder="Alex Johnson">
+          </div>
+          <div class="form-group">
+            <label for="trustee_email_${index}">Email</label>
+            <input type="email" id="trustee_email_${index}" placeholder="alex@example.com">
+          </div>
+          <div class="form-group">
+            <label for="trustee_phone_${index}">Phone Number</label>
+            <input type="tel" id="trustee_phone_${index}" placeholder="(123) 456-7890">
+          </div>
+          <div class="form-group">
+            <label for="trustee_instructions_${index}">Instructions to Trustee</label>
+            <textarea id="trustee_instructions_${index}" placeholder="Specific instructions for this trustee..." rows="2"></textarea>
+          </div>
+        </div>
+      `;
+      
+      container.insertAdjacentHTML('beforeend', trusteeHTML);
+      
+      // Add remove functionality
+      const newItem = container.lastElementChild;
+      const removeBtn = newItem.querySelector('.remove-trustee');
+      removeBtn.addEventListener('click', function() {
+        if (container.children.length > 1) {
+          container.removeChild(newItem);
+          renumberTrustees();
+        }
+      });
+    }
+    
+    function renumberBeneficiaries() {
+      const container = document.getElementById('beneficiariesContainer');
+      Array.from(container.children).forEach((item, index) => {
+        const title = item.querySelector('h4');
+        if (title) {
+          title.textContent = `Beneficiary ${index + 1}`;
+        }
+      });
+    }
+    
+    function renumberTrustees() {
+      const container = document.getElementById('trusteesContainer');
+      Array.from(container.children).forEach((item, index) => {
+        const title = item.querySelector('h4');
+        if (title) {
+          title.textContent = `Trustee ${index + 1}`;
+        }
+      });
+    }
+  </script>
+</body>
+</html>

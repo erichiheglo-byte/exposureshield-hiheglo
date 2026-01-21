@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support ExposureShield | Donate to Digital Security & Privacy</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== VARIABLES ===== */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ===== BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--secondary);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            gap: 30px;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            font-size: 1.02rem;
+            transition: var(--transition);
+            position: relative;
+            opacity: 0.85;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            opacity: 1;
+        }
+
+        nav a.active {
+            color: var(--primary);
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .secondary-button {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--gray-light);
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .secondary-button:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .donate-button {
+            background: linear-gradient(135deg, var(--success), #34d399);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .donate-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+            background: 
+                radial-gradient(800px 300px at 15% 20%, rgba(16, 185, 129, 0.08), transparent 60%),
+                radial-gradient(800px 300px at 85% 25%, rgba(34, 211, 238, 0.06), transparent 55%),
+                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gray-light), transparent);
+        }
+
+        .hero h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ===== MISSION SECTION ===== */
+        .mission-section {
+            margin: 100px 0;
+            background: white;
+            padding: 80px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .mission-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .mission-content h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--secondary);
+            text-align: center;
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .mission-item {
+            padding: 30px;
+            background: var(--light);
+            border-radius: var(--radius);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .mission-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .mission-item h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .mission-item p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* ===== DONATION TIERS ===== */
+        .donation-section {
+            margin: 100px 0;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--secondary);
+            letter-spacing: -0.02em;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 60px;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-top: 50px;
+        }
+
+        .tier-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 40px 32px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: var(--transition);
+            position: relative;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .tier-card.popular {
+            border: 2px solid var(--success);
+        }
+
+        .tier-card.popular::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--success), #34d399);
+            color: white;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 8px;
+            letter-spacing: 1px;
+        }
+
+        .tier-icon {
+            font-size: 2.8rem;
+            color: var(--success);
+            margin-bottom: 24px;
+        }
+
+        .tier-amount {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 20px 0;
+            color: var(--secondary);
+        }
+
+        .tier-amount .currency {
+            font-size: 1.5rem;
+            vertical-align: super;
+            margin-right: 2px;
+        }
+
+        .tier-name {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .tier-description {
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .tier-features li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: var(--secondary);
+        }
+
+        .tier-features i {
+            color: var(--success);
+            font-size: 1.1rem;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .custom-amount {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .custom-input {
+            display: flex;
+            max-width: 400px;
+            margin: 30px auto;
+            gap: 10px;
+        }
+
+        .currency-symbol {
+            background: var(--gray-light);
+            padding: 16px 20px;
+            border-radius: 12px 0 0 12px;
+            font-weight: 600;
+            color: var(--secondary);
+            border: 2px solid var(--gray-light);
+            border-right: none;
+        }
+
+        .custom-input input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid var(--gray-light);
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--secondary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .custom-input input:focus {
+            border-color: var(--primary);
+        }
+
+        .custom-input .input-suffix {
+            background: var(--gray-light);
+            padding: 16px 20px;
+            border-radius: 0 12px 12px 0;
+            font-weight: 600;
+            color: var(--secondary);
+            border: 2px solid var(--gray-light);
+            border-left: none;
+        }
+
+        /* ===== IMPACT SECTION ===== */
+        .impact-section {
+            margin: 100px 0;
+            background: linear-gradient(135deg, var(--success) 0%, #34d399 100%);
+            padding: 80px 0;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .impact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .impact-section .section-title {
+            color: white;
+        }
+
+        .impact-section .section-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .impact-card {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+        }
+
+        .impact-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .impact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .impact-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .impact-card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* ===== FUNDS USAGE SECTION ===== */
+        .funds-section {
+            margin: 100px 0;
+        }
+
+        .funds-chart {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .fund-item {
+            margin-bottom: 25px;
+        }
+
+        .fund-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .fund-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .fund-percentage {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .fund-bar {
+            height: 10px;
+            background: var(--gray-light);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .fund-progress {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .fund-description {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* ===== COMPLIANCE SECTION ===== */
+        .compliance-section {
+            margin: 100px 0;
+            background: white;
+            padding: 60px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .compliance-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .compliance-content h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+
+        .compliance-points {
+            list-style: none;
+        }
+
+        .compliance-points li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: var(--gray);
+        }
+
+        .compliance-points i {
+            color: var(--success);
+            font-size: 1.2rem;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            background: white;
+            padding: 80px 0;
+            border-radius: var(--radius);
+            margin: 100px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            position: relative;
+        }
+
+        .cta-section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ===== FAQ SECTION ===== */
+        .faq-section {
+            margin: 100px 0;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 50px auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--light);
+        }
+
+        .faq-question h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-answer.show {
+            padding: 0 24px 24px;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1.5fr repeat(3, 1fr);
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+
+        .footer-logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .footer-desc {
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .footer-links h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 1.02rem;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .api-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            margin-top: 20px;
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 350px;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+            
+            .mission-section {
+                padding: 60px 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .hero {
+                padding: 80px 0 60px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.15rem;
+            }
+            
+            .tiers-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .compliance-section {
+                padding: 40px 30px;
+            }
+            
+            .impact-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-section {
+                padding: 40px 30px;
+            }
+            
+            .mission-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .tier-amount {
+                font-size: 2.5rem;
+            }
+            
+            .custom-input {
+                flex-direction: column;
+            }
+            
+            .currency-symbol,
+            .custom-input input,
+            .custom-input .input-suffix {
+                border-radius: 12px;
+                border: 2px solid var(--gray-light);
+                width: 100%;
+            }
+            
+            .currency-symbol,
+            .custom-input .input-suffix {
+                text-align: center;
+            }
+            
+            .cta-button,
+            .secondary-button,
+            .donate-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="pricing.html">Pricing</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="donate.html" class="active">Donate</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li>
+                        <a href="https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS" target="_blank" rel="noopener noreferrer" class="donate-button">
+                            <i class="fas fa-heart"></i>
+                            Donate
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <a href="index.html#emailCheck" class="cta-button">
+                <i class="fas fa-search-shield"></i>
+                Free Security Scan
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Invest in a Safer Digital World</h1>
+            <p>Your donation helps us provide free security tools to millions, protect vulnerable communities, and build sustainable privacy-first technology that benefits everyone.</p>
+            
+            <div class="trust-row" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 40px;">
+                <div class="trust-badge" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.8); padding: 14px 20px; border-radius: 50px; font-size: 1rem; color: var(--gray); backdrop-filter: blur(10px); transition: var(--transition);">
+                    <i class="fas fa-lock"></i>
+                    Secure Payment Processing
+                </div>
+                <div class="trust-badge" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.8); padding: 14px 20px; border-radius: 50px; font-size: 1rem; color: var(--gray); backdrop-filter: blur(10px); transition: var(--transition);">
+                    <i class="fas fa-chart-line"></i>
+                    Full Financial Transparency
+                </div>
+                <div class="trust-badge" style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(226, 232, 240, 0.8); padding: 14px 20px; border-radius: 50px; font-size: 1rem; color: var(--gray); backdrop-filter: blur(10px); transition: var(--transition);">
+                    <i class="fas fa-heart"></i>
+                    100% Supports Our Mission
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Why Donate Section -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-content">
+                <h2>Why Your Donation Matters</h2>
+                <p style="text-align: center; color: var(--gray); margin-bottom: 40px; line-height: 1.6;">
+                    ExposureShield operates on a unique model: We provide essential security scanning for free to everyone, 
+                    while offering premium reports for those who need professional documentation. Donations bridge the gap 
+                    between what's free and what's sustainable.
+                </p>
+                
+                <div class="mission-grid">
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-universal-access"></i>
+                        </div>
+                        <h3>Free Services Cost Money</h3>
+                        <p>Every free security scan costs us in API fees, server costs, and development time. Your donations keep these essential services free for millions.</p>
+                    </div>
+                    
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Protect Vulnerable Users</h3>
+                        <p>Non-profits, journalists, activists, and low-income individuals rely on our free tools. Your donation helps protect those who need it most.</p>
+                    </div>
+                    
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Open Source Development</h3>
+                        <p>We develop and maintain open-source security tools. Your funding supports developers creating privacy-first technology everyone can use.</p>
+                    </div>
+                    
+                    <div class="mission-item">
+                        <div class="mission-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Security Education</h3>
+                        <p>We create free security guides, workshops, and resources. Your donation helps educate the next generation about digital safety.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Donation Tiers -->
+    <section class="donation-section">
+        <div class="container">
+            <h2 class="section-title">Choose Your Contribution Level</h2>
+            <p class="section-subtitle">Select a donation tier that fits your budget. Every contribution directly supports our mission.</p>
+            
+            <div class="tiers-grid">
+                <!-- Tier 1: Supporter -->
+                <div class="tier-card">
+                    <div class="tier-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3 class="tier-name">Seed Supporter</h3>
+                    <div class="tier-amount">
+                        <span class="currency">$</span>5
+                    </div>
+                    <p class="tier-description">Perfect for students, individuals, or anyone who wants to support digital security.</p>
+                    
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Thank you email</li>
+                        <li><i class="fas fa-check"></i> Supporter badge on profile</li>
+                        <li><i class="fas fa-check"></i> Monthly impact newsletter</li>
+                        <li><i class="fas fa-check"></i> Name in supporters list</li>
+                    </ul>
+                    
+                    <button class="donate-button donate-tier" data-amount="5" style="width: 100%; margin-top: auto;">
+                        <i class="fab fa-paypal"></i>
+                        Donate $5
+                    </button>
+                    <p style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
+                        Covers 5 free security scans
+                    </p>
+                </div>
+
+                <!-- Tier 2: Defender (Most Popular) -->
+                <div class="tier-card popular">
+                    <div class="tier-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="tier-name">Digital Defender</h3>
+                    <div class="tier-amount">
+                        <span class="currency">$</span>15
+                    </div>
+                    <p class="tier-description">Ideal for regular users who value privacy and want to make a meaningful impact.</p>
+                    
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Everything in Supporter</li>
+                        <li><i class="fas fa-check"></i> Digital certificate of support</li>
+                        <li><i class="fas fa-check"></i> Early access to new features</li>
+                        <li><i class="fas fa-check"></i> Priority email support</li>
+                        <li><i class="fas fa-check"></i> Exclusive security tips</li>
+                    </ul>
+                    
+                    <button class="donate-button donate-tier" data-amount="15" style="width: 100%; margin-top: auto; background: linear-gradient(135deg, var(--success), #34d399);">
+                        <i class="fab fa-paypal"></i>
+                        Donate $15
+                    </button>
+                    <p style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
+                        Funds 15 free security scans
+                    </p>
+                </div>
+
+                <!-- Tier 3: Guardian -->
+                <div class="tier-card">
+                    <div class="tier-icon">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="tier-name">Security Guardian</h3>
+                    <div class="tier-amount">
+                        <span class="currency">$</span>50
+                    </div>
+                    <p class="tier-description">For champions of digital security who want to lead the way in privacy protection.</p>
+                    
+                    <ul class="tier-features">
+                        <li><i class="fas fa-check"></i> Everything in Defender</li>
+                        <li><i class="fas fa-check"></i> Featured supporter spotlight</li>
+                        <li><i class="fas fa-check"></i> Direct access to our security team</li>
+                        <li><i class="fas fa-check"></i> Detailed annual impact report</li>
+                        <li><i class="fas fa-check"></i> Custom security consultation</li>
+                    </ul>
+                    
+                    <button class="donate-button donate-tier" data-amount="50" style="width: 100%; margin-top: auto;">
+                        <i class="fab fa-paypal"></i>
+                        Donate $50
+                    </button>
+                    <p style="margin-top: 10px; font-size: 0.8rem; color: var(--gray);">
+                        Sponsors free security for a small organization
+                    </p>
+                </div>
+            </div>
+
+            <!-- Major Donor Tier -->
+            <div style="max-width: 600px; margin: 60px auto; text-align: center;">
+                <div style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; padding: 40px; border-radius: var(--radius);">
+                    <i class="fas fa-star" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                    <h3 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; margin-bottom: 15px;">Visionary Donor</h3>
+                    <div style="font-size: 2.5rem; font-weight: 800; margin: 20px 0;">$100+</div>
+                    <p style="margin-bottom: 25px; opacity: 0.9;">Transform digital security for hundreds of people.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 25px;">
+                        Includes all Guardian benefits plus:
+                    </p>
+                    <ul style="list-style: none; text-align: left; margin-bottom: 25px;">
+                        <li><i class="fas fa-check"></i> Dedicated thank you video from our team</li>
+                        <li><i class="fas fa-check"></i> Name on our website's major donors page</li>
+                        <li><i class="fas fa-check"></i> Quarterly strategy updates</li>
+                        <li><i class="fas fa-check"></i> Influence on future feature development</li>
+                    </ul>
+                    <a href="contact.html" class="cta-button" style="background: white; color: #7c3aed;">
+                        <i class="fas fa-envelope"></i>
+                        Contact for Major Donations
+                    </a>
+                </div>
+            </div>
+
+            <!-- Custom Amount -->
+            <div class="custom-amount">
+                <h3 style="font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin-bottom: 20px; color: var(--secondary);">Or Choose Any Amount</h3>
+                <p style="color: var(--gray); margin-bottom: 20px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                    Enter any amount between $1 and $10,000. Every dollar makes a difference.
+                </p>
+                
+                <div class="custom-input">
+                    <div class="currency-symbol">$</div>
+                    <input type="number" id="customAmount" placeholder="Enter amount" min="1" max="10000" step="1" value="25">
+                    <div class="input-suffix">USD</div>
+                </div>
+                
+                <button class="donate-button" id="customDonateBtn" style="margin-top: 20px; padding: 16px 40px;">
+                    <i class="fab fa-paypal"></i>
+                    Donate <span id="customAmountDisplay">$25</span>
+                </button>
+                
+                <p style="margin-top: 20px; color: var(--gray); font-size: 0.9rem;">
+                    Minimum: $1 • Maximum: $10,000 • No subscription required
+                </p>
+                
+                <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                    <button class="secondary-button quick-amount" data-amount="10" style="padding: 10px 20px;">
+                        $10
+                    </button>
+                    <button class="secondary-button quick-amount" data-amount="25" style="padding: 10px 20px;">
+                        $25
+                    </button>
+                    <button class="secondary-button quick-amount" data-amount="100" style="padding: 10px 20px;">
+                        $100
+                    </button>
+                    <button class="secondary-button quick-amount" data-amount="500" style="padding: 10px 20px;">
+                        $500
+                    </button>
+                    <button class="secondary-button quick-amount" data-amount="1000" style="padding: 10px 20px;">
+                        $1,000
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How Funds Are Used Section -->
+    <section class="funds-section">
+        <div class="container">
+            <h2 class="section-title">How Your Donation is Used</h2>
+            <p class="section-subtitle">We maintain complete transparency about how every dollar is spent to further our mission.</p>
+            
+            <div class="funds-chart">
+                <h3 style="font-family: 'Poppins', sans-serif; margin-bottom: 30px; color: var(--secondary); text-align: center;">Breakdown of Donation Allocation</h3>
+                
+                <div class="fund-item">
+                    <div class="fund-header">
+                        <span class="fund-name">Free Security Scans (40%)</span>
+                        <span class="fund-percentage">40%</span>
+                    </div>
+                    <div class="fund-bar">
+                        <div class="fund-progress" style="width: 40%;"></div>
+                    </div>
+                    <div class="fund-description">
+                        API costs, server infrastructure, and bandwidth for millions of free security checks.
+                    </div>
+                </div>
+                
+                <div class="fund-item">
+                    <div class="fund-header">
+                        <span class="fund-name">Open Source Development (25%)</span>
+                        <span class="fund-percentage">25%</span>
+                    </div>
+                    <div class="fund-bar">
+                        <div class="fund-progress" style="width: 25%;"></div>
+                    </div>
+                    <div class="fund-description">
+                        Developer salaries, code maintenance, and creating new privacy tools for everyone.
+                    </div>
+                </div>
+                
+                <div class="fund-item">
+                    <div class="fund-header">
+                        <span class="fund-name">Security Education (20%)</span>
+                        <span class="fund-percentage">20%</span>
+                    </div>
+                    <div class="fund-bar">
+                        <div class="fund-progress" style="width: 20%;"></div>
+                    </div>
+                    <div class="fund-description">
+                        Creating guides, workshops, and resources to educate people about digital safety.
+                    </div>
+                </div>
+                
+                <div class="fund-item">
+                    <div class="fund-header">
+                        <span class="fund-name">Operational Costs (10%)</span>
+                        <span class="fund-percentage">10%</span>
+                    </div>
+                    <div class="fund-bar">
+                        <div class="fund-progress" style="width: 10%;"></div>
+                    </div>
+                    <div class="fund-description">
+                        Legal, accounting, payment processing fees, and essential business operations.
+                    </div>
+                </div>
+                
+                <div class="fund-item">
+                    <div class="fund-header">
+                        <span class="fund-name">Community Support (5%)</span>
+                        <span class="fund-percentage">5%</span>
+                    </div>
+                    <div class="fund-bar">
+                        <div class="fund-progress" style="width: 5%;"></div>
+                    </div>
+                    <div class="fund-description">
+                        Supporting vulnerable users, non-profits, and organizations that need extra help.
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <p style="color: var(--gray); max-width: 700px; margin: 0 auto; line-height: 1.6;">
+                    <strong>Important:</strong> 0% of donations go to marketing or advertising. 
+                    We grow through word-of-mouth and the quality of our service. 
+                    We also never sell user data or accept funding that compromises our privacy-first principles.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact-section">
+        <div class="container">
+            <h2 class="section-title">Your Donation's Direct Impact</h2>
+            <p class="section-subtitle">See exactly what your contribution makes possible in the digital security ecosystem.</p>
+            
+            <div class="impact-grid">
+                <!-- Impact 1 -->
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>$5 Protects 5 People</h3>
+                    <p>Provides free security scans for 5 individuals, helping them understand their digital exposure.</p>
+                </div>
+
+                <!-- Impact 2 -->
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-school"></i>
+                    </div>
+                    <h3>$15 Educates a Classroom</h3>
+                    <p>Funds security education materials for an entire classroom of students learning digital safety.</p>
+                </div>
+
+                <!-- Impact 3 -->
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3>$50 Supports a Non-Profit</h3>
+                    <p>Provides comprehensive security monitoring for a small non-profit organization for one month.</p>
+                </div>
+
+                <!-- Impact 4 -->
+                <div class="impact-card">
+                    <div class="impact-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>$100 Develops New Tools</h3>
+                    <p>Funds 8 hours of developer time creating new open-source privacy tools for everyone.</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <div style="background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: var(--radius); border: 1px solid rgba(255, 255, 255, 0.2); display: inline-block;">
+                    <h4 style="font-family: 'Poppins', sans-serif; color: white; margin-bottom: 15px; font-size: 1.2rem;">
+                        <i class="fas fa-chart-bar"></i> Real Impact Numbers
+                    </h4>
+                    <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: white;">2.1M+</div>
+                            <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">Free Scans This Year</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: white;">45K+</div>
+                            <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">People Educated</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: 800; color: white;">600+</div>
+                            <div style="color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">Organizations Protected</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-subtitle">Get answers to common questions about donating to ExposureShield.</p>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Why should I donate when you already charge for PDF reports?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>PDF reports ($4.99) are for users who need professional documentation. Donations support the free services that 95% of our users rely on. Every free scan costs us money in API fees and server costs. Donations ensure we can continue offering essential security checking to everyone, regardless of their ability to pay.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Are donations tax-deductible?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>No. ExposureShield is a for-profit social enterprise, not a registered 501(c)(3) charity. Donations are considered personal gifts and are not tax-deductible. We operate this way to maintain flexibility and avoid restrictions that sometimes come with non-profit status.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I get a refund if I change my mind?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Donations are generally non-refundable as they are immediately allocated to our operational costs. However, if there was an error (wrong amount, duplicate charge) or exceptional circumstances, contact us within 7 days at donations@exposureshield.com and we'll review your case.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>How often should I donate?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We prefer one-time donations over subscriptions to maintain flexibility for both you and us. However, some supporters choose to donate monthly. There's no obligation – give what you can, when you can. Even a single donation makes a meaningful difference.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What payment methods do you accept?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept all major credit/debit cards, PayPal, and bank transfers through our secure payment processor. All transactions are encrypted and PCI DSS compliant. We never store your full payment details on our servers.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Will my donation information be private?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. We never sell, share, or trade donor information. Your name will only appear in our supporters list if you choose that option. All financial information is handled by our secure payment processors. Review our <a href="privacy.html" style="color: var(--primary);">Privacy Policy</a> for details.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can I donate anonymously?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes. During the donation process, you can select "Donate Anonymously." Your contribution will still be counted in our totals, but your name won't appear anywhere. We'll still send you a receipt email (if provided) for your records.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Do you accept corporate donations or sponsorships?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! We welcome corporate support that aligns with our mission. Corporate donors receive special recognition, impact reports, and can sponsor specific projects. Contact us at partnerships@exposureshield.com to discuss corporate giving opportunities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compliance Section -->
+    <section class="compliance-section">
+        <div class="container">
+            <div class="compliance-content">
+                <h3>Important Legal & Compliance Information</h3>
+                
+                <ul class="compliance-points">
+                    <li>
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Voluntary contributions:</strong> Donations are completely optional. All core security services remain free regardless of donation status.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <div>
+                            <strong>Business structure:</strong> ExposureShield operates as a for-profit social enterprise (LLC). Donations support our mission but are not charitable deductions.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-redo"></i>
+                        <div>
+                            <strong>No recurring charges:</strong> All donations are one-time unless you explicitly choose a monthly option. We don't auto-renew donations.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-user-shield"></i>
+                        <div>
+                            <strong>Privacy protected:</strong> Donor information is never sold or shared. View our <a href="privacy.html" style="color: var(--primary);">Privacy Policy</a> for complete details.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-shield-alt"></i>
+                        <div>
+                            <strong>Secure payments:</strong> All transactions are processed through PCI DSS compliant payment processors with bank-level encryption.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Immediate receipt:</strong> You'll receive a detailed donation receipt via email immediately after payment for your records.
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fas fa-balance-scale"></i>
+                        <div>
+                            <strong>Financial transparency:</strong> We publish annual reports on how donations are used. Contact us for the latest report.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Support Digital Security?</h2>
+            <p>Join thousands of supporters who believe privacy and security should be accessible to everyone, not just those who can afford it.</p>
+            
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 30px;">
+                <button class="donate-button donate-tier" data-amount="15" style="padding: 16px 40px;">
+                    <i class="fab fa-paypal"></i>
+                    Donate $15 Now
+                </button>
+                <button class="donate-button donate-tier" data-amount="50" style="padding: 16px 40px; background: linear-gradient(135deg, #8b5cf6, #7c3aed);">
+                    <i class="fab fa-paypal"></i>
+                    Donate $50
+                </button>
+                <a href="index.html#emailCheck" class="secondary-button">
+                    <i class="fas fa-search-shield"></i>
+                    Try Free Security Scan First
+                </a>
+            </div>
+            
+            <p style="margin-top: 30px; color: var(--gray); font-size: 1rem;">
+                <i class="fas fa-lock"></i>
+                Secure payment • Immediate receipt • No subscription • 100% mission support
+            </p>
+            
+            <div style="margin-top: 40px; padding: 20px; background: var(--light); border-radius: var(--radius); max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h4 style="font-family: 'Poppins', sans-serif; margin-bottom: 10px; color: var(--secondary);">
+                    <i class="fas fa-quote-left" style="color: var(--primary);"></i>
+                    Donor Testimonial
+                </h4>
+                <p style="color: var(--gray); font-style: italic;">
+                    "I use ExposureShield's free service regularly for my family. Donating $15 felt like paying for a service I value, while supporting others who can't afford premium security tools."
+                </p>
+                <p style="color: var(--gray); margin-top: 10px; font-size: 0.9rem;">
+                    — Sarah M., Monthly Donor since 2023
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="donationToast">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <strong>Redirecting to Secure Payment...</strong>
+            <div style="font-size: 0.9rem; opacity: 0.9;">You'll complete your donation on our secure payment page.</div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">ExposureShield</div>
+                    <p class="footer-desc">
+                        Enterprise-grade security made accessible. 
+                        Your support helps us provide free security tools to millions worldwide while maintaining our privacy-first principles.
+                    </p>
+                    <div class="api-badge">
+                        <i class="fas fa-heart"></i>
+                        100% of donations support our free security services
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Support Our Work</h4>
+                    <ul>
+                        <li><a href="donate.html">Donate Now</a></li>
+                        <li><a href="pricing.html">Premium Services</a></li>
+                        <li><a href="contact.html">Contact Donations Team</a></li>
+                        <li><a href="transparency.html">Financial Transparency</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Legal & Compliance</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <a href="refund.html">Refund Policy</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="about.html">Our Mission</a></li>
+                        <li><a href="blog.html">Security Blog</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                        <li><a href="sitemap.xml">Sitemap</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© <span id="currentYear"></span> ExposureShield Security Solutions. All rights reserved.</p>
+                <p style="margin-top: 12px; color: #94a3b8; font-size: 0.9rem;">
+                    <i class="fas fa-shield-alt"></i>
+                    Donations keep our free services available to everyone
+                </p>
+                <p style="margin-top: 8px; font-size: 0.85rem; color: #64748b;">
+                    Contact: contact@exposureshield.com | Phone: +1 (207) 992-7874
+                </p>
+                <p style="margin-top: 8px; font-size: 0.85rem; color: #64748b;">
+                    Secure payments via PayPal • PCI DSS Compliant • Financial reports available upon request
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PayPal Donation Script -->
+    <script>
+  // Set current year
+  const yearEl = document.getElementById("currentYear");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // PayPal Donation Link (Production)
+  const PAYPAL_DONATE_BASE = "https://www.paypal.com/ncp/payment/Q6KLHNUYEJVDS";
+
+  function buildDonateUrl(amount) {
+    const url = new URL(PAYPAL_DONATE_BASE);
+    if (amount && Number(amount) > 0) url.searchParams.set("amount", String(parseInt(amount, 10)));
+    url.searchParams.set("src", "exposureshield");
+    url.searchParams.set("type", "donation");
+    return url.toString();
+  }
+
+  function openPayPal(amount) {
+    const finalUrl = buildDonateUrl(amount);
+    window.open(finalUrl, "_blank", "noopener,noreferrer");
+  }
+
+  // Custom amount display
+  const customAmountInput = document.getElementById("customAmount");
+  const customAmountDisplay = document.getElementById("customAmountDisplay");
+  const customDonateBtn = document.getElementById("customDonateBtn");
+
+  function clampAmount(v) {
+    let amount = parseInt(v || "0", 10);
+    if (isNaN(amount) || amount < 1) amount = 1;
+    if (amount > 10000) amount = 10000;
+    return amount;
+  }
+
+  if (customAmountInput && customAmountDisplay) {
+    customAmountInput.addEventListener("input", function () {
+      const amount = clampAmount(this.value);
+      this.value = amount;
+      customAmountDisplay.textContent = "$" + amount;
+    });
+  }
+
+  // Custom donate button (only affects this button)
+  if (customDonateBtn && customAmountInput) {
+    customDonateBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const amount = clampAmount(customAmountInput.value);
+      openPayPal(amount);
+    });
+  }
+
+  // Tier buttons - FIXED VERSION
+  document.querySelectorAll(".donate-tier").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event bubbling
+      
+      const amount = clampAmount(this.getAttribute("data-amount"));
+      const originalHtml = this.innerHTML;
+      const originalText = this.innerText || this.textContent;
+
+      // UI feedback only for THIS button
+      this.disabled = true;
+      this.innerHTML = '<i class="fab fa-paypal"></i> Opening PayPal...';
+      
+      // Add a temporary visual indicator
+      this.style.opacity = "0.8";
+      this.style.cursor = "wait";
+
+      // Open PayPal immediately
+      openPayPal(amount);
+
+      // Restore button after delay (only if still disabled)
+      setTimeout(() => {
+        if (this.disabled) {
+          this.disabled = false;
+          this.innerHTML = originalHtml;
+          this.style.opacity = "1";
+          this.style.cursor = "pointer";
+        }
+      }, 1500);
+    });
+  });
+
+  // Quick amount buttons (just sets the input; no payment action)
+  document.querySelectorAll(".quick-amount").forEach((btn) => {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const amount = clampAmount(this.getAttribute("data-amount"));
+      if (customAmountInput) customAmountInput.value = amount;
+      if (customAmountDisplay) customAmountDisplay.textContent = "$" + amount;
+    });
+  });
+
+  // FAQ Accordion
+  document.querySelectorAll(".faq-question").forEach((question) => {
+    question.addEventListener("click", function () {
+      const answer = this.nextElementSibling;
+      const icon = this.querySelector("i");
+
+      answer.classList.toggle("show");
+      if (icon) {
+        icon.classList.toggle("fa-chevron-down");
+        icon.classList.toggle("fa-chevron-up");
+      }
+
+      document.querySelectorAll(".faq-answer").forEach((otherAnswer) => {
+        if (otherAnswer !== answer) {
+          otherAnswer.classList.remove("show");
+          const otherIcon = otherAnswer.previousElementSibling?.querySelector("i");
+          if (otherIcon) {
+            otherIcon.classList.remove("fa-chevron-up");
+            otherIcon.classList.add("fa-chevron-down");
+          }
+        }
+      });
+    });
+  });
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (href !== '#') {
+        e.preventDefault();
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
+
+  // Open first FAQ by default
+  document.addEventListener("DOMContentLoaded", function () {
+    const firstQuestion = document.querySelector(".faq-question");
+    if (firstQuestion) firstQuestion.click();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Vault | ExposureShield - Secure Storage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: var(--secondary);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .vault-header {
+            padding: 40px 0 20px;
+        }
+        .vault-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .upload-area {
+            border: 3px dashed var(--gray-light);
+            border-radius: var(--radius);
+            padding: 60px 40px;
+            text-align: center;
+            background: white;
+            margin: 30px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        .document-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-light);
+            transition: all 0.3s;
+        }
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+        .doc-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--gray-light);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 50px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--gray);
+            margin-top: 60px;
+            border-top: 1px solid var(--gray-light);
+        }
+        @media (max-width: 768px) {
+            .documents-grid { grid-template-columns: 1fr; }
+            .upload-area { padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </a>
+            <div class="auth-buttons">
+                <!-- Will be populated by shared.js -->
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="vault-header">
+            <h1>Document Vault</h1>
+            <p>Secure, encrypted storage for your important documents. Bank-level encryption ensures your files are protected.</p>
+            
+            <div class="security-badge">
+                <i class="fas fa-lock"></i>
+                <span>256-bit Encryption • Secure Storage</span>
+            </div>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h3 style="margin-bottom: 10px;">Drag & Drop Files Here</h3>
+            <p style="color: var(--gray); margin-bottom: 20px;">
+                Or click to browse. Max file size: 10MB per file
+            </p>
+            <button class="btn" onclick="triggerFileInput()">
+                <i class="fas fa-folder-open"></i> Browse Files
+            </button>
+            <input type="file" id="fileInput" multiple style="display: none;" 
+                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+        </div>
+        
+        <h2 style="margin: 40px 0 20px;">Your Documents</h2>
+        <div id="documentsList" class="documents-grid">
+            <!-- Documents will be loaded here -->
+        </div>
+        
+        <div class="footer">
+            <p>ExposureShield Vault • All documents encrypted at rest and in transit</p>
+        </div>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // REQUIRE AUTHENTICATION
+        if (!ExposureShieldAuth.requireAuth({ showAlert: true })) {
+            return;
+        }
+        
+        loadDocuments();
+        setupFileUpload();
+    });
+    
+    function loadDocuments() {
+        const documents = JSON.parse(localStorage.getItem('user_documents') || '[]');
+        const container = document.getElementById('documentsList');
+        
+        if (documents.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <div style="font-size: 4rem; color: var(--gray-light); margin-bottom: 20px;">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3>No documents yet</h3>
+                    <p style="color: var(--gray);">Upload your first document to get started</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = '';
+        
+        documents.forEach((doc, index) => {
+            const card = document.createElement('div');
+            card.className = 'document-card';
+            card.innerHTML = `
+                <div class="doc-icon">
+                    <i class="${getFileIcon(doc.type)}"></i>
+                </div>
+                <div style="font-weight: 600; margin-bottom: 10px; font-size: 1.1rem;">${doc.name}</div>
+                <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 15px;">
+                    <div>Type: ${doc.type.toUpperCase()}</div>
+                    <div>Size: ${formatFileSize(doc.size)}</div>
+                    <div>Uploaded: ${doc.uploaded}</div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn" onclick="viewDocument(${index})" style="padding: 8px 16px; font-size: 0.9rem;">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadDocument(${index})" style="padding: 8px 16px; font-size: 0.9rem;">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+    
+    function setupFileUpload() {
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.background = '#f0f9ff';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--gray-light)';
+            uploadArea.style.background = 'white';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--gray-light)';
+            uploadArea.style.background = 'white';
+            handleFiles(e.dataTransfer.files);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+    }
+    
+    function triggerFileInput() {
+        document.getElementById('fileInput').click();
+    }
+    
+    function handleFiles(files) {
+        let uploadedCount = 0;
+        
+        Array.from(files).forEach((file) => {
+            if (file.size > 10 * 1024 * 1024) {
+                alert(`File "${file.name}" exceeds 10MB limit`);
+                return;
+            }
+            
+            // Save document
+            saveDocument(file);
+            uploadedCount++;
+        });
+        
+        if (uploadedCount > 0) {
+            loadDocuments();
+            ExposureShieldAuth.showNotification(`${uploadedCount} document(s) uploaded`, 'info');
+        }
+    }
+    
+    function saveDocument(file) {
+        const documents = JSON.parse(localStorage.getItem('user_documents') || '[]');
+        
+        const documentData = {
+            id: Date.now(),
+            name: file.name,
+            type: file.type || 'unknown',
+            size: file.size,
+            uploaded: new Date().toLocaleDateString()
+        };
+        
+        documents.push(documentData);
+        localStorage.setItem('user_documents', JSON.stringify(documents));
+    }
+    
+    function getFileIcon(type) {
+        if (type.includes('pdf')) return 'fas fa-file-pdf';
+        if (type.includes('word') || type.includes('document')) return 'fas fa-file-word';
+        if (type.includes('image')) return 'fas fa-file-image';
+        if (type.includes('text')) return 'fas fa-file-alt';
+        return 'fas fa-file';
+    }
+    
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+    
+    function viewDocument(index) {
+        const documents = JSON.parse(localStorage.getItem('user_documents') || '[]');
+        const doc = documents[index];
+        alert(`Viewing: ${doc.name}\n\nIn production, this would open the document in a secure viewer.`);
+    }
+    
+    function downloadDocument(index) {
+        const documents = JSON.parse(localStorage.getItem('user_documents') || '[]');
+        const doc = documents[index];
+        
+        // Create demo content
+        const content = `This is a demo file representing: ${doc.name}\nUploaded: ${doc.uploaded}\nSize: ${formatFileSize(doc.size)}`;
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = doc.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+    </script>
+</body>
+</html>

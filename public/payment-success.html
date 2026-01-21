@@ -1,0 +1,28 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment Successful â€” ExposureShield</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; padding:24px;}
+    .card{max-width:720px;margin:0 auto;border:1px solid #ddd;border-radius:12px;padding:18px;}
+    .btn{display:inline-block;margin-top:14px;padding:10px 14px;border-radius:10px;border:1px solid #333;text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Payment Successful</h1>
+    <p>Your report is now unlocked.</p>
+
+    <script>
+      // MVP unlock flag (Phase 2: verify server-side)
+      sessionStorage.setItem("exposureshield_paid", "true");
+    </script>
+
+    <a class="btn" href="/#email-check">Return to Email Check</a>
+  </div>
+</body>
+</html>
+
+
