@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1157,8 +1157,8 @@
                         <label class="form-label">Default Currency</label>
                         <select class="form-control" id="defaultCurrency">
                             <option value="USD">USD ($)</option>
-                            <option value="EUR">EUR (€)</option>
-                            <option value="GBP">GBP (£)</option>
+                            <option value="EUR">EUR (â‚¬)</option>
+                            <option value="GBP">GBP (Â£)</option>
                         </select>
                     </div>
                     
@@ -1176,7 +1176,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>© 2024 LegacyShield Enterprise Platform. All rights reserved. | v3.2.1</p>
+            <p>Â© 2024 LegacyShield Enterprise Platform. All rights reserved. | v3.2.1</p>
             <p>System Status: <span class="status-badge status-active">Operational</span></p>
         </div>
     </div>
@@ -1209,7 +1209,7 @@
 
     // Initialize the application
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 LegacyShield Enterprise Platform Initializing...');
+        console.log('ðŸš€ LegacyShield Enterprise Platform Initializing...');
         
         // Initialize dashboard
         initializeDashboard();
@@ -1259,7 +1259,7 @@
             if (response.status === 401) {
                 showAlert('error', 'Session expired. Please log in again.');
                 setTimeout(() => {
-                    window.location.href = '/login';
+                    window.location.href = '/login.html';
                 }, 2000);
                 return null;
             }
@@ -1998,7 +1998,7 @@
         };
         
         document.getElementById('pageTitle').textContent = titles[tab] || 'Dashboard';
-        document.getElementById('pageSubtitle').textContent = `LegacyShield ${titles[tab] || 'Dashboard'} • ${new Date().toLocaleDateString()}`;
+        document.getElementById('pageSubtitle').textContent = `LegacyShield ${titles[tab] || 'Dashboard'} â€¢ ${new Date().toLocaleDateString()}`;
     }
 
     function toggleNotifications() {
