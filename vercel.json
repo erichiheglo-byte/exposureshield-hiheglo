@@ -1,4 +1,4 @@
-{
+﻿{
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
@@ -8,9 +8,7 @@
     }
   },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index.js?__path=/:path*" },
-    
-    { "source": "/login", "destination": "/login.html" },
+{ "source": "/login", "destination": "/login.html" },
     { "source": "/register", "destination": "/register.html" },
     { "source": "/services", "destination": "/services.html" },
     { "source": "/pricing", "destination": "/pricing.html" },
@@ -23,3 +21,4 @@
     { "source": "/refund", "destination": "/refund.html" }
   ]
 }
+
