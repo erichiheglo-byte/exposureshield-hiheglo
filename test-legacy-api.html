@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>LegacyShield API Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { background: #d4edda; border-color: #c3e6cb; }
+        .error { background: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>LegacyShield API Test Suite</h1>
+    
+    <div class="test">
+        <h3>Test 1: Check Authentication State</h3>
+        <button onclick="testAuthState()">Check Auth State</button>
+        <div id="authState"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Test API with Bearer Token</h3>
+        <button onclick="testBearerToken()">Test Bearer Token</button>
+        <div id="bearerResult"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 3: Test API with Cookies</h3>
+        <button onclick="testCookies()">Test Cookies</button>
+        <div id="cookieResult"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 4: Full Integration Test</h3>
+        <button onclick="testFullIntegration()">Run Full Test</button>
+        <div id="fullResult"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Debug Info</h3>
+        <button onclick="showDebugInfo()">Show Debug Info</button>
+        <pre id="debugInfo"></pre>
+    </div>
+
+    <script>
+        // Test 1: Check Authentication State
+        async function testAuthState() {
+            const output = document.getElementById('authState');
+            output.innerHTML = '<p>Checking authentication state...</p>';
+            
+            const results = [];
+            
+            // Check localStorage
+            const tokenKeys = ['token', 'access_token', 'auth_token', 'jwt'];
+            tokenKeys.forEach(key => {
+                const value = localStorage.getItem(key);
+                results.push(`localStorage.${key}: ${value ? '✓ (' + value.length + ' chars)' : '✗'}`);
+            });
+            
+            // Check sessionStorage
+            const sessionToken = sessionStorage.getItem('token');
+            results.push(`sessionStorage.token: ${sessionToken ? '✓ (' + sessionToken.length + ' chars)' : '✗'}`);
+            
+            // Check cookies
+            results.push(`Cookies: ${document.cookie ? '✓ (' + document.cookie.length + ' chars)' : '✗'}`);
+            if (document.cookie) {
+                results.push(`Cookie content: ${document.cookie}`);
+            }
+            
+            output.innerHTML = '<ul>' + results.map(r => `<li>${r}</li>`).join('') + '</ul>';
+        }
+        
+        // Test 2: Test Bearer Token
+        async function testBearerToken() {
+            const output = document.getElementById('bearerResult');
+            output.innerHTML = '<p>Testing Bearer token...</p>';
+            
+            const token = localStorage.getItem('token') || 
+                         localStorage.getItem('access_token') || 
+                         localStorage.getItem('auth_token');
+            
+            if (!token) {
+                output.innerHTML = '<p class="error">❌ No token found in localStorage</p>';
+                return;
+            }
+            
+            output.innerHTML += `<p>Token found: ${token.substring(0, 20)}...</p>`;
+            
+            try {
+                const start = Date.now();
+                const response = await fetch('/api/legacy/get', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const end = Date.now();
+                
+                output.innerHTML += `<p>Status: ${response.status} ${response.statusText}</p>`;
+                output.innerHTML += `<p>Time: ${end - start}ms</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    output.innerHTML += `<p class="success">✅ SUCCESS! Got data:</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const errorText = await response.text();
+                    output.innerHTML += `<p class="error">❌ Failed: ${errorText}</p>`;
+                }
+            } catch (error) {
+                output.innerHTML += `<p class="error">❌ Network error: ${error.message}</p>`;
+            }
+        }
+        
+        // Test 3: Test Cookies
+        async function testCookies() {
+            const output = document.getElementById('cookieResult');
+            output.innerHTML = '<p>Testing cookies...</p>';
+            
+            try {
+                const start = Date.now();
+                const response = await fetch('/api/legacy/get', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const end = Date.now();
+                
+                output.innerHTML += `<p>Status: ${response.status} ${response.statusText}</p>`;
+                output.innerHTML += `<p>Time: ${end - start}ms</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    output.innerHTML += `<p class="success">✅ SUCCESS! Got data:</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    const errorText = await response.text();
+                    output.innerHTML += `<p class="error">❌ Failed: ${errorText}</p>`;
+                }
+            } catch (error) {
+                output.innerHTML += `<p class="error">❌ Network error: ${error.message}</p>`;
+            }
+        }
+        
+        // Test 4: Full Integration Test
+        async function testFullIntegration() {
+            const output = document.getElementById('fullResult');
+            output.innerHTML = '<h4>Running full integration test...</h4>';
+            
+            // Test dashboard's apiLegacyGet
+            try {
+                const result = await apiLegacyGet();
+                output.innerHTML += `<p class="success">✅ apiLegacyGet() SUCCESS!</p>`;
+                output.innerHTML += `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+                
+                // Update legacy plan status
+                if (result.ok && result.plan) {
+                    output.innerHTML += `<p class="success">✅ Legacy plan found with ${result.plan.beneficiaries?.length || 0} beneficiaries</p>`;
+                } else if (result.ok && !result.plan) {
+                    output.innerHTML += `<p>ℹ️ No legacy plan yet (this is normal for new users)</p>`;
+                } else {
+                    output.innerHTML += `<p class="error">❌ Error: ${result.error || 'Unknown error'}</p>`;
+                }
+            } catch (error) {
+                output.innerHTML += `<p class="error">❌ apiLegacyGet() failed: ${error.message}</p>`;
+            }
+        }
+        
+        // Debug Info
+        function showDebugInfo() {
+            const output = document.getElementById('debugInfo');
+            const info = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                localStorage: {},
+                sessionStorage: {},
+                cookies: document.cookie,
+                screen: {
+                    width: window.screen.width,
+                    height: window.screen.height
+                }
+            };
+            
+            // Get localStorage items
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('token') || key.includes('auth') || key.includes('user')) {
+                    const value = localStorage.getItem(key);
+                    info.localStorage[key] = value ? `${value.length} chars` : 'empty';
+                }
+            }
+            
+            output.textContent = JSON.stringify(info, null, 2);
+        }
+    </script>
+</body>
+</html>

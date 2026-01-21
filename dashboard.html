@@ -1,36 +1,1842 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LegacyShield Dashboard</title>
-    <!-- Your existing head content here -->
-</head>
-<body>
-    <h1>Dashboard</h1>
-    <div id="content"></div>
-    
-    <script>
-    // LegacyShield API: Get user's legacy data
-    async function apiLegacyGet() {
-        const res = await fetch("/api/legacy/get", {
-            method: "GET",
-            headers: { "Accept": "application/json" },
-            credentials: "include",
-            cache: "no-store"
-        });
-        
-        const data = await res.json().catch(() => null);
-        
-        if (!res.ok) {
-            const msg = (data && (data.error || data.message))
-                ? (data.error || data.message)
-                : ("Legacy API error: " + res.status);
-            throw new Error(msg);
-        }
-        
-        return data;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LegacyShield | Enterprise Digital Legacy Management Platform</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #7c3aed;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --border: #e2e8f0;
+      --sidebar: #0f172a;
     }
-    
-    // Your other existing JavaScript code here
-    </script>
-</body>
-</html>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f1f5f9;
+      color: var(--dark);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      color: white;
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .logo {
+      padding: 0 24px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 24px;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo p {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .nav-menu { flex: 1; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 24px;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: all 0.3s;
+      font-weight: 500;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border-left: 4px solid var(--primary);
+    }
+
+    .nav-item.active {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border-left: 4px solid var(--primary);
+    }
+
+    .nav-item i { width: 20px; text-align: center; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--primary);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .sidebar-footer {
+      padding: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      margin-top: auto;
+    }
+
+    .user-profile { display: flex; align-items: center; gap: 12px; }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .user-info h4 { font-size: 14px; font-weight: 600; color: white; }
+    .user-info p { font-size: 12px; color: #94a3b8; }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .page-title h2 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .page-title p { color: var(--gray); margin-top: 4px; }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .search-box { position: relative; }
+    .search-box input {
+      padding: 10px 16px 10px 40px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      width: 300px;
+      font-size: 14px;
+      background: white;
+    }
+    .search-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+    }
+
+    .notification-bell {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid var(--border);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-icon.blue { background: #dbeafe; color: #1d4ed8; }
+    .stat-icon.green { background: #d1fae5; color: #047857; }
+    .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
+    .stat-icon.orange { background: #fef3c7; color: #d97706; }
+    .stat-icon.red { background: #fee2e2; color: #dc2626; }
+
+    .stat-trend { font-size: 14px; padding: 4px 8px; border-radius: 6px; }
+    .trend-up { background: #d1fae5; color: #065f46; }
+    .trend-down { background: #fee2e2; color: #991b1b; }
+
+    .stat-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; }
+    .stat-label { color: var(--gray); font-size: 14px; }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 1200px) { .main-grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-content { padding: 24px; }
+
+    /* Tables */
+    .table-responsive { overflow-x: auto; }
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th {
+      background: #f8fafc;
+      padding: 14px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--dark);
+      border-bottom: 2px solid var(--border);
+    }
+    .data-table td { padding: 16px; border-bottom: 1px solid var(--border); }
+    .data-table tr:hover { background: #f8fafc; }
+
+    .status-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+    .status-active { background: #d1fae5; color: #065f46; }
+    .status-pending { background: #fef3c7; color: #92400e; }
+    .status-expired { background: #fee2e2; color: #991b1b; }
+
+    /* Activity */
+    .activity-feed { list-style: none; }
+    .activity-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .activity-details { flex: 1; }
+    .activity-details p { margin-bottom: 4px; line-height: 1.5; }
+    .activity-time { font-size: 12px; color: var(--gray); }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    }
+    .btn-secondary {
+      background: white;
+      color: var(--dark);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #f8fafc; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease;
+    }
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-body { padding: 24px; }
+    .modal-footer {
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .close-modal {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    /* Forms */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--dark); }
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Tabs */
+    .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 24px; gap: 8px; flex-wrap: wrap; }
+    .tab {
+      padding: 12px 24px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--gray);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Alerts */
+    .alert {
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      border: 1px solid transparent;
+    }
+    .alert-success { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+    .alert-error { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .alert-info { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--gray);
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: 32px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.3s; }
+      .sidebar.active { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .search-box input { width: 200px; }
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: stretch; }
+      .header-actions { justify-content: flex-start; }
+      .search-box input { width: 100%; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <h1><i class="fas fa-shield-alt"></i> LegacyShield</h1>
+      <p>Enterprise Platform</p>
+    </div>
+
+    <div class="nav-menu">
+      <a href="#" class="nav-item active" data-tab="dashboard"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="#" class="nav-item" data-tab="clients"><i class="fas fa-users"></i> Clients <span class="nav-badge" id="clientCount">--</span></a>
+      <a href="#" class="nav-item" data-tab="plans"><i class="fas fa-file-contract"></i> Legacy Plans <span class="nav-badge" id="planCount">--</span></a>
+      <a href="#" class="nav-item" data-tab="invoices"><i class="fas fa-receipt"></i> Invoices <span class="nav-badge" id="invoiceCount">--</span></a>
+      <a href="#" class="nav-item" data-tab="documents"><i class="fas fa-folder"></i> Documents</a>
+      <a href="#" class="nav-item" data-tab="audit"><i class="fas fa-clipboard-list"></i> Audit Trail</a>
+      <a href="#" class="nav-item" data-tab="reports"><i class="fas fa-chart-bar"></i> Reports</a>
+      <a href="#" class="nav-item" data-tab="settings"><i class="fas fa-cog"></i> Settings</a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-profile">
+        <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+        <div class="user-info">
+          <h4 id="userName">Loading...</h4>
+          <p id="userRole">Administrator</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Header -->
+    <div class="header">
+      <div class="page-title">
+        <h2 id="pageTitle">Dashboard</h2>
+        <p id="pageSubtitle">Welcome to LegacyShield Enterprise Platform</p>
+      </div>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search clients, plans, invoices..." id="globalSearch" />
+        </div>
+
+        <div class="notification-bell" onclick="toggleNotifications()">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notificationCount">0</span>
+        </div>
+
+        <button class="btn btn-primary" onclick="openCreateModal('client')">
+          <i class="fas fa-plus"></i> New Client
+        </button>
+
+        <button class="btn btn-secondary" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-content active">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+            <span class="stat-trend trend-up">Live</span>
+          </div>
+          <div class="stat-value" id="totalClients">--</div>
+          <div class="stat-label">Total Clients</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon green"><i class="fas fa-file-contract"></i></div>
+            <span class="stat-trend trend-up">Live</span>
+          </div>
+          <div class="stat-value" id="activePlans">--</div>
+          <div class="stat-label">Active Plans</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon purple"><i class="fas fa-dollar-sign"></i></div>
+            <span class="stat-trend trend-up">Live</span>
+          </div>
+          <div class="stat-value" id="monthlyRevenue">--</div>
+          <div class="stat-label">Paid Revenue (Total)</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon orange"><i class="fas fa-tasks"></i></div>
+            <span class="stat-trend trend-up">Live</span>
+          </div>
+          <div class="stat-value" id="pendingTasks">--</div>
+          <div class="stat-label">Pending Invoices</div>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <!-- Recent Activity -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-history"></i> Recent Activity</div>
+            <button class="btn btn-sm btn-secondary" onclick="refreshActivity()">
+              <i class="fas fa-sync"></i> Refresh
+            </button>
+          </div>
+          <div class="card-content">
+            <ul class="activity-feed" id="activityFeed"></ul>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><i class="fas fa-bolt"></i> Quick Actions</div>
+          </div>
+          <div class="card-content">
+            <div class="btn-group" style="flex-direction: column;">
+              <button class="btn btn-secondary" onclick="openCreateModal('plan')"><i class="fas fa-plus-circle"></i> Create Legacy Plan</button>
+              <button class="btn btn-secondary" onclick="openCreateModal('invoice')"><i class="fas fa-file-invoice-dollar"></i> Create Invoice</button>
+              <button class="btn btn-secondary" onclick="exportDashboardData()"><i class="fas fa-download"></i> Export Data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Plans -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-file-contract"></i> Recent Legacy Plans</div>
+          <button class="btn btn-sm btn-primary" onclick="openTab('plans')">View All <i class="fas fa-arrow-right"></i></button>
+        </div>
+        <div class="card-content">
+          <div class="table-responsive">
+            <table class="data-table" id="recentPlansTable">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Plan Name</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clients Tab -->
+    <div id="clients" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-users"></i> Client Management</div>
+          <button class="btn btn-primary" onclick="openCreateModal('client')"><i class="fas fa-plus"></i> Add Client</button>
+        </div>
+        <div class="card-content">
+          <div class="table-responsive">
+            <table class="data-table" id="clientsTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plans Tab -->
+    <div id="plans" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-file-contract"></i> Legacy Plans</div>
+          <button class="btn btn-primary" onclick="openCreateModal('plan')"><i class="fas fa-plus"></i> Create Plan</button>
+        </div>
+        <div class="card-content">
+          <div class="table-responsive">
+            <table class="data-table" id="plansTable">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Plan Name</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Value</th>
+                  <th>Beneficiaries</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invoices Tab -->
+    <div id="invoices" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-receipt"></i> Invoice Management</div>
+          <button class="btn btn-primary" onclick="openCreateModal('invoice')"><i class="fas fa-plus"></i> Create Invoice</button>
+        </div>
+        <div class="card-content">
+          <div class="tabs">
+            <button class="tab active" data-invoice-tab="all">All</button>
+            <button class="tab" data-invoice-tab="pending">Pending</button>
+            <button class="tab" data-invoice-tab="paid">Paid</button>
+            <button class="tab" data-invoice-tab="overdue">Overdue</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" id="invoicesTable">
+              <thead>
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Client</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Due Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Tab (Stub UI for now) -->
+    <div id="documents" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-folder"></i> Document Vault</div>
+          <button class="btn btn-primary" onclick="uploadDocument()"><i class="fas fa-upload"></i> Upload Document</button>
+        </div>
+        <div class="card-content">
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Documents API is not implemented yet. This UI is ready; we will connect storage next.
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="documentsTable">
+              <thead>
+                <tr>
+                  <th>Document Name</th>
+                  <th>Type</th>
+                  <th>Client</th>
+                  <th>Uploaded</th>
+                  <th>Size</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6">No documents available.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Tab (Stub UI for now) -->
+    <div id="audit" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-clipboard-list"></i> Audit Trail</div>
+          <button class="btn btn-secondary" onclick="exportAuditLog()"><i class="fas fa-download"></i> Export Log</button>
+        </div>
+        <div class="card-content">
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            Audit table export is not implemented yet. Activity feed is working under Dashboard.
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="auditTable">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>User</th>
+                  <th>Action</th>
+                  <th>Details</th>
+                  <th>IP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="5">No audit records.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Tab (Local-only demo) -->
+    <div id="reports" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-chart-bar"></i> Reports & Analytics</div>
+        </div>
+        <div class="card-content">
+          <div class="btn-group">
+            <button class="btn btn-secondary" onclick="generateReport('revenue')"><i class="fas fa-chart-line"></i> Revenue</button>
+            <button class="btn btn-secondary" onclick="generateReport('clients')"><i class="fas fa-users"></i> Clients</button>
+            <button class="btn btn-secondary" onclick="generateReport('plans')"><i class="fas fa-file-contract"></i> Plans</button>
+            <button class="btn btn-secondary" onclick="generateReport('activity')"><i class="fas fa-history"></i> Activity</button>
+          </div>
+          <div id="reportContainer" style="margin-top: 24px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Tab -->
+    <div id="settings" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-cog"></i> System Settings</div>
+        </div>
+        <div class="card-content">
+          <div class="form-group">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" id="companyName" value="LegacyShield Inc.">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Default Currency</label>
+            <select class="form-control" id="defaultCurrency">
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Invoice Terms (days)</label>
+            <input type="number" class="form-control" id="invoiceTerms" value="30">
+          </div>
+
+          <button class="btn btn-primary" onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>© 2026 LegacyShield Enterprise Platform. All rights reserved.</p>
+      <p>System Status: <span class="status-badge status-active">Operational</span></p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="createModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Create New</h3>
+        <button class="close-modal" onclick="closeModal('createModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
+        <button class="btn btn-primary" id="modalSubmitBtn">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================
+    // CONFIG
+    // ============================
+    const API_BASE = '/api';
+    let currentUser = null;
+
+    // Cache (so we can map clientId -> client name)
+    let clientsCache = [];
+    let plansCache = [];
+    let invoicesCache = [];
+    let activityCache = [];
+
+    // ============================
+    // INIT
+    // ============================
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('🚀 Dashboard init');
+
+      // Require session cookie
+      const sessionToken = getCookie('session') || getCookie('sessionId');
+      if (!sessionToken) {
+        showAlert('error', 'Session expired. Please log in again.');
+        setTimeout(() => window.location.href = '/login.html', 1200);
+        return;
+      }
+
+      setupEventListeners();
+
+      // Load user + data
+      await initializeDashboard();
+      await loadDashboardData();
+      updatePageTitle('dashboard');
+    });
+
+    // ============================
+    // API
+    // ============================
+    async function apiRequest(endpoint, method = 'GET', data = null) {
+      const url = `${API_BASE}${endpoint}`;
+      const options = {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        credentials: 'include'
+      };
+      if (data && (method === 'POST' || method === 'PUT')) {
+        options.body = JSON.stringify(data);
+      }
+
+      try {
+        const res = await fetch(url, options);
+
+        if (res.status === 401) {
+          showAlert('error', 'Session expired. Please log in again.');
+          setTimeout(() => window.location.href = '/login.html', 1200);
+          return null;
+        }
+
+        const json = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(json?.error || `API Error ${res.status}`);
+        return json;
+      } catch (err) {
+        console.error('API error:', err);
+        showAlert('error', err.message || 'API request failed');
+        return null;
+      }
+    }
+
+    // ============================
+    // LOADERS
+    // ============================
+    async function initializeDashboard() {
+      const user = await apiRequest('/user/profile');
+      if (user?.ok) {
+        currentUser = user.user;
+        document.getElementById('userName').textContent = currentUser.name || 'Administrator';
+        document.getElementById('userRole').textContent = (currentUser.role || 'admin').toUpperCase();
+      } else {
+        document.getElementById('userName').textContent = 'Administrator';
+      }
+    }
+
+    async function loadDashboardData() {
+      // Load everything in parallel
+      const [clientsRes, plansRes, invoicesRes, activityRes] = await Promise.all([
+        apiRequest('/clients'),
+        apiRequest('/plans'),
+        apiRequest('/invoices'),
+        apiRequest('/activity/recent')
+      ]);
+
+      clientsCache = clientsRes?.ok ? clientsRes.data : [];
+      plansCache = plansRes?.ok ? plansRes.data : [];
+      invoicesCache = invoicesRes?.ok ? invoicesRes.data : [];
+      activityCache = activityRes?.ok ? activityRes.data : [];
+
+      // Update stats
+      const totalClients = clientsCache.length;
+      const activePlans = plansCache.filter(p => (p.status || 'active') === 'active').length;
+
+      const paidRevenue = invoicesCache
+        .filter(i => (i.status || 'pending') === 'paid')
+        .reduce((sum, i) => sum + (parseFloat(i.amount ?? i.total ?? 0) || 0), 0);
+
+      const pendingInvoices = invoicesCache.filter(i => (i.status || 'pending') === 'pending').length;
+
+      document.getElementById('totalClients').textContent = totalClients;
+      document.getElementById('clientCount').textContent = totalClients;
+
+      document.getElementById('activePlans').textContent = activePlans;
+      document.getElementById('planCount').textContent = plansCache.length;
+
+      document.getElementById('monthlyRevenue').textContent = `$${formatNumber(paidRevenue)}`;
+      document.getElementById('invoiceCount').textContent = invoicesCache.length;
+
+      document.getElementById('pendingTasks').textContent = pendingInvoices;
+
+      // Activity
+      updateActivityFeed(activityCache);
+
+      // Recent plans table
+      renderRecentPlans(plansCache);
+
+      // Notifications badge (simple demo: number of pending invoices)
+      document.getElementById('notificationCount').textContent = String(pendingInvoices);
+    }
+
+    // ============================
+    // TAB NAV
+    // ============================
+    function openTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabName)?.classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(i => {
+        i.classList.toggle('active', i.dataset.tab === tabName);
+      });
+
+      updatePageTitle(tabName);
+      loadTabData(tabName);
+    }
+
+    async function loadTabData(tabName) {
+      if (tabName === 'clients') return loadClients();
+      if (tabName === 'plans') return loadPlans();
+      if (tabName === 'invoices') return loadInvoices(getActiveInvoiceFilter());
+      if (tabName === 'documents') return loadDocuments();
+      if (tabName === 'audit') return loadAuditLog();
+      if (tabName === 'reports') return generateReport('revenue');
+    }
+
+    // ============================
+    // RENDERERS
+    // ============================
+    function updateActivityFeed(activities) {
+      const feed = document.getElementById('activityFeed');
+      if (!feed) return;
+
+      if (!activities || activities.length === 0) {
+        feed.innerHTML = `<li class="activity-item"><div class="activity-details"><p>No recent activity</p></div></li>`;
+        return;
+      }
+
+      feed.innerHTML = activities.slice(0, 10).map(a => `
+        <li class="activity-item">
+          <div class="activity-icon" style="background:${getActivityColor(a.type)}">
+            <i class="fas fa-${getActivityIcon(a.type)}"></i>
+          </div>
+          <div class="activity-details">
+            <p><strong>${escapeHtml(a.user || 'System')}</strong> ${escapeHtml(a.action || '')}</p>
+            <small class="activity-time">${formatTime(a.timestamp)}</small>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    function renderRecentPlans(plans) {
+      const tbody = document.querySelector('#recentPlansTable tbody');
+      if (!tbody) return;
+
+      const byNewest = [...(plans || [])].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      const recent = byNewest.slice(0, 5);
+
+      if (recent.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6">No plans found</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = recent.map(p => {
+        const clientName = getClientNameById(p.clientId) || p.clientName || 'Unknown';
+        const statusClass = p.status === 'active' ? 'status-active' : (p.status === 'pending' ? 'status-pending' : 'status-expired');
+        return `
+          <tr>
+            <td>${escapeHtml(clientName)}</td>
+            <td>${escapeHtml(p.name || 'Untitled')}</td>
+            <td>${escapeHtml(p.type || 'basic')}</td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(p.status || 'active')}</span></td>
+            <td>${formatDate(p.createdAt)}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="viewPlan('${escapeAttr(p.id)}')"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadClients() {
+      // Ensure cache is fresh
+      const res = await apiRequest('/clients');
+      if (res?.ok) clientsCache = res.data;
+
+      const tbody = document.querySelector('#clientsTable tbody');
+      if (!tbody) return;
+
+      if (!clientsCache || clientsCache.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6">No clients found</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = clientsCache.map(c => `
+        <tr>
+          <td><strong>${escapeHtml(c.name || 'Unnamed')}</strong><br><small>${escapeHtml(c.company || '')}</small></td>
+          <td>${escapeHtml(c.email || '')}</td>
+          <td>${escapeHtml(c.phone || 'N/A')}</td>
+          <td><span class="status-badge ${(c.status || 'active') === 'active' ? 'status-active' : 'status-pending'}">${escapeHtml(c.status || 'active')}</span></td>
+          <td>${formatDate(c.createdAt)}</td>
+          <td>
+            <button class="btn btn-sm btn-secondary" onclick="viewClient('${escapeAttr(c.id)}')"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-sm btn-primary" onclick="editClient('${escapeAttr(c.id)}')"><i class="fas fa-edit"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadPlans() {
+      const res = await apiRequest('/plans');
+      if (res?.ok) plansCache = res.data;
+
+      const tbody = document.querySelector('#plansTable tbody');
+      if (!tbody) return;
+
+      if (!plansCache || plansCache.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7">No plans found</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = plansCache.map(p => {
+        const clientName = getClientNameById(p.clientId) || p.clientName || 'Unknown';
+        const statusClass = p.status === 'active' ? 'status-active' : (p.status === 'pending' ? 'status-pending' : 'status-expired');
+        return `
+          <tr>
+            <td>${escapeHtml(clientName)}</td>
+            <td>${escapeHtml(p.name || 'Untitled')}</td>
+            <td>${escapeHtml(p.type || 'basic')}</td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(p.status || 'active')}</span></td>
+            <td>$${formatNumber(p.value || 0)}</td>
+            <td>${Array.isArray(p.beneficiaries) ? p.beneficiaries.length : 0}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="viewPlan('${escapeAttr(p.id)}')"><i class="fas fa-eye"></i></button>
+              <button class="btn btn-sm btn-primary" onclick="editPlan('${escapeAttr(p.id)}')"><i class="fas fa-edit"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function loadInvoices(filter = 'all') {
+      const res = await apiRequest('/invoices');
+      if (res?.ok) invoicesCache = res.data;
+
+      let list = [...(invoicesCache || [])];
+      if (filter !== 'all') list = list.filter(i => (i.status || 'pending') === filter);
+
+      // Newest first
+      list.sort((a, b) => new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0));
+
+      const tbody = document.querySelector('#invoicesTable tbody');
+      if (!tbody) return;
+
+      if (!list || list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7">No invoices found</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map(inv => {
+        const invoiceId = inv.id || '';
+        const amount = parseFloat(inv.amount ?? inv.total ?? 0) || 0;
+        const status = inv.status || 'pending';
+        const statusClass = status === 'paid' ? 'status-active' : (status === 'pending' ? 'status-pending' : 'status-expired');
+        const clientName = inv.clientName || getClientNameById(inv.clientId) || 'Unknown';
+
+        const createdDate = inv.date || inv.createdAt || null;
+        const dueDate = inv.dueDate || null;
+
+        return `
+          <tr>
+            <td>INV-${String(invoiceId).padStart(5, '0')}</td>
+            <td>${escapeHtml(clientName)}</td>
+            <td>$${formatNumber(amount)}</td>
+            <td>${formatDate(createdDate)}</td>
+            <td>${formatDate(dueDate)}</td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(status)}</span></td>
+            <td>
+              <button class="btn btn-sm btn-secondary" onclick="viewInvoice('${escapeAttr(invoiceId)}')"><i class="fas fa-eye"></i></button>
+              <button class="btn btn-sm btn-primary" onclick="downloadInvoice('${escapeAttr(invoiceId)}')"><i class="fas fa-download"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ============================
+    // MODAL + FORMS
+    // ============================
+    function openCreateModal(type) {
+      const modal = document.getElementById('createModal');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
+      const submitBtn = document.getElementById('modalSubmitBtn');
+
+      if (!modal || !title || !body || !submitBtn) return;
+
+      if (type === 'client') {
+        title.textContent = 'Create New Client';
+        body.innerHTML = getClientForm();
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Client';
+        submitBtn.onclick = submitClientForm;
+      } else if (type === 'plan') {
+        title.textContent = 'Create Legacy Plan';
+        body.innerHTML = getPlanForm();
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Plan';
+        submitBtn.onclick = submitPlanForm;
+
+        // Populate clients dropdown
+        setTimeout(fillClientSelects, 0);
+      } else if (type === 'invoice') {
+        title.textContent = 'Create Invoice';
+        body.innerHTML = getInvoiceForm();
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Invoice';
+        submitBtn.onclick = submitInvoiceForm;
+
+        setTimeout(fillClientSelects, 0);
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId)?.classList.remove('active');
+    }
+
+    function getClientForm() {
+      return `
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" class="form-control" id="clientName" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address *</label>
+          <input type="email" class="form-control" id="clientEmail" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone Number</label>
+          <input type="tel" class="form-control" id="clientPhone">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Company</label>
+          <input type="text" class="form-control" id="clientCompany">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Address</label>
+          <textarea class="form-control" id="clientAddress" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea class="form-control" id="clientNotes" rows="3"></textarea>
+        </div>
+      `;
+    }
+
+    function getPlanForm() {
+      return `
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <select class="form-control" id="planClientId" required>
+            <option value="">Select Client...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Plan Name *</label>
+          <input type="text" class="form-control" id="planName" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Plan Type *</label>
+          <select class="form-control" id="planType" required>
+            <option value="basic">Basic Legacy Plan</option>
+            <option value="premium">Premium Legacy Plan</option>
+            <option value="enterprise">Enterprise Legacy Plan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Estimated Value ($)</label>
+          <input type="number" class="form-control" id="planValue" min="0" step="0.01">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Beneficiaries (one per line)</label>
+          <textarea class="form-control" id="planBeneficiaries" rows="3" placeholder="Beneficiary name"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Special Instructions</label>
+          <textarea class="form-control" id="planInstructions" rows="4"></textarea>
+        </div>
+      `;
+    }
+
+    function getInvoiceForm() {
+      const today = new Date().toISOString().slice(0, 10);
+      return `
+        <div class="form-group">
+          <label class="form-label">Client *</label>
+          <select class="form-control" id="invoiceClientId" required>
+            <option value="">Select Client...</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Invoice Amount *</label>
+          <input type="number" class="form-control" id="invoiceAmount" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" id="invoiceDescription" rows="3"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Due Date *</label>
+          <input type="date" class="form-control" id="invoiceDueDate" value="${today}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Payment Terms</label>
+          <select class="form-control" id="invoiceTerms">
+            <option value="net30">Net 30</option>
+            <option value="net15">Net 15</option>
+            <option value="due_on_receipt">Due on Receipt</option>
+          </select>
+        </div>
+      `;
+    }
+
+    function fillClientSelects() {
+      const planSelect = document.getElementById('planClientId');
+      const invoiceSelect = document.getElementById('invoiceClientId');
+
+      const options = (clientsCache || []).map(c => `<option value="${escapeAttr(c.id)}">${escapeHtml(c.name || c.email || 'Client')}</option>`).join('');
+
+      if (planSelect) planSelect.innerHTML = `<option value="">Select Client...</option>${options}`;
+      if (invoiceSelect) invoiceSelect.innerHTML = `<option value="">Select Client...</option>${options}`;
+    }
+
+    async function submitClientForm() {
+      const clientData = {
+        name: document.getElementById('clientName')?.value?.trim(),
+        email: document.getElementById('clientEmail')?.value?.trim(),
+        phone: document.getElementById('clientPhone')?.value?.trim(),
+        company: document.getElementById('clientCompany')?.value?.trim(),
+        address: document.getElementById('clientAddress')?.value?.trim(),
+        notes: document.getElementById('clientNotes')?.value?.trim()
+      };
+
+      if (!clientData.name || !clientData.email) {
+        showAlert('error', 'Name and email are required');
+        return;
+      }
+
+      const res = await apiRequest('/clients', 'POST', clientData);
+      if (res?.ok) {
+        showAlert('success', 'Client created successfully');
+        closeModal('createModal');
+        await loadDashboardData();
+        await loadClients();
+      }
+    }
+
+    async function submitPlanForm() {
+      const beneficiariesRaw = document.getElementById('planBeneficiaries')?.value || '';
+      const planData = {
+        clientId: document.getElementById('planClientId')?.value,
+        name: document.getElementById('planName')?.value?.trim(),
+        type: document.getElementById('planType')?.value,
+        value: parseFloat(document.getElementById('planValue')?.value || 0) || 0,
+        beneficiaries: beneficiariesRaw.split('\n').map(x => x.trim()).filter(Boolean),
+        instructions: document.getElementById('planInstructions')?.value?.trim()
+      };
+
+      if (!planData.clientId || !planData.name || !planData.type) {
+        showAlert('error', 'Client, name, and type are required');
+        return;
+      }
+
+      const res = await apiRequest('/plans', 'POST', planData);
+      if (res?.ok) {
+        showAlert('success', 'Plan created successfully');
+        closeModal('createModal');
+        await loadDashboardData();
+        await loadPlans();
+      }
+    }
+
+    async function submitInvoiceForm() {
+      // NOTE: Your backend currently does NOT have POST /api/invoices in the snippet you pasted.
+      // So we store invoices locally is NOT possible. We show a message instead.
+      showAlert('info', 'Invoice create endpoint is not implemented yet (POST /api/invoices). Add it and I will connect this button.');
+      closeModal('createModal');
+    }
+
+    // ============================
+    // STUB/SAFE HANDLERS (no crashes)
+    // ============================
+    function viewClient(id) { showAlert('info', `View client: ${id}`); }
+    function editClient(id) { showAlert('info', `Edit client: ${id}`); }
+    function viewPlan(id) { showAlert('info', `View plan: ${id}`); }
+    function editPlan(id) { showAlert('info', `Edit plan: ${id}`); }
+    function viewInvoice(id) { showAlert('info', `View invoice: ${id}`); }
+    function downloadInvoice(id) { showAlert('info', `Download invoice: ${id}`); }
+
+    async function loadDocuments() { /* UI-only for now */ }
+    async function loadAuditLog() { /* UI-only for now */ }
+    function uploadDocument() { showAlert('info', 'Upload Document: connect storage API next'); }
+    function exportAuditLog() { showAlert('info', 'Export Audit: connect API next'); }
+
+    function saveSettings() {
+      const company = document.getElementById('companyName')?.value || '';
+      const currency = document.getElementById('defaultCurrency')?.value || 'USD';
+      const terms = document.getElementById('invoiceTerms')?.value || '30';
+      localStorage.setItem('legacyshield_settings', JSON.stringify({ company, currency, terms }));
+      showAlert('success', 'Settings saved (local). Connect API later.');
+    }
+
+    function generateReport(kind) {
+      const box = document.getElementById('reportContainer');
+      if (!box) return;
+
+      if (kind === 'revenue') {
+        const paid = invoicesCache.filter(i => (i.status || 'pending') === 'paid');
+        const total = paid.reduce((s, i) => s + (parseFloat(i.amount ?? i.total ?? 0) || 0), 0);
+        box.innerHTML = `<div class="alert alert-info"><i class="fas fa-chart-line"></i> Paid revenue total: <strong>$${formatNumber(total)}</strong></div>`;
+        return;
+      }
+
+      if (kind === 'clients') {
+        box.innerHTML = `<div class="alert alert-info"><i class="fas fa-users"></i> Clients count: <strong>${clientsCache.length}</strong></div>`;
+        return;
+      }
+
+      if (kind === 'plans') {
+        box.innerHTML = `<div class="alert alert-info"><i class="fas fa-file-contract"></i> Plans count: <strong>${plansCache.length}</strong></div>`;
+        return;
+      }
+
+      if (kind === 'activity') {
+        box.innerHTML = `<div class="alert alert-info"><i class="fas fa-history"></i> Activity records: <strong>${activityCache.length}</strong></div>`;
+        return;
+      }
+    }
+
+    // ============================
+    // SEARCH
+    // ============================
+    async function performGlobalSearch(query) {
+ try {
+        const q = String(query || '').trim().toLowerCase();
+        const resultsBox = document.getElementById('searchResults');
+        if (!q) {
+          if (resultsBox) resultsBox.innerHTML = '';
+          showAlert('info', 'Type something to search.');
+          return;
+        }
+
+        // Ensure caches exist (no crashes)
+        window.clientsCache  = Array.isArray(window.clientsCache)  ? window.clientsCache  : [];
+        window.plansCache    = Array.isArray(window.plansCache)    ? window.plansCache    : [];
+        window.invoicesCache = Array.isArray(window.invoicesCache) ? window.invoicesCache : [];
+        window.activityCache = Array.isArray(window.activityCache) ? window.activityCache : [];
+
+        const maxPerType = 8;
+
+        const matchAnyField = (obj, fields) => {
+          if (!obj) return false;
+          for (const f of fields) {
+            const v = obj[f];
+            if (v == null) continue;
+            if (String(v).toLowerCase().includes(q)) return true;
+          }
+          return false;
+        };
+
+        const foundClients = window.clientsCache
+          .filter(c => matchAnyField(c, ['id','name','email','phone','status','notes']))
+          .slice(0, maxPerType);
+
+        const foundPlans = window.plansCache
+          .filter(p => matchAnyField(p, ['id','title','name','clientName','clientEmail','status','type','notes']))
+          .slice(0, maxPerType);
+
+        const foundInvoices = window.invoicesCache
+          .filter(i => matchAnyField(i, ['id','invoiceNo','clientName','clientEmail','status','amount','total','currency','dueDate']))
+          .slice(0, maxPerType);
+
+        const foundActivity = window.activityCache
+          .filter(a => matchAnyField(a, ['id','action','message','actor','createdAt','ip']))
+          .slice(0, maxPerType);
+
+        // Render results
+        const html = [];
+        html.push(`<div class="search-summary">Results for: <strong>${escapeHtml(query)}</strong></div>`);
+
+        const renderList = (title, icon, items, renderItem) => {
+          html.push(`
+            <div class="search-group">
+              <div class="search-title"><i class="${icon}"></i> ${escapeHtml(title)} <span class="muted">(${items.length})</span></div>
+              ${items.length ? `<div class="search-items">${items.map(renderItem).join('')}</div>` : `<div class="muted">No matches.</div>`}
+            </div>
+          `);
+        };
+
+        renderList('Clients', 'fas fa-users', foundClients, (c) => {
+          const id = c.id ?? c.clientId ?? '';
+          const name = c.name ?? '(no name)';
+          const email = c.email ?? '';
+          return `
+            <div class="search-item">
+              <div class="search-main">
+                <div class="search-name">${escapeHtml(name)}</div>
+                <div class="search-meta">${escapeHtml(email)}</div>
+              </div>
+              <div class="search-actions">
+                <button class="btn btn-sm" onclick="viewClient('${escapeAttr(id)}')">View</button>
+                <button class="btn btn-sm btn-outline" onclick="editClient('${escapeAttr(id)}')">Edit</button>
+              </div>
+            </div>
+          `;
+        });
+
+        renderList('Plans', 'fas fa-file-contract', foundPlans, (p) => {
+          const id = p.id ?? p.planId ?? '';
+          const title = p.title ?? p.name ?? '(no title)';
+          const client = p.clientName ?? p.clientEmail ?? '';
+          return `
+            <div class="search-item">
+              <div class="search-main">
+                <div class="search-name">${escapeHtml(title)}</div>
+                <div class="search-meta">${escapeHtml(client)}</div>
+              </div>
+              <div class="search-actions">
+                <button class="btn btn-sm" onclick="viewPlan('${escapeAttr(id)}')">View</button>
+                <button class="btn btn-sm btn-outline" onclick="editPlan('${escapeAttr(id)}')">Edit</button>
+              </div>
+            </div>
+          `;
+        });
+
+        renderList('Invoices', 'fas fa-receipt', foundInvoices, (i) => {
+          const id = i.id ?? i.invoiceId ?? '';
+          const no = i.invoiceNo ?? i.number ?? id ?? '';
+          const client = i.clientName ?? i.clientEmail ?? '';
+          const amt = formatMoney(i.amount ?? i.total ?? 0, i.currency ?? 'USD');
+          const status = i.status ?? 'pending';
+          return `
+            <div class="search-item">
+              <div class="search-main">
+                <div class="search-name">Invoice ${escapeHtml(String(no))} <span class="badge">${escapeHtml(status)}</span></div>
+                <div class="search-meta">${escapeHtml(client)} • ${escapeHtml(amt)}</div>
+              </div>
+              <div class="search-actions">
+                <button class="btn btn-sm" onclick="viewInvoice('${escapeAttr(id)}')">View</button>
+                <button class="btn btn-sm btn-outline" onclick="downloadInvoice('${escapeAttr(id)}')">Download</button>
+              </div>
+            </div>
+          `;
+        });
+
+        renderList('Activity', 'fas fa-history', foundActivity, (a) => {
+          const msg = a.message ?? a.action ?? '(activity)';
+          const when = a.createdAt ?? '';
+          return `
+            <div class="search-item">
+              <div class="search-main">
+                <div class="search-name">${escapeHtml(String(msg))}</div>
+                <div class="search-meta">${escapeHtml(String(when))}</div>
+              </div>
+              <div class="search-actions">
+                <button class="btn btn-sm btn-outline" onclick="showAlert('info','Activity is UI-only for now')">Details</button>
+              </div>
+            </div>
+          `;
+        });
+
+        if (resultsBox) {
+          resultsBox.innerHTML = html.join('');
+        } else {
+          // If no container exists, at least show a small alert.
+          showAlert('success', `Search complete. Clients:${foundClients.length}, Plans:${foundPlans.length}, Invoices:${foundInvoices.length}, Activity:${foundActivity.length}`);
+        }
+      } catch (err) {
+        console.error('performGlobalSearch error:', err);
+        showAlert('error', 'Search failed (safe handler). Check console for details.');
+      }
+    }
+
+    // ============================
+    // SAFE UTILITIES (no crashes)
+    // ============================
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function escapeAttr(str) {
+      // Safe for putting inside single quotes in onclick
+      return String(str ?? '')
+        .replaceAll('\\', '\\\\')
+        .replaceAll("'", "\\'")
+        .replaceAll('\n', ' ')
+        .replaceAll('\r', ' ');
+    }
+
+    function formatMoney(value, currency) {
+      const n = parseFloat(value ?? 0) || 0;
+      const c = String(currency || 'USD').toUpperCase();
+      try {
+        return new Intl.NumberFormat(undefined, { style: 'currency', currency: c }).format(n);
+      } catch {
+        return `${c} ${formatNumber(n)}`;
+      }
+    }
+
+    // If formatNumber already exists earlier, do not override it.
+    if (typeof window.formatNumber !== 'function') {
+      window.formatNumber = function formatNumber(n) {
+        const x = parseFloat(n ?? 0) || 0;
+        return x.toLocaleString(undefined, { maximumFractionDigits: 2 });
+      };
+    }
+
+    // If showAlert already exists earlier, do not override it.
+    if (typeof window.showAlert !== 'function') {
+      window.showAlert = function showAlert(type, message) {
+        // Tries to render in #alertBox, else uses console
+        const box = document.getElementById('alertBox');
+        const msg = String(message ?? '');
+        const t = String(type ?? 'info').toLowerCase();
+
+        if (!box) {
+          if (t === 'error') console.error(msg);
+          else if (t === 'success') console.log(msg);
+          else console.info(msg);
+          return;
+        }
+
+        const icon =
+          t === 'success' ? 'fas fa-check-circle' :
+          t === 'error'   ? 'fas fa-exclamation-triangle' :
+          t === 'warning' ? 'fas fa-exclamation-circle' :
+                            'fas fa-info-circle';
+
+        box.innerHTML = `
+          <div class="alert alert-${escapeHtml(t)}">
+            <i class="${icon}"></i>
+            <span>${escapeHtml(msg)}</span>
+          </div>
+        `;
+
+        // Auto-clear
+        clearTimeout(window.__alertTimer);
+        window.__alertTimer = setTimeout(() => {
+          if (box) box.innerHTML = '';
+        }, 4500);
+      };
+    }
+
+    function debounce(fn, wait) {
+      let t = null;
+      return function(...args) {
+        clearTimeout(t);
+        t = setTimeout(() => fn.apply(this, args), wait);
+      };
+    }
+
+    // ============================
+    // NAV / SECTION SWITCHING (safe)
+    // ============================
+    function showSection(sectionId) {
+      try {
+        // Hide all sections with [data-section]
+        const sections = document.querySelectorAll('[data-section]');
+        sections.forEach(s => { s.style.display = 'none'; });
+
+        const el = document.getElementById(sectionId);
+        if (el) el.style.display = '';
+
+        // Highlight nav button with [data-nav]
+        const navs = document.querySelectorAll('[data-nav]');
+        navs.forEach(n => n.classList.remove('active'));
+
+        const activeNav = document.querySelector(`[data-nav="${CSS.escape(sectionId)}"]`);
+        if (activeNav) activeNav.classList.add('active');
+      } catch (err) {
+        console.error('showSection error:', err);
+      }
+    }
+
+    // ============================
+    // SAFE "LOAD" FUNCTIONS (UI-only)
+    // These keep the dashboard alive even without APIs.
+    // ============================
+    async function safeInitCaches() {
+      window.clientsCache  = Array.isArray(window.clientsCache)  ? window.clientsCache  : [];
+      window.plansCache    = Array.isArray(window.plansCache)    ? window.plansCache    : [];
+      window.invoicesCache = Array.isArray(window.invoicesCache) ? window.invoicesCache : [];
+      window.activityCache = Array.isArray(window.activityCache) ? window.activityCache : [];
+    }
+
+    async function loadAllUI() {
+      await safeInitCaches();
+
+      // Call existing UI load functions if they exist
+      try { if (typeof window.loadClients === 'function') await window.loadClients(); } catch (e) { console.warn(e); }
+      try { if (typeof window.loadPlans === 'function') await window.loadPlans(); } catch (e) { console.warn(e); }
+      try { if (typeof window.loadInvoices === 'function') await window.loadInvoices(); } catch (e) { console.warn(e); }
+      try { if (typeof window.loadDocuments === 'function') await window.loadDocuments(); } catch (e) { console.warn(e); }
+      try { if (typeof window.loadAuditLog === 'function') await window.loadAuditLog(); } catch (e) { console.warn(e); }
+
+      // Optional: render quick stats if elements exist
+      try { renderQuickStats(); } catch (e) { console.warn(e); }
+    }
+
+    function renderQuickStats() {
+      const elClients = document.getElementById('statClients');
+      const elPlans   = document.getElementById('statPlans');
+      const elInv     = document.getElementById('statInvoices');
+      const elRev     = document.getElementById('statRevenue');
+
+      const clients = Array.isArray(window.clientsCache) ? window.clientsCache.length : 0;
+      const plans   = Array.isArray(window.plansCache) ? window.plansCache.length : 0;
+      const invs    = Array.isArray(window.invoicesCache) ? window.invoicesCache.length : 0;
+
+      const paid = (Array.isArray(window.invoicesCache) ? window.invoicesCache : []).filter(i => (i.status || 'pending') === 'paid');
+      const revenue = paid.reduce((s, i) => s + (parseFloat(i.amount ?? i.total ?? 0) || 0), 0);
+
+      if (elClients) elClients.textContent = String(clients);
+      if (elPlans)   elPlans.textContent   = String(plans);
+      if (elInv)     elInv.textContent     = String(invs);
+      if (elRev)     elRev.textContent     = formatMoney(revenue, 'USD');
+    }
+
+    // ============================
+    // SESSION / LOGOUT (safe)
+    // ============================
+    function logout() {
+      try {
+        // Clear local session keys that your dashboard may use
+        localStorage.removeItem('legacyshield_token');
+        localStorage.removeItem('legacyshield_user');
+        sessionStorage.removeItem('legacyshield_token');
+        sessionStorage.removeItem('legacyshield_user');
+
+        showAlert('success', 'Logged out (local). Redirecting...');
+        setTimeout(() => {
+          // If you have a login page, adjust this path
+          window.location.href = '/';
+        }, 700);
+      } catch (err) {
+        console.error('logout error:', err);
+        // Last resort
+        window.location.href = '/';
+      }
+    }
+
+    // ============================
+    // WIRE UP EVENTS (safe)
+    // ============================
+    function wireDashboardEvents() {
+      // Global search input
+      const input = document.getElementById('globalSearchInput');
+      const btn = document.getElementById('globalSearchBtn');
+
+      const run = debounce(() => {
+        const q = input ? input.value : '';
+        performGlobalSearch(q);
+      }, 200);
+
+      if (input) {
+        input.addEventListener('input', run);
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') performGlobalSearch(input.value);
+        });
+      }
+      if (btn) {
+        btn.addEventListener('click', () => performGlobalSearch(input ? input.value : ''));
+      }
+
+      // Nav buttons (optional markup: <button data-nav="sectionId">)
+      document.querySelectorAll('[data-nav]').forEach(el => {
+        el.addEventListener('click', () => {
+          const target = el.getAttribute('data-nav');
+          if (target) showSection(target);
+        });
+      });
+
+      // Logout (optional markup: id="logoutBtn")
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.addEventListener('click', logout);
+
+      // Settings load (optional)
+      try {
+        const raw = localStorage.getItem('legacyshield_settings');
+        if (raw) {
+          const s = JSON.parse(raw);
+          if (document.getElementById('companyName')) document.getElementById('companyName').value = s.company ?? '';
+          if (document.getElementById('defaultCurrency')) document.getElementById('defaultCurrency').value = s.currency ?? 'USD';
+          if (document.getElementById('invoiceTerms')) document.getElementById('invoiceTerms').value = s.terms ?? '30';
+        }
+      } catch (e) {
+        console.warn('Settings load failed:', e);
+      }
+    }
+
+    // ============================
+    // BOOTSTRAP
+    // ============================
+    (function bootstrapLegacyShieldDashboard() {
+      try {
+        document.addEventListener('DOMContentLoaded', async () => {
+          wireDashboardEvents();
+
+          // Default section (try common IDs)
+          const preferred =
+            document.getElementById('overview') ? 'overview' :
+            document.querySelector('[data-section]')?.id || null;
+
+          if (preferred) showSection(preferred);
+
+          await loadAllUI();
+
+          // Soft notice
+          showAlert('info', 'Dashboard loaded (UI-only safe mode). Connect APIs when ready.');
+        });
+      } catch (err) {
+        console.error('bootstrap error:', err);
+      }
+    })();
+
+</script>

@@ -1,24 +1,6 @@
-﻿// api/legacy/save.js
-const { applyCors } = require("../_lib/cors.js");
-const { verifyJwt } = require("../_lib/jwt.js");
-const { setJson } = require("../_lib/store.js");
-
-function bearerToken(req) {
-  const authHeader = String(req.headers.authorization || "").trim();
-  return authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-}
-
-async function readJsonBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = "";
-    req.on("data", (chunk) => { data += chunk; });
-    req.on("end", () => {
-      if (!data) return resolve({});
-      try { resolve(JSON.parse(data)); }
-      catch (e) { reject(new Error("Invalid JSON body")); }
-    });
-  });
-}
+﻿const { applyCors } = require("../_lib/cors.js");
+const { verifySession } = require("../_lib/auth.js");
+const { getJson, setJson } = require("../_lib/store.js");
 
 module.exports = async function handler(req, res) {
   if (applyCors(req, res, "POST,OPTIONS")) return;
@@ -29,49 +11,74 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ ok: false, error: "Method not allowed" }));
   }
 
-  const jwtSecret = String(process.env.JWT_SECRET || "").trim();
-  if (!jwtSecret) {
-    res.statusCode = 500;
-    return res.end(JSON.stringify({ ok: false, error: "JWT_SECRET not configured" }));
-  }
-
-  const token = bearerToken(req);
-  if (!token) {
-    res.statusCode = 401;
-    return res.end(JSON.stringify({ ok: false, error: "Missing Authorization: Bearer <token>" }));
-  }
-
   try {
-    const payload = verifyJwt(token, jwtSecret);
-    const userId = payload.sub;
-
-    const body = await readJsonBody(req);
-    const plan = body.plan || null;
-
-    if (!plan || typeof plan !== "object") {
-      res.statusCode = 400;
-      return res.end(JSON.stringify({ ok: false, error: "Missing plan object in body: { plan: {...} }" }));
+    // 1. Get session from cookie
+    const sessionId = req.cookies?.session || req.cookies?.sessionId;
+    if (!sessionId) {
+      res.statusCode = 401;
+      return res.end(JSON.stringify({ 
+        ok: false, 
+        error: "Not authenticated" 
+      }));
     }
 
-    // Basic normalization
-    const cleaned = {
-      fullName: String(plan.fullName || "").trim(),
-      emergencyContact: String(plan.emergencyContact || "").trim(),
-      notes: String(plan.notes || "").trim(),
-      beneficiaries: Array.isArray(plan.beneficiaries) ? plan.beneficiaries : [],
-      trustees: Array.isArray(plan.trustees) ? plan.trustees : [],
-      assets: Array.isArray(plan.assets) ? plan.assets : [],
-      updatedAt: new Date().toISOString()
+    // 2. Verify session
+    const userId = await verifySession(sessionId);
+    if (!userId) {
+      res.statusCode = 401;
+      return res.end(JSON.stringify({ 
+        ok: false, 
+        error: "Session expired" 
+      }));
+    }
+
+    // 3. Parse request body
+    let body;
+    try {
+      body = JSON.parse(req.body || "{}");
+    } catch (e) {
+      res.statusCode = 400;
+      return res.end(JSON.stringify({ 
+        ok: false, 
+        error: "Invalid JSON body" 
+      }));
+    }
+
+    // 4. Validate required fields
+    if (!body.plan || typeof body.plan !== "object") {
+      res.statusCode = 400;
+      return res.end(JSON.stringify({ 
+        ok: false, 
+        error: "Missing or invalid plan data" 
+      }));
+    }
+
+    // 5. Add metadata
+    const planWithMeta = {
+      ...body.plan,
+      userId: userId,
+      updatedAt: Date.now(),
+      updatedAtISO: new Date().toISOString()
     };
 
+    // 6. Save to storage
     const key = `legacy:plan:${userId}`;
-    await setJson(key, cleaned);
+    await setJson(key, planWithMeta);
 
+    // 7. Return success
     res.statusCode = 200;
     res.setHeader("Content-Type", "application/json");
-    return res.end(JSON.stringify({ ok: true, plan: cleaned }));
-  } catch (e) {
-    res.statusCode = 401;
-    return res.end(JSON.stringify({ ok: false, error: e.message || "Invalid or expired token" }));
+    return res.end(JSON.stringify({ 
+      ok: true, 
+      message: "Legacy plan saved successfully",
+      updatedAt: planWithMeta.updatedAtISO
+    }));
+  } catch (error) {
+    console.error("Legacy SAVE error:", error);
+    res.statusCode = 500;
+    return res.end(JSON.stringify({ 
+      ok: false, 
+      error: "Internal server error" 
+    }));
   }
 };
