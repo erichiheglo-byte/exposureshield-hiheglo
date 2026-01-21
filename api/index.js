@@ -660,4 +660,19 @@ async function logActivity(userId, type, action) {
 }
 
 // Export for Vercel
-module.exports = app;
+
+module.exports = (req, res) => {
+  // Vercel rewrite forwards /api/* to /api/index.js; preserve original route in ?__path=
+  const original = req.query && req.query.__path;
+
+  if (original) {
+    const qs = new URLSearchParams(req.query);
+    qs.delete("__path");
+
+    const queryString = qs.toString();
+    req.url = "/api" + original + (queryString ? ? : "");
+  }
+
+  return app(req, res);
+};
+
