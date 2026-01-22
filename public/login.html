@@ -232,8 +232,83 @@
         document.getElementById('email').value = 'demo@exposureshield.com';
     });
     </script>
+<script>
+/* __ES_LOGIN_ENFORCE__ */
+(function () {
+  "use strict";
+  if (window.__ES_LOGIN_WIRED__) return;
+  window.__ES_LOGIN_WIRED__ = true;
+
+  function pick(sel) { return document.querySelector(sel); }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var form =
+      document.getElementById("loginForm") ||
+      pick('form[data-login="1"]') ||
+      pick("form");
+
+    if (!form) return;
+
+    form.addEventListener("submit", async function (e) {
+      try {
+        e.preventDefault();
+
+        var emailEl =
+          document.getElementById("loginEmail") ||
+          document.getElementById("email") ||
+          pick('input[type="email"]');
+
+        var passEl =
+          document.getElementById("loginPassword") ||
+          document.getElementById("password") ||
+          pick('input[type="password"]');
+
+        var email = (emailEl && emailEl.value ? String(emailEl.value) : "").trim();
+        var password = (passEl && passEl.value ? String(passEl.value) : "");
+
+        if (!email || !password) {
+          alert("Please enter email and password.");
+          return;
+        }
+
+        // Cookie-based session support + token support
+        var res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email: email, password: password })
+        });
+
+        var data = null;
+        try { data = await res.json(); } catch (_) { data = null; }
+
+        if (!res.ok) {
+          var msg = (data && (data.error || data.message)) ? (data.error || data.message) : ("Login failed (" + res.status + ")");
+          alert(msg);
+          return;
+        }
+
+        // Save token if provided (Bearer mode)
+        var token = (data && (data.token || data.access_token)) ? (data.token || data.access_token) : "";
+        if (token && window.ExposureShieldAuth && ExposureShieldAuth.setToken) {
+          ExposureShieldAuth.setToken(token);
+        } else if (token) {
+          localStorage.setItem("ES_TOKEN", token);
+        }
+
+        // Go to your working dashboard route
+        window.location.href = "/legacy/dashboard";
+      } catch (err) {
+        console.error(err);
+        alert("Login error. Check console.");
+      }
+    }, { passive: false });
+  });
+})();
+</script>
 </body>
 </html>
+
 
 
 

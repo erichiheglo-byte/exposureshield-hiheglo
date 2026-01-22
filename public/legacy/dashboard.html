@@ -713,6 +713,22 @@
             }
         }
     </style>
+<script src="/shared-auth.js"></script>
+<script>
+/* __ES_DASH_GUARD__ */
+(function () {
+  "use strict";
+  document.addEventListener("DOMContentLoaded", async function () {
+    try {
+      if (!window.ExposureShieldAuth || !ExposureShieldAuth.requireAuthOrRedirect) return;
+      await ExposureShieldAuth.requireAuthOrRedirect("/login");
+    } catch (e) {
+      console.error(e);
+      window.location.href = "/login";
+    }
+  });
+})();
+</script>
 </head>
 <body>
     <!-- Global Loading Overlay -->
@@ -2076,3 +2092,4 @@
     </script>
 </body>
 </html>
+
