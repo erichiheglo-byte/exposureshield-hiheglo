@@ -1,22 +1,55 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/register", "destination": "/register.html" },
-
-    { "source": "/dashboard", "destination": "/dashboard.html" },
-
-    { "source": "/services", "destination": "/services.html" },
-    { "source": "/pricing", "destination": "/pricing.html" },
-    { "source": "/legacyshield", "destination": "/legacy/dashboard.html" },
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/donate", "destination": "/donate.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/refund", "destination": "/refund.html" }
-  ]
+    "version":  2,
+    "cleanUrls":  true,
+    "trailingSlash":  false,
+    "rewrites":  [
+                     {
+                         "source":  "/login",
+                         "destination":  "/login.html"
+                     },
+                     {
+                         "source":  "/register",
+                         "destination":  "/register.html"
+                     },
+                     {
+                         "source":  "/services",
+                         "destination":  "/services.html"
+                     },
+                     {
+                         "source":  "/pricing",
+                         "destination":  "/pricing.html"
+                     },
+                     {
+                         "source":  "/legacyshield",
+                         "destination":  "/legacy/dashboard.html"
+                     },
+                     {
+                         "source":  "/about",
+                         "destination":  "/about.html"
+                     },
+                     {
+                         "source":  "/donate",
+                         "destination":  "/donate.html"
+                     },
+                     {
+                         "source":  "/contact",
+                         "destination":  "/contact.html"
+                     },
+                     {
+                         "source":  "/privacy",
+                         "destination":  "/privacy.html"
+                     },
+                     {
+                         "source":  "/terms",
+                         "destination":  "/terms.html"
+                     },
+                     {
+                         "source":  "/refund",
+                         "destination":  "/refund.html"
+                     },
+                     {
+                         "source":  "/dashboard",
+                         "destination":  "/public/legacy/dashboard.html"
+                     }
+                 ]
 }
