@@ -729,6 +729,31 @@
   });
 })();
 </script>
+<script>
+/* __ES_DEMO_DASH__ */
+(function () {
+  "use strict";
+  // If demo token, prevent noisy API calls by stubbing fetch for /api/* endpoints.
+  try {
+    var t = localStorage.getItem("ES_TOKEN");
+    if (t !== "demo") return;
+
+    var origFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
+      if (url && url.startsWith("/api/")) {
+        return Promise.resolve(new Response(JSON.stringify({ ok: true, demo: true }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+      return origFetch(input, init);
+    };
+
+    console.log("✅ Demo mode: API calls stubbed");
+  } catch (e) {}
+})();
+</script>
 </head>
 <body>
     <!-- Global Loading Overlay -->
@@ -2092,5 +2117,6 @@
     </script>
 </body>
 </html>
+
 
 

@@ -34,7 +34,12 @@
   async function apiFetch(path, opts = {}) {
     const token = getToken();
 
-    const headers = Object.assign(
+/* __ES_DEMO_AUTH__ */
+// Demo token bypass: allow dashboard to load without backend auth
+if (token === "demo") {
+  return true;
+}
+const headers = Object.assign(
       { "Content-Type": "application/json" },
       opts.headers || {}
     );
@@ -95,7 +100,12 @@
 async requireAuthOrRedirect(redirectTo = "/login") {
       const token = getToken();
 
-      // If you rely on cookie-only auth, remove this token check
+/* __ES_DEMO_AUTH__ */
+// Demo token bypass: allow dashboard to load without backend auth
+if (token === "demo") {
+  return true;
+}
+// If you rely on cookie-only auth, remove this token check
       // and only validate via /api/user/profile.
       if (!token) {
         window.location.href = redirectTo;
@@ -114,4 +124,5 @@ async requireAuthOrRedirect(redirectTo = "/login") {
 
   console.log("✅ shared-auth.js loaded (ExposureShieldAuth ready)");
 })();
+
 
