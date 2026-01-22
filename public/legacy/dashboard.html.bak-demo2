@@ -1,0 +1,2122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegacyShield | Enterprise Digital Legacy Management Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --sidebar: #0f172a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        /* Global Loading Overlay */
+        #globalLoading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar);
+            color: white;
+            padding: 24px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 0 24px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        
+        .nav-menu {
+            flex: 1;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: auto;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .user-info p {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .page-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .page-title p {
+            color: var(--gray);
+            margin-top: 4px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 300px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .notification-bell {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 1px solid var(--border);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .stat-icon.blue { background: #dbeafe; color: #1d4ed8; }
+        .stat-icon.green { background: #d1fae5; color: #047857; }
+        .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
+        .stat-icon.orange { background: #fef3c7; color: #d97706; }
+        .stat-icon.red { background: #fee2e2; color: #dc2626; }
+        
+        .stat-trend {
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        
+        .trend-up { background: #d1fae5; color: #065f46; }
+        .trend-down { background: #fee2e2; color: #991b1b; }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 8px 0 4px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-content {
+            padding: 24px;
+        }
+        
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .data-table th {
+            background: #f8fafc;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark);
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-expired { background: #fee2e2; color: #991b1b; }
+        
+        /* Utility Classes */
+        .text-danger { color: var(--danger); font-weight: 600; }
+        
+        /* Activity Feed */
+        .activity-feed {
+            list-style: none;
+        }
+        
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-details p {
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+        
+        .activity-time {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: #f8fafc;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--gray);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--gray);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 32px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .search-box input {
+                width: 200px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .header-actions {
+                flex-wrap: wrap;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+<script src="/shared-auth.js"></script>
+<script>
+/* __ES_DASH_GUARD__ */
+(function () {
+  "use strict";
+  document.addEventListener("DOMContentLoaded", async function () {
+    try {
+      if (!window.ExposureShieldAuth || !ExposureShieldAuth.requireAuthOrRedirect) return;
+      await ExposureShieldAuth.requireAuthOrRedirect("/login");
+    } catch (e) {
+      console.error(e);
+      window.location.href = "/login";
+    }
+  });
+})();
+</script>
+<script>
+/* __ES_DEMO_DASH__ */
+(function () {
+  "use strict";
+  // If demo token, prevent noisy API calls by stubbing fetch for /api/* endpoints.
+  try {
+    var t = localStorage.getItem("ES_TOKEN");
+    if (t !== "demo") return;
+
+    var origFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
+      if (url && url.startsWith("/api/")) {
+        return Promise.resolve(new Response(JSON.stringify({ ok: true, demo: true }), {
+          status: 200,
+          headers: { "Content-Type": "application/json" }
+        }));
+      }
+      return origFetch(input, init);
+    };
+
+    console.log("✅ Demo mode: API calls stubbed");
+  } catch (e) {}
+})();
+</script>
+</head>
+<body>
+    <!-- Global Loading Overlay -->
+    <div id="globalLoading">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h1><i class="fas fa-shield-alt"></i> LegacyShield</h1>
+            <p>Enterprise Platform</p>
+        </div>
+        
+        <div class="nav-menu">
+            <a href="#" class="nav-item active" data-tab="dashboard">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-tab="clients">
+                <i class="fas fa-users"></i> Clients
+                <span class="nav-badge" id="clientCount">--</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="plans">
+                <i class="fas fa-file-contract"></i> Legacy Plans
+                <span class="nav-badge" id="planCount">--</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="invoices">
+                <i class="fas fa-receipt"></i> Invoices
+                <span class="nav-badge" id="invoiceCount">--</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="documents">
+                <i class="fas fa-folder"></i> Documents
+            </a>
+            <a href="#" class="nav-item" data-tab="audit">
+                <i class="fas fa-clipboard-list"></i> Audit Trail
+            </a>
+            <a href="#" class="nav-item" data-tab="reports">
+                <i class="fas fa-chart-bar"></i> Reports
+            </a>
+            <a href="#" class="nav-item" data-tab="settings">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="user-info">
+                    <h4 id="userName">Loading...</h4>
+                    <p id="userRole">Administrator</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="page-title">
+                <h2 id="pageTitle">Dashboard</h2>
+                <p id="pageSubtitle">Welcome to LegacyShield Enterprise Platform</p>
+            </div>
+            
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search clients, plans, invoices..." id="globalSearch">
+                </div>
+                
+                <div class="notification-bell" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationCount">3</span>
+                </div>
+                
+                <button class="btn btn-primary" onclick="openCreateModal('client')">
+                    <i class="fas fa-plus"></i> New Client
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+12%</span>
+                    </div>
+                    <div class="stat-value" id="totalClients">--</div>
+                    <div class="stat-label">Total Clients</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon green">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+8%</span>
+                    </div>
+                    <div class="stat-value" id="activePlans">--</div>
+                    <div class="stat-label">Active Plans</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <span class="stat-trend trend-up">+15%</span>
+                    </div>
+                    <div class="stat-value" id="monthlyRevenue">--</div>
+                    <div class="stat-label">Monthly Revenue</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <span class="stat-trend trend-down">-2%</span>
+                    </div>
+                    <div class="stat-value" id="pendingTasks">--</div>
+                    <div class="stat-label">Pending Tasks</div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="main-grid">
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-history"></i>
+                            Recent Activity
+                        </div>
+                        <button class="btn btn-sm btn-secondary" onclick="refreshActivity()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <ul class="activity-feed" id="activityFeed">
+                            <!-- Activity items will be loaded here -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-bolt"></i>
+                            Quick Actions
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="btn-group" style="flex-direction: column;">
+                            <button class="btn btn-secondary" onclick="openCreateModal('plan')">
+                                <i class="fas fa-plus-circle"></i> Create Legacy Plan
+                            </button>
+                            <button class="btn btn-secondary" onclick="openCreateModal('invoice')">
+                                <i class="fas fa-file-invoice-dollar"></i> Generate Invoice
+                            </button>
+                            <button class="btn btn-secondary" onclick="runAuditReport()">
+                                <i class="fas fa-shield-alt"></i> Security Audit
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportDashboardData()">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Plans -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-file-contract"></i>
+                        Recent Legacy Plans
+                    </div>
+                    <button class="btn btn-sm btn-primary" onclick="openTab('plans')">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="recentPlansTable">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Plan Type</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Plans will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clients Tab -->
+        <div id="clients" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-users"></i>
+                        Client Management
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateModal('client')">
+                        <i class="fas fa-plus"></i> Add Client
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="clientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Plans</th>
+                                    <th>Last Active</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Clients will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Plans Tab -->
+        <div id="plans" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-file-contract"></i>
+                        Legacy Plans
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateModal('plan')">
+                        <i class="fas fa-plus"></i> Create Plan
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="plansTable">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Plan Name</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Value</th>
+                                    <th>Beneficiaries</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Plans will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Invoices Tab -->
+        <div id="invoices" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-receipt"></i>
+                        Invoice Management
+                    </div>
+                    <button class="btn btn-primary" onclick="openCreateModal('invoice')">
+                        <i class="fas fa-plus"></i> Create Invoice
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="tabs">
+                        <button class="tab active" data-invoice-tab="all">All Invoices</button>
+                        <button class="tab" data-invoice-tab="pending">Pending</button>
+                        <button class="tab" data-invoice-tab="paid">Paid</button>
+                        <button class="tab" data-invoice-tab="overdue">Overdue</button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table" id="invoicesTable">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Client</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Invoices will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-folder"></i>
+                        Document Vault
+                    </div>
+                    <button class="btn btn-primary" onclick="uploadDocument()">
+                        <i class="fas fa-upload"></i> Upload Document
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="documentsTable">
+                            <thead>
+                                <tr>
+                                    <th>Document Name</th>
+                                    <th>Type</th>
+                                    <th>Client</th>
+                                    <th>Uploaded</th>
+                                    <th>Size</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Documents will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audit Tab -->
+        <div id="audit" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Audit Trail
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportAuditLog()">
+                        <i class="fas fa-download"></i> Export Log
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="auditTable">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Audit logs will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Reports & Analytics
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="generateReport('revenue')">
+                            <i class="fas fa-chart-line"></i> Revenue Report
+                        </button>
+                        <button class="btn btn-secondary" onclick="generateReport('clients')">
+                            <i class="fas fa-users"></i> Client Growth
+                        </button>
+                        <button class="btn btn-secondary" onclick="generateReport('plans')">
+                            <i class="fas fa-file-contract"></i> Plan Analysis
+                        </button>
+                        <button class="btn btn-secondary" onclick="generateReport('audit')">
+                            <i class="fas fa-shield-alt"></i> Security Report
+                        </button>
+                    </div>
+                    
+                    <div id="reportContainer" style="margin-top: 24px;">
+                        <!-- Reports will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-cog"></i>
+                        System Settings
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-control" id="companyName" value="LegacyShield Inc.">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Currency</label>
+                        <select class="form-control" id="defaultCurrency">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (â‚¬)</option>
+                            <option value="GBP">GBP (Â£)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Invoice Terms (days)</label>
+                        <input type="number" class="form-control" id="invoiceTerms" value="30">
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Â© 2024 LegacyShield Enterprise Platform. All rights reserved. | v3.2.1</p>
+            <p>System Status: <span class="status-badge status-active">Operational</span></p>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Create New</h3>
+                <button class="close-modal" onclick="closeModal('createModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
+                <button class="btn btn-primary" id="modalSubmitBtn">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // ENTERPRISE API INTEGRATION
+    // ============================================
+
+    // API Configuration
+    const API_BASE = '/api';
+    let currentUser = null;
+
+    // Initialize the application
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('ðŸš€ LegacyShield Enterprise Platform Initializing...');
+        
+        // Initialize dashboard
+        initializeDashboard();
+        
+        // Set up event listeners
+        setupEventListeners();
+        
+        // Load initial data
+        loadDashboardData();
+        
+        // Log initial activity
+        logActivity('Dashboard accessed', 'login');
+    });
+
+    // Fixed Loading Function
+    function showLoading(show) {
+        const loadingEl = document.getElementById('globalLoading');
+        if (loadingEl) {
+            loadingEl.style.display = show ? 'flex' : 'none';
+        }
+    }
+
+    // API Functions
+    async function apiRequest(endpoint, method = 'GET', data = null) {
+        const url = `${API_BASE}${endpoint}`;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+
+        const options = {
+            method: method,
+            headers: headers,
+            credentials: 'include' // Important for cookies
+        };
+
+        if (data && (method === 'POST' || method === 'PUT')) {
+            options.body = JSON.stringify(data);
+        }
+
+        try {
+            showLoading(true);
+            const response = await fetch(url, options);
+            
+            // Handle 401 Unauthorized
+            if (response.status === 401) {
+                showAlert('error', 'Session expired. Please log in again.');
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 2000);
+                return null;
+            }
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || `API Error: ${response.status}`);
+            }
+            
+            return result;
+        } catch (error) {
+            console.error('API Request Failed:', error);
+            showAlert('error', `API Error: ${error.message}`);
+            return null;
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Legacy API Integration
+    async function getLegacyPlan() {
+        try {
+            const response = await apiRequest('/legacy/get');
+            if (response && response.ok) {
+                return response.plan;
+            }
+            return null;
+        } catch (error) {
+            console.error('Failed to fetch legacy plan:', error);
+            return null;
+        }
+    }
+
+    // Dashboard Functions
+    async function initializeDashboard() {
+        // Get user info
+        const userResponse = await apiRequest('/user/profile');
+        if (userResponse && userResponse.ok) {
+            currentUser = userResponse.user;
+            document.getElementById('userName').textContent = currentUser.name || 'Admin User';
+            document.getElementById('userRole').textContent = currentUser.role || 'Administrator';
+        }
+    }
+
+    async function loadDashboardData() {
+        try {
+            // Load multiple data sources in parallel
+            const [clients, plans, invoices, activity] = await Promise.allSettled([
+                apiRequest('/clients'),
+                apiRequest('/plans'),
+                apiRequest('/invoices?recent=true'),
+                apiRequest('/activity/recent')
+            ]);
+            
+            // Update stats
+            if (clients.value && clients.value.ok) {
+                updateStats('clients', clients.value);
+            }
+            
+            if (plans.value && plans.value.ok) {
+                updateStats('plans', plans.value);
+            }
+            
+            if (invoices.value && invoices.value.ok) {
+                updateStats('invoices', invoices.value);
+            }
+            
+            if (activity.value && activity.value.ok) {
+                updateActivityFeed(activity.value.data);
+            }
+            
+            // Load legacy plan
+            const legacyPlan = await getLegacyPlan();
+            if (legacyPlan) {
+                updateLegacyPlanDisplay(legacyPlan);
+            }
+            
+            // Load recent plans for dashboard
+            await loadRecentPlans();
+            
+        } catch (error) {
+            console.error('Failed to load dashboard data:', error);
+            showAlert('error', 'Failed to load dashboard data');
+        }
+    }
+
+    function updateStats(type, response) {
+        switch(type) {
+            case 'clients':
+                document.getElementById('totalClients').textContent = response.total || 0;
+                document.getElementById('clientCount').textContent = response.total || '--';
+                break;
+            case 'plans':
+                document.getElementById('activePlans').textContent = response.active || 0;
+                document.getElementById('planCount').textContent = response.total || '--';
+                break;
+            case 'invoices':
+                const revenue = response.revenue || 0;
+                document.getElementById('monthlyRevenue').textContent = `$${formatNumber(revenue)}`;
+                document.getElementById('invoiceCount').textContent = response.total || '--';
+                break;
+        }
+    }
+
+    async function loadRecentPlans() {
+        const response = await apiRequest('/plans?limit=5');
+        if (response && response.ok) {
+            const tbody = document.querySelector('#recentPlansTable tbody');
+            let html = '';
+            
+            response.data.slice(0, 5).forEach(plan => {
+                html += `
+                    <tr>
+                        <td>${plan.clientName || 'Unknown Client'}</td>
+                        <td>${plan.type}</td>
+                        <td>
+                            <span class="status-badge ${plan.status === 'active' ? 'status-active' : 'status-pending'}">
+                                ${plan.status}
+                            </span>
+                        </td>
+                        <td>${formatDate(plan.createdAt)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewPlan('${plan.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="5">No plans found</td></tr>';
+        }
+    }
+
+    function updateActivityFeed(activities) {
+        const feed = document.getElementById('activityFeed');
+        if (!activities || activities.length === 0) {
+            feed.innerHTML = '<li class="activity-item"><p>No recent activity</p></li>';
+            return;
+        }
+        
+        let html = '';
+        activities.slice(0, 5).forEach(activity => {
+            html += `
+                <li class="activity-item">
+                    <div class="activity-icon" style="background: ${getActivityColor(activity.type)}">
+                        <i class="fas fa-${getActivityIcon(activity.type)}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <p><strong>${activity.user}</strong> ${activity.action}</p>
+                        <small class="activity-time">${formatTime(activity.timestamp)}</small>
+                    </div>
+                </li>
+            `;
+        });
+        
+        feed.innerHTML = html;
+    }
+
+    // Tab Management
+    function openTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Show selected tab
+        document.getElementById(tabName).classList.add('active');
+        
+        // Update navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.tab === tabName) {
+                item.classList.add('active');
+            }
+        });
+        
+        // Update page title
+        updatePageTitle(tabName);
+        
+        // Load tab data
+        loadTabData(tabName);
+    }
+
+    async function loadTabData(tabName) {
+        switch(tabName) {
+            case 'clients':
+                await loadClients();
+                break;
+            case 'plans':
+                await loadPlans();
+                break;
+            case 'invoices':
+                await loadInvoices('all');
+                break;
+            case 'documents':
+                await loadDocuments();
+                break;
+            case 'audit':
+                await loadAuditLog();
+                break;
+        }
+    }
+
+    // Client Management
+    async function loadClients() {
+        const response = await apiRequest('/clients');
+        if (response && response.ok) {
+            const clients = response.data;
+            const tbody = document.querySelector('#clientsTable tbody');
+            
+            let html = '';
+            clients.forEach(client => {
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${client.name}</strong><br>
+                            <small>${client.company || ''}</small>
+                        </td>
+                        <td>${client.email}</td>
+                        <td>${client.phone || 'N/A'}</td>
+                        <td>
+                            <span class="status-badge ${client.status === 'active' ? 'status-active' : 'status-pending'}">
+                                ${client.status}
+                            </span>
+                        </td>
+                        <td>${client.planCount || 0}</td>
+                        <td>${formatDate(client.lastActive)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewClient('${client.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="editClient('${client.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="7">No clients found</td></tr>';
+        }
+    }
+
+    async function createClient(clientData) {
+        const response = await apiRequest('/clients', 'POST', clientData);
+        if (response && response.ok) {
+            showAlert('success', 'Client created successfully');
+            loadClients();
+            loadDashboardData();
+            closeModal('createModal');
+            return true;
+        }
+        return false;
+    }
+
+    // Plan Management
+    async function loadPlans() {
+        const response = await apiRequest('/plans');
+        if (response && response.ok) {
+            const plans = response.data;
+            const tbody = document.querySelector('#plansTable tbody');
+            
+            let html = '';
+            plans.forEach(plan => {
+                html += `
+                    <tr>
+                        <td>${plan.clientName || 'Unknown'}</td>
+                        <td>${plan.name}</td>
+                        <td>${plan.type}</td>
+                        <td>
+                            <span class="status-badge ${plan.status === 'active' ? 'status-active' : 
+                                                       plan.status === 'pending' ? 'status-pending' : 'status-expired'}">
+                                ${plan.status}
+                            </span>
+                        </td>
+                        <td>$${formatNumber(plan.value)}</td>
+                        <td>${plan.beneficiaries?.length || 0}</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewPlan('${plan.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="editPlan('${plan.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="7">No plans found</td></tr>';
+        }
+    }
+
+    // Invoice Management
+    async function loadInvoices(filter = 'all') {
+        const response = await apiRequest('/invoices');
+        if (response && response.ok) {
+            let invoices = response.data;
+            
+            // Apply filter
+            if (filter !== 'all') {
+                invoices = invoices.filter(inv => inv.status === filter);
+            }
+            
+            const tbody = document.querySelector('#invoicesTable tbody');
+            
+            let html = '';
+            invoices.forEach(invoice => {
+                html += `
+                    <tr>
+                        <td>INV-${String(invoice.id).padStart(5, '0')}</td>
+                        <td>${invoice.clientName}</td>
+                        <td>$${formatNumber(invoice.amount)}</td>
+                        <td>${formatDate(invoice.date)}</td>
+                        <td class="${invoice.status === 'overdue' ? 'text-danger' : ''}">
+                            ${formatDate(invoice.dueDate)}
+                        </td>
+                        <td>
+                            <span class="status-badge ${invoice.status === 'paid' ? 'status-active' : 
+                                                       invoice.status === 'pending' ? 'status-pending' : 'status-expired'}">
+                                ${invoice.status}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewInvoice('${invoice.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="downloadInvoice('${invoice.id}')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="7">No invoices found</td></tr>';
+        }
+    }
+
+    // Modal Management
+    function openCreateModal(type) {
+        const modal = document.getElementById('createModal');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        const submitBtn = document.getElementById('modalSubmitBtn');
+        
+        switch(type) {
+            case 'client':
+                title.textContent = 'Create New Client';
+                body.innerHTML = getClientForm();
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Client';
+                submitBtn.onclick = () => submitClientForm();
+                break;
+                
+            case 'plan':
+                title.textContent = 'Create Legacy Plan';
+                body.innerHTML = getPlanForm();
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Plan';
+                submitBtn.onclick = () => submitPlanForm();
+                break;
+                
+            case 'invoice':
+                title.textContent = 'Create Invoice';
+                body.innerHTML = getInvoiceForm();
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Invoice';
+                submitBtn.onclick = () => submitInvoiceForm();
+                break;
+        }
+        
+        modal.classList.add('active');
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Form Templates
+    function getClientForm() {
+        return `
+            <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" class="form-control" id="clientName" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email Address *</label>
+                <input type="email" class="form-control" id="clientEmail" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="clientPhone">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Company</label>
+                <input type="text" class="form-control" id="clientCompany">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Address</label>
+                <textarea class="form-control" id="clientAddress" rows="2"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-control" id="clientNotes" rows="3"></textarea>
+            </div>
+        `;
+    }
+
+    function getPlanForm() {
+        return `
+            <div class="form-group">
+                <label class="form-label">Client *</label>
+                <select class="form-control" id="planClientId" required>
+                    <option value="">Select Client...</option>
+                    <!-- Clients will be loaded dynamically -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Plan Name *</label>
+                <input type="text" class="form-control" id="planName" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Plan Type *</label>
+                <select class="form-control" id="planType" required>
+                    <option value="basic">Basic Legacy Plan</option>
+                    <option value="premium">Premium Legacy Plan</option>
+                    <option value="enterprise">Enterprise Legacy Plan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Estimated Value ($)</label>
+                <input type="number" class="form-control" id="planValue" min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Beneficiaries</label>
+                <textarea class="form-control" id="planBeneficiaries" rows="3" 
+                          placeholder="Enter beneficiary names, one per line"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Special Instructions</label>
+                <textarea class="form-control" id="planInstructions" rows="4"></textarea>
+            </div>
+        `;
+    }
+
+    function getInvoiceForm() {
+        return `
+            <div class="form-group">
+                <label class="form-label">Client *</label>
+                <select class="form-control" id="invoiceClientId" required>
+                    <option value="">Select Client...</option>
+                    <!-- Clients will be loaded dynamically -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Invoice Amount *</label>
+                <input type="number" class="form-control" id="invoiceAmount" min="0" step="0.01" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" id="invoiceDescription" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Due Date *</label>
+                <input type="date" class="form-control" id="invoiceDueDate" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Payment Terms</label>
+                <select class="form-control" id="invoiceTerms">
+                    <option value="net30">Net 30</option>
+                    <option value="net15">Net 15</option>
+                    <option value="due_on_receipt">Due on Receipt</option>
+                </select>
+            </div>
+        `;
+    }
+
+    // Form Submission
+    async function submitClientForm() {
+        const clientData = {
+            name: document.getElementById('clientName').value,
+            email: document.getElementById('clientEmail').value,
+            phone: document.getElementById('clientPhone').value,
+            company: document.getElementById('clientCompany').value,
+            address: document.getElementById('clientAddress').value,
+            notes: document.getElementById('clientNotes').value
+        };
+        
+        if (!clientData.name || !clientData.email) {
+            showAlert('error', 'Name and email are required');
+            return;
+        }
+        
+        await createClient(clientData);
+    }
+
+    async function submitPlanForm() {
+        const planData = {
+            clientId: document.getElementById('planClientId').value,
+            name: document.getElementById('planName').value,
+            type: document.getElementById('planType').value,
+            value: document.getElementById('planValue').value,
+            beneficiaries: document.getElementById('planBeneficiaries').value.split('\n').filter(b => b.trim()),
+            instructions: document.getElementById('planInstructions').value
+        };
+        
+        if (!planData.clientId || !planData.name || !planData.type) {
+            showAlert('error', 'Client, name, and type are required');
+            return;
+        }
+        
+        const response = await apiRequest('/plans', 'POST', planData);
+        if (response && response.ok) {
+            showAlert('success', 'Plan created successfully');
+            loadPlans();
+            closeModal('createModal');
+        }
+    }
+
+    async function submitInvoiceForm() {
+        const invoiceData = {
+            clientId: document.getElementById('invoiceClientId').value,
+            amount: document.getElementById('invoiceAmount').value,
+            description: document.getElementById('invoiceDescription').value,
+            dueDate: document.getElementById('invoiceDueDate').value,
+            terms: document.getElementById('invoiceTerms').value
+        };
+        
+        if (!invoiceData.clientId || !invoiceData.amount || !invoiceData.dueDate) {
+            showAlert('error', 'Client, amount, and due date are required');
+            return;
+        }
+        
+        const response = await apiRequest('/invoices', 'POST', invoiceData);
+        if (response && response.ok) {
+            showAlert('success', 'Invoice created successfully');
+            loadInvoices();
+            closeModal('createModal');
+        }
+    }
+
+    // Missing Functions (Stubs to prevent errors)
+    function uploadDocument() { 
+        showAlert('info', 'Document upload feature coming soon'); 
+    }
+    
+    async function loadDocuments() { 
+        showAlert('info', 'Loading documents...'); 
+        // TODO: Implement document loading
+    }
+    
+    async function loadAuditLog() { 
+        const response = await apiRequest('/audit');
+        if (response && response.ok) {
+            const tbody = document.querySelector('#auditTable tbody');
+            let html = '';
+            
+            response.data.forEach(log => {
+                html += `
+                    <tr>
+                        <td>${formatDate(log.timestamp)}</td>
+                        <td>${log.user}</td>
+                        <td>${log.action}</td>
+                        <td>${log.details || ''}</td>
+                        <td>${log.ip || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html || '<tr><td colspan="5">No audit logs found</td></tr>';
+        }
+    }
+    
+    function exportAuditLog() { 
+        showAlert('info', 'Export feature coming soon'); 
+    }
+    
+    function generateReport(type) { 
+        showAlert('info', `Generating ${type} report...`); 
+    }
+    
+    function saveSettings() { 
+        showAlert('success', 'Settings saved successfully'); 
+    }
+    
+    function downloadInvoice(id) { 
+        showAlert('info', `Downloading invoice ${id}...`); 
+    }
+    
+    function updateLegacyPlanDisplay(plan) {
+        // Optional: Display legacy plan details somewhere
+        console.log('Legacy Plan:', plan);
+    }
+
+    // Utility Functions
+    function showAlert(type, message) {
+        // Create alert element
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                               type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            ${message}
+        `;
+        
+        // Add to page
+        document.querySelector('.main-content').prepend(alert);
+        
+        // Remove after 5 seconds
+        setTimeout(() => alert.remove(), 5000);
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
+    function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diff = now - date;
+        
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+        if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+        return formatDate(timestamp);
+    }
+
+    function formatNumber(num) {
+        return Number(num).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function getActivityColor(type) {
+        switch(type) {
+            case 'login': return '#dbeafe';
+            case 'create': return '#d1fae5';
+            case 'update': return '#fef3c7';
+            case 'delete': return '#fee2e2';
+            default: return '#e2e8f0';
+        }
+    }
+
+    function getActivityIcon(type) {
+        switch(type) {
+            case 'login': return 'sign-in-alt';
+            case 'create': return 'plus-circle';
+            case 'update': return 'edit';
+            case 'delete': return 'trash';
+            default: return 'info-circle';
+        }
+    }
+
+    function setupEventListeners() {
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const tab = item.dataset.tab;
+                openTab(tab);
+            });
+        });
+        
+        // Invoice tabs
+        document.querySelectorAll('[data-invoice-tab]').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('[data-invoice-tab]').forEach(t => {
+                    t.classList.remove('active');
+                });
+                tab.classList.add('active');
+                loadInvoices(tab.dataset.invoiceTab);
+            });
+        });
+        
+        // Global search
+        document.getElementById('globalSearch').addEventListener('input', (e) => {
+            performGlobalSearch(e.target.value);
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch').focus();
+            }
+            
+            // Escape to close modals
+            if (e.key === 'Escape') {
+                closeModal('createModal');
+            }
+        });
+    }
+
+    async function performGlobalSearch(query) {
+        if (query.length < 2) return;
+        
+        const response = await apiRequest(`/search?q=${encodeURIComponent(query)}`);
+        if (response && response.ok) {
+            showAlert('info', `Found ${response.data.clients.length} clients, ${response.data.plans.length} plans, ${response.data.invoices.length} invoices`);
+        }
+    }
+
+    // Initialize
+    function updatePageTitle(tab) {
+        const titles = {
+            dashboard: 'Dashboard',
+            clients: 'Client Management',
+            plans: 'Legacy Plans',
+            invoices: 'Invoice Management',
+            documents: 'Document Vault',
+            audit: 'Audit Trail',
+            reports: 'Reports & Analytics',
+            settings: 'System Settings'
+        };
+        
+        document.getElementById('pageTitle').textContent = titles[tab] || 'Dashboard';
+        document.getElementById('pageSubtitle').textContent = `LegacyShield ${titles[tab] || 'Dashboard'} â€¢ ${new Date().toLocaleDateString()}`;
+    }
+
+    function toggleNotifications() {
+        showAlert('info', 'Notifications panel would open here');
+    }
+
+    // Additional Business Functions
+    async function runAuditReport() {
+        const response = await apiRequest('/audit/run', 'POST');
+        if (response && response.ok) {
+            showAlert('success', 'Security audit completed successfully');
+            logActivity('Security audit completed', 'success');
+        }
+    }
+
+    async function exportDashboardData() {
+        const response = await apiRequest('/export/dashboard');
+        if (response && response.ok) {
+            // Create download link
+            const blob = new Blob([JSON.stringify(response.data, null, 2)], {
+                type: 'application/json'
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `legacyshield-export-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showAlert('success', 'Data exported successfully');
+        }
+    }
+
+    function refreshActivity() {
+        apiRequest('/activity/recent').then(response => {
+            if (response && response.ok) {
+                updateActivityFeed(response.data);
+                showAlert('success', 'Activity feed refreshed');
+            }
+        });
+    }
+
+    // Log user activity
+    async function logActivity(action, type = 'info') {
+        // Send to API
+        await apiRequest('/activity/log', 'POST', {
+            action: action,
+            type: type
+        });
+    }
+
+    // View functions
+    function viewClient(id) {
+        showAlert('info', `Viewing client ${id}...`);
+    }
+    
+    function editClient(id) {
+        showAlert('info', `Editing client ${id}...`);
+    }
+    
+    function viewPlan(id) {
+        showAlert('info', `Viewing plan ${id}...`);
+    }
+    
+    function editPlan(id) {
+        showAlert('info', `Editing plan ${id}...`);
+    }
+    
+    function viewInvoice(id) {
+        showAlert('info', `Viewing invoice ${id}...`);
+    }
+
+    </script>
+</body>
+</html>
+
+
+

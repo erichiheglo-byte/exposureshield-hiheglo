@@ -1,0 +1,316 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | ExposureShield - Secure Your Digital Legacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .login-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .login-header p {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+        }
+        .login-form {
+            padding: 40px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.9rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        .login-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        .login-button:active {
+            transform: translateY(0);
+        }
+        .login-footer {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-light);
+            margin-top: 30px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        .login-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        .demo-note {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            color: #0369a1;
+        }
+        .demo-note i {
+            margin-right: 8px;
+        }
+        @media (max-width: 480px) {
+            .login-container { max-width: 100%; }
+            .login-header, .login-form { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                ExposureShield
+            </div>
+            <p>Secure your digital legacy with confidence</p>
+        </div>
+        
+        <div class="login-form">
+            <div class="demo-note">
+                <i class="fas fa-info-circle"></i>
+                <strong>Demo Login:</strong> Any email works. Password is optional.
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="email" 
+                           placeholder="you@example.com" required autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="password" 
+                           placeholder="••••••••" minlength="6" autocomplete="current-password">
+                    <div style="font-size: 0.8rem; color: var(--gray); margin-top: 5px;">
+                        Demo: Any password works
+                    </div>
+                </div>
+                
+                <button type="submit" class="login-button">
+                    <i class="fas fa-sign-in-alt"></i> Sign In to Dashboard
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Don't have an account? <a href="register.html">Create Account</a></p>
+                <p><a href="index.html"><i class="fas fa-arrow-left"></i> Back to Homepage</a></p>
+            </div>
+        </div>
+    </div>
+<script src="/shared-auth.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('loginForm');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email) {
+                alert('Please enter your email address.');
+                return;
+            }
+            
+            // Show loading state
+            const button = form.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            button.disabled = true;
+            
+            // Simulate API call (1 second delay for realism)
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Create demo user data
+            const demoToken = 'token_' + Date.now() + '_' + Math.random().toString(36).substr(2);
+            const userData = {
+                email: email,
+                name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+                id: Date.now(),
+                plan: 'premium',
+                joined: new Date().toISOString().split('T')[0]
+            };
+            
+            // Use centralized login function
+            ExposureShieldAuth.login(demoToken, userData);
+            
+            // Redirect to dashboard or requested page
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTo = urlParams.get('redirect') || 'dashboard.html';
+            
+            // Show success message before redirect
+            button.innerHTML = '<i class="fas fa-check"></i> Login Successful!';
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            window.location.href = redirectTo;
+        });
+        
+        // Auto-fill demo email for testing
+        document.getElementById('email').value = 'demo@exposureshield.com';
+    });
+    </script>
+<script>
+/* __ES_LOGIN_ENFORCE__ */
+(function () {
+  "use strict";
+  if (window.__ES_LOGIN_WIRED__) return;
+  window.__ES_LOGIN_WIRED__ = true;
+
+  function pick(sel) { return document.querySelector(sel); }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var form =
+      document.getElementById("loginForm") ||
+      pick('form[data-login="1"]') ||
+      pick("form");
+
+    if (!form) return;
+
+    form.addEventListener("submit", async function (e) {
+      try {
+        e.preventDefault();
+
+        var emailEl =
+          document.getElementById("loginEmail") ||
+          document.getElementById("email") ||
+          pick('input[type="email"]');
+
+        var passEl =
+          document.getElementById("loginPassword") ||
+          document.getElementById("password") ||
+          pick('input[type="password"]');
+
+        var email = (emailEl && emailEl.value ? String(emailEl.value) : "").trim();
+        var password = (passEl && passEl.value ? String(passEl.value) : "");
+
+        if (!email || !password) {
+          alert("Please enter email and password.");
+          return;
+        }
+
+        // Cookie-based session support + token support
+        var res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ email: email, password: password })
+        });
+
+        var data = null;
+        try { data = await res.json(); } catch (_) { data = null; }
+
+        if (!res.ok) {
+          var msg = (data && (data.error || data.message)) ? (data.error || data.message) : ("Login failed (" + res.status + ")");
+          alert(msg);
+          return;
+        }
+
+        // Save token if provided (Bearer mode)
+        var token = (data && (data.token || data.access_token)) ? (data.token || data.access_token) : "";
+        if (token && window.ExposureShieldAuth && ExposureShieldAuth.setToken) {
+          ExposureShieldAuth.setToken(token);
+        } else if (token) {
+          localStorage.setItem("ES_TOKEN", token);
+        }
+
+        // Go to your working dashboard route
+        window.location.href = "/legacy/dashboard";
+      } catch (err) {
+        console.error(err);
+        alert("Login error. Check console.");
+      }
+    }, { passive: false });
+  });
+})();
+</script>
+</body>
+</html>
+
+
+
+
+
+

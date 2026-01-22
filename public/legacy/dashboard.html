@@ -1,14 +1,17 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegacyShield | Enterprise Digital Legacy Management Platform</title>
+    <title>LegacyShield | Enterprise Digital Legacy Protection</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Light Theme */
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
+            --primary-light: #dbeafe;
             --secondary: #7c3aed;
             --success: #10b981;
             --danger: #ef4444;
@@ -16,9 +19,59 @@
             --info: #3b82f6;
             --dark: #1e293b;
             --light: #f8fafc;
-            --gray: #64748b;
-            --border: #e2e8f0;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --border: #e5e7eb;
             --sidebar: #0f172a;
+            --card-bg: #ffffff;
+            --body-bg: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #1e3a8a;
+            --secondary: #8b5cf6;
+            --dark: #f9fafb;
+            --light: #111827;
+            --gray-50: #111827;
+            --gray-100: #1f2937;
+            --gray-200: #374151;
+            --gray-300: #4b5563;
+            --gray-400: #6b7280;
+            --gray-500: #9ca3af;
+            --gray-600: #d1d5db;
+            --gray-700: #e5e7eb;
+            --gray-800: #f3f4f6;
+            --gray-900: #f9fafb;
+            --border: #374151;
+            --sidebar: #030712;
+            --card-bg: #1f2937;
+            --body-bg: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
         }
         
         * {
@@ -29,26 +82,29 @@
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
-            color: var(--dark);
+            background: var(--body-bg);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: background-color var(--transition), color var(--transition);
         }
         
-        /* Global Loading Overlay */
+        /* Global Loading */
         #globalLoading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
+            background: var(--body-bg);
+            backdrop-filter: blur(8px);
             z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
-            display: none;
+            transition: opacity var(--transition-fast);
         }
         
         .loading {
@@ -56,17 +112,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
+            padding: 48px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border);
         }
         
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top: 4px solid var(--primary);
+            width: 56px;
+            height: 56px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         
         @keyframes spin {
@@ -76,88 +136,167 @@
         
         /* Sidebar */
         .sidebar {
-            width: 260px;
+            width: 280px;
             background: var(--sidebar);
             color: white;
-            padding: 24px 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             position: fixed;
             height: 100vh;
             z-index: 100;
+            border-right: 1px solid var(--border);
+            transition: transform var(--transition);
+        }
+        
+        .logo-container {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         .logo {
-            padding: 0 24px 32px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         
-        .logo h1 {
-            font-size: 24px;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .logo-text h1 {
+            font-size: 20px;
             font-weight: 700;
             background: linear-gradient(90deg, #60a5fa, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
         
-        .logo p {
+        .logo-text p {
             font-size: 12px;
             color: #94a3b8;
-            margin-top: 4px;
+            margin-top: 2px;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
         
         .nav-menu {
             flex: 1;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+        
+        .nav-section {
+            padding: 0 8px;
+            margin-bottom: 24px;
+        }
+        
+        .nav-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            padding: 0 16px 8px;
+            margin-bottom: 8px;
         }
         
         .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 24px;
+            padding: 12px 16px;
             color: #cbd5e1;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all var(--transition-fast);
             font-weight: 500;
+            border-radius: 8px;
+            margin: 0 8px 4px;
+            position: relative;
+            overflow: hidden;
         }
         
         .nav-item:hover {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             color: white;
-            border-left: 4px solid var(--primary);
         }
         
         .nav-item.active {
-            background: rgba(255,255,255,0.1);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(124, 58, 237, 0.2));
             color: white;
-            border-left: 4px solid var(--primary);
+        }
+        
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
         }
         
         .nav-item i {
             width: 20px;
             text-align: center;
+            font-size: 16px;
         }
         
         .nav-badge {
             margin-left: auto;
             background: var(--primary);
             color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
         }
         
         .sidebar-footer {
-            padding: 24px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: auto;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
         }
         
         .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color var(--transition-fast);
+        }
+        
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .user-avatar {
@@ -168,92 +307,146 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .user-info {
+            flex: 1;
+            min-width: 0;
         }
         
         .user-info h4 {
             font-size: 14px;
             font-weight: 600;
             color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .user-info p {
             font-size: 12px;
             color: #94a3b8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .user-dropdown-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .user-dropdown-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
         
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 260px;
-            padding: 24px;
+            margin-left: 280px;
             min-height: 100vh;
+            transition: margin-left var(--transition);
+            display: flex;
+            flex-direction: column;
         }
         
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 24px;
+        .top-bar {
+            height: 72px;
+            background: var(--card-bg);
             border-bottom: 1px solid var(--border);
-        }
-        
-        .page-title h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .page-title p {
-            color: var(--gray);
-            margin-top: 4px;
-        }
-        
-        .header-actions {
             display: flex;
-            gap: 16px;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
         }
         
-        .search-box {
-            position: relative;
-        }
-        
-        .search-box input {
-            padding: 10px 16px 10px 40px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 300px;
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 14px;
-            background: white;
+            color: var(--text-secondary);
         }
         
-        .search-box i {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
+        .breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
         }
         
-        .notification-bell {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 8px;
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+        
+        .breadcrumb .separator {
+            color: var(--gray-400);
+        }
+        
+        .breadcrumb .current {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .top-actions {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 16px;
+        }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
             cursor: pointer;
-            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+        
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            background: var(--gray-100);
+        }
+        
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all var(--transition-fast);
+        }
+        
+        .notification-btn:hover {
+            color: var(--text-primary);
+            background: var(--gray-100);
         }
         
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: 4px;
+            right: 4px;
             background: var(--danger);
             color: white;
             font-size: 10px;
@@ -263,92 +456,152 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 600;
+        }
+        
+        .content-wrapper {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+        
+        .page-header {
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
         
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             margin-bottom: 32px;
         }
         
         .stat-card {
-            background: white;
+            background: var(--card-bg);
             padding: 24px;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow);
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
         }
         
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
         
         .stat-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
         
         .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
+            background: var(--primary-light);
+            color: var(--primary);
         }
         
-        .stat-icon.blue { background: #dbeafe; color: #1d4ed8; }
-        .stat-icon.green { background: #d1fae5; color: #047857; }
-        .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
-        .stat-icon.orange { background: #fef3c7; color: #d97706; }
-        .stat-icon.red { background: #fee2e2; color: #dc2626; }
-        
         .stat-trend {
-            font-size: 14px;
-            padding: 4px 8px;
-            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
         
         .trend-up { background: #d1fae5; color: #065f46; }
         .trend-down { background: #fee2e2; color: #991b1b; }
+        .trend-neutral { background: var(--gray-100); color: var(--gray-600); }
+        
+        .stat-content {
+            margin-top: 8px;
+        }
         
         .stat-value {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             margin: 8px 0 4px;
+            color: var(--text-primary);
+            line-height: 1;
         }
         
         .stat-label {
-            color: var(--gray);
             font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .stat-description {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 8px;
+            line-height: 1.4;
         }
         
         /* Main Grid */
         .main-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
             margin-bottom: 32px;
         }
         
-        @media (max-width: 1200px) {
+        @media (max-width: 1400px) {
             .main-grid {
                 grid-template-columns: 1fr;
             }
         }
         
+        /* Cards */
         .card {
-            background: white;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 16px;
             border: 1px solid var(--border);
             overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: box-shadow var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-md);
         }
         
         .card-header {
@@ -362,10 +615,20 @@
         .card-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--dark);
+            color: var(--text-primary);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+        }
+        
+        .card-title i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 8px;
         }
         
         .card-content {
@@ -373,46 +636,148 @@
         }
         
         /* Tables */
-        .table-responsive {
+        .table-container {
             overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
         }
         
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px;
         }
         
-        .data-table th {
-            background: #f8fafc;
-            padding: 14px 16px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--dark);
+        .data-table thead {
+            background: var(--gray-50);
             border-bottom: 2px solid var(--border);
         }
         
-        .data-table td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
+        .data-table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
         }
         
-        .data-table tr:hover {
-            background: #f8fafc;
+        .data-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background-color var(--transition-fast);
+        }
+        
+        .data-table tbody tr:hover {
+            background: var(--gray-50);
+        }
+        
+        .data-table td {
+            padding: 16px 20px;
+            color: var(--text-primary);
+            vertical-align: middle;
         }
         
         .status-badge {
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 500;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-badge i {
+            font-size: 10px;
         }
         
         .status-active { background: #d1fae5; color: #065f46; }
         .status-pending { background: #fef3c7; color: #92400e; }
         .status-expired { background: #fee2e2; color: #991b1b; }
+        .status-draft { background: var(--gray-100); color: var(--gray-600); }
         
-        /* Utility Classes */
-        .text-danger { color: var(--danger); font-weight: 600; }
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            font-family: inherit;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--gray-200);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-outline:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 8px;
+        }
+        
+        .btn-icon {
+            padding: 8px;
+            width: 36px;
+            height: 36px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
         
         /* Activity Feed */
         .activity-feed {
@@ -422,12 +787,17 @@
         .activity-item {
             display: flex;
             gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: var(--gray-50);
+            border: 1px solid var(--border);
+            transition: all var(--transition-fast);
         }
         
-        .activity-item:last-child {
-            border-bottom: none;
+        .activity-item:hover {
+            background: var(--gray-100);
+            transform: translateX(4px);
         }
         
         .activity-icon {
@@ -439,163 +809,99 @@
             justify-content: center;
             font-size: 16px;
             flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
         }
         
-        .activity-details {
+        .activity-content {
             flex: 1;
+            min-width: 0;
         }
         
-        .activity-details p {
+        .activity-message {
+            font-size: 14px;
+            color: var(--text-primary);
             margin-bottom: 4px;
             line-height: 1.5;
         }
         
-        .activity-time {
-            font-size: 12px;
-            color: var(--gray);
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: var(--dark);
-            border: 1px solid var(--border);
-        }
-        
-        .btn-secondary:hover {
-            background: #f8fafc;
-        }
-        
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-        
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-        
-        .btn-group {
+        .activity-meta {
             display: flex;
+            align-items: center;
             gap: 12px;
-            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--text-secondary);
         }
         
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
+        .activity-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+        }
+        
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 24px;
+            color: var(--gray-400);
+            font-size: 32px;
         }
         
-        .modal.active {
-            display: flex;
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
         }
         
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            animation: modalSlideIn 0.3s ease;
-        }
-        
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .modal-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 24px;
-        }
-        
-        .modal-footer {
-            padding: 24px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
+        .empty-state-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         /* Forms */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--dark);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
         }
         
         .form-control {
             width: 100%;
-            padding: 10px 14px;
+            padding: 12px 16px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 14px;
-            transition: border-color 0.3s;
+            transition: all var(--transition-fast);
+            background: var(--card-bg);
+            color: var(--text-primary);
         }
         
         .form-control:focus {
@@ -604,11 +910,86 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
+        .form-control::placeholder {
+            color: var(--gray-400);
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 20px;
+            padding-right: 48px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        /* Alerts */
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1px solid transparent;
+        }
+        
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .alert-content {
+            flex: 1;
+        }
+        
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .alert-description {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-color: #a7f3d0;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fecaca;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #bfdbfe;
+        }
+        
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+        
         /* Tabs */
         .tabs {
             display: flex;
             border-bottom: 1px solid var(--border);
             margin-bottom: 24px;
+            gap: 4px;
         }
         
         .tab {
@@ -616,10 +997,15 @@
             background: none;
             border: none;
             border-bottom: 3px solid transparent;
-            color: var(--gray);
+            color: var(--text-secondary);
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
         }
         
         .tab.active {
@@ -635,49 +1021,234 @@
             display: block;
         }
         
-        /* Alerts */
-        .alert {
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        /* Profile Section */
+        .profile-section {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .profile-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .profile-avatar {
+            position: relative;
+        }
+        
+        .avatar-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--card-bg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 3px solid var(--card-bg);
+            transition: all var(--transition-fast);
+        }
+        
+        .avatar-upload:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+        
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            border: 4px solid var(--card-bg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .profile-info h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .profile-info p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .profile-stat {
+            text-align: center;
+        }
+        
+        .profile-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+            line-height: 1;
+        }
+        
+        .profile-stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
             gap: 12px;
         }
         
-        .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+            border-radius: 6px;
+            transition: all var(--transition-fast);
         }
         
-        .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-        
-        .alert-info {
-            background: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
+        .modal-close:hover {
+            color: var(--text-primary);
+            background: var(--gray-100);
         }
         
         /* Footer */
         .footer {
-            text-align: center;
             padding: 24px;
-            color: var(--gray);
-            font-size: 14px;
             border-top: 1px solid var(--border);
-            margin-top: 32px;
+            background: var(--card-bg);
+            margin-top: auto;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .footer-copyright {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color var(--transition-fast);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
         }
         
         /* Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s;
             }
             
             .sidebar.active {
@@ -688,8 +1259,8 @@
                 margin-left: 0;
             }
             
-            .search-box input {
-                width: 200px;
+            .menu-toggle {
+                display: block;
             }
         }
         
@@ -698,19 +1269,47 @@
                 grid-template-columns: 1fr;
             }
             
-            .header {
+            .top-bar {
+                padding: 0 16px;
+                height: 64px;
+            }
+            
+            .content-wrapper {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
                 flex-direction: column;
-                gap: 16px;
-                align-items: stretch;
+                text-align: center;
             }
-            
-            .header-actions {
-                flex-wrap: wrap;
-            }
-            
-            .search-box input {
-                width: 100%;
-            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-400);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-500);
         }
     </style>
 <script src="/shared-auth.js"></script>
@@ -753,7 +1352,9 @@
     id: "demo-user",
     name: "Demo User",
     email: (function(){ try { return localStorage.getItem("ES_EMAIL") || "demo@exposureshield.com"; } catch(e){ return "demo@exposureshield.com"; } })(),
-    plan: "demo"
+    role: "Administrator",
+    plan: "demo",
+    profilePhoto: null
   };
 
   // Return arrays so code using .slice() / .forEach() won't crash
@@ -805,1368 +1406,1760 @@
 </script>
 </head>
 <body>
-    <!-- Global Loading Overlay -->
+    <!-- Global Loading -->
     <div id="globalLoading">
         <div class="loading">
             <div class="spinner"></div>
-            <p>Loading...</p>
+            <p style="color: var(--text-primary); margin-top: 16px;">Initializing LegacyShield Platform...</p>
         </div>
     </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo">
-            <h1><i class="fas fa-shield-alt"></i> LegacyShield</h1>
-            <p>Enterprise Platform</p>
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>LegacyShield</h1>
+                    <p>Enterprise Platform</p>
+                </div>
+            </div>
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         
         <div class="nav-menu">
-            <a href="#" class="nav-item active" data-tab="dashboard">
-                <i class="fas fa-home"></i> Dashboard
-            </a>
-            <a href="#" class="nav-item" data-tab="clients">
-                <i class="fas fa-users"></i> Clients
-                <span class="nav-badge" id="clientCount">--</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="plans">
-                <i class="fas fa-file-contract"></i> Legacy Plans
-                <span class="nav-badge" id="planCount">--</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="invoices">
-                <i class="fas fa-receipt"></i> Invoices
-                <span class="nav-badge" id="invoiceCount">--</span>
-            </a>
-            <a href="#" class="nav-item" data-tab="documents">
-                <i class="fas fa-folder"></i> Documents
-            </a>
-            <a href="#" class="nav-item" data-tab="audit">
-                <i class="fas fa-clipboard-list"></i> Audit Trail
-            </a>
-            <a href="#" class="nav-item" data-tab="reports">
-                <i class="fas fa-chart-bar"></i> Reports
-            </a>
-            <a href="#" class="nav-item" data-tab="settings">
-                <i class="fas fa-cog"></i> Settings
-            </a>
+            <div class="nav-section">
+                <div class="nav-section-label">Main</div>
+                <a href="#" class="nav-item active" data-tab="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="assets">
+                    <i class="fas fa-database"></i>
+                    <span>Digital Assets</span>
+                    <span class="nav-badge" id="assetCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="beneficiaries">
+                    <i class="fas fa-users"></i>
+                    <span>Beneficiaries</span>
+                    <span class="nav-badge" id="beneficiaryCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="documents">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Documents</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-label">Management</div>
+                <a href="#" class="nav-item" data-tab="clients">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Clients</span>
+                    <span class="nav-badge" id="clientCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="invoices">
+                    <i class="fas fa-receipt"></i>
+                    <span>Invoices</span>
+                    <span class="nav-badge" id="invoiceCount">0</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="reports">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-label">System</div>
+                <a href="#" class="nav-item" data-tab="audit">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Audit Trail</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="profile">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Profile Settings</span>
+                </a>
+                <a href="#" class="nav-item" data-tab="admin">
+                    <i class="fas fa-cog"></i>
+                    <span>Administration</span>
+                </a>
+            </div>
         </div>
         
         <div class="sidebar-footer">
-            <div class="user-profile">
-                <div class="user-avatar">
+            <div class="user-profile" onclick="openTab('profile')">
+                <div class="user-avatar" id="sidebarAvatar">
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="user-info">
-                    <h4 id="userName">Loading...</h4>
-                    <p id="userRole">Administrator</p>
+                    <h4 id="sidebarUserName">Loading...</h4>
+                    <p id="sidebarUserRole">Administrator</p>
                 </div>
+                <button class="user-dropdown-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- Header -->
-        <div class="header">
-            <div class="page-title">
-                <h2 id="pageTitle">Dashboard</h2>
-                <p id="pageSubtitle">Welcome to LegacyShield Enterprise Platform</p>
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <button class="menu-toggle" onclick="toggleSidebar()" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="breadcrumb" id="breadcrumb">
+                <a href="#" onclick="openTab('dashboard')">Dashboard</a>
+                <span class="separator">/</span>
+                <span class="current">Overview</span>
             </div>
             
-            <div class="header-actions">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search clients, plans, invoices..." id="globalSearch">
+            <div class="top-actions">
+                <div class="search-box" style="position: relative;">
+                    <input type="text" 
+                           class="form-control" 
+                           style="padding-left: 40px; width: 300px;" 
+                           placeholder="Search assets, clients, documents..."
+                           id="globalSearch">
+                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
                 </div>
                 
-                <div class="notification-bell" onclick="toggleNotifications()">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="notification-btn" onclick="showNotifications()">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge" id="notificationCount">3</span>
-                </div>
+                </button>
                 
-                <button class="btn btn-primary" onclick="openCreateModal('client')">
-                    <i class="fas fa-plus"></i> New Client
+                <button class="btn btn-primary" onclick="showQuickActionModal()">
+                    <i class="fas fa-plus"></i>
+                    <span>New Asset</span>
                 </button>
             </div>
         </div>
 
-        <!-- Dashboard Tab -->
-        <div id="dashboard" class="tab-content active">
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon blue">
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="page-header">
+                    <h1 class="page-title">Digital Legacy Protection Dashboard</h1>
+                    <p class="page-subtitle">Welcome to your professional digital legacy management platform</p>
+                </div>
+                
+                <!-- Protection Status -->
+                <div class="alert alert-success" style="margin-bottom: 32px;">
+                    <div class="alert-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Protection Active</div>
+                        <div class="alert-description">
+                            Your LegacyShield protection is active and monitoring your digital legacy. 
+                            <a href="#" onclick="openTab('profile')" style="color: inherit; text-decoration: underline;">View protection details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <span class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                +12%
+                            </span>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalAssets">0</div>
+                            <div class="stat-label">Protected Digital Assets</div>
+                            <div class="stat-description">Securely documented and organized</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <span class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                +8%
+                            </span>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalBeneficiaries">0</div>
+                            <div class="stat-label">Beneficiaries Designated</div>
+                            <div class="stat-description">Individuals designated to receive assets</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <span class="stat-trend trend-neutral">
+                                <i class="fas fa-minus"></i>
+                                0%
+                            </span>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="totalDocuments">0</div>
+                            <div class="stat-label">Legal Documents</div>
+                            <div class="stat-description">Wills, trusts, and instructions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <span class="stat-trend trend-up">
+                                <i class="fas fa-arrow-up"></i>
+                                +15%
+                            </span>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="auditEntries">0</div>
+                            <div class="stat-label">Audit Entries</div>
+                            <div class="stat-description">Complete change history and tracking</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Grid -->
+                <div class="main-grid">
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-history"></i>
+                                Recent Activity
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-sm btn-secondary" onclick="refreshActivity()">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <ul class="activity-feed" id="activityFeed">
+                                <!-- Activity items will be loaded here -->
+                            </ul>
+                            <div class="empty-state" id="noActivity" style="display: none;">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <h3 class="empty-state-title">No Recent Activity</h3>
+                                <p class="empty-state-description">Your activity will appear here as you manage your digital legacy.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <i class="fas fa-bolt"></i>
+                                Quick Actions
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <button class="btn btn-secondary" onclick="openTab('assets')">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Add Digital Asset</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="openTab('beneficiaries')">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>Add Beneficiary</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="openTab('documents')">
+                                    <i class="fas fa-file-upload"></i>
+                                    <span>Upload Document</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="generateAuditReport()">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>Generate Report</span>
+                                </button>
+                            </div>
+                            
+                            <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border);">
+                                <h4 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px;">Next Steps</h4>
+                                <ul style="list-style: none; padding: 0;">
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-secondary);">
+                                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                        <span>Review your protection status</span>
+                                    </li>
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-secondary);">
+                                        <i class="fas fa-circle" style="color: var(--primary);"></i>
+                                        <span>Document important digital assets</span>
+                                    </li>
+                                    <li style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--text-secondary);">
+                                        <i class="fas fa-circle" style="color: var(--primary);"></i>
+                                        <span>Designate beneficiaries</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Assets -->
+                <div class="card" style="margin-top: 32px;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-database"></i>
+                            Recently Added Assets
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-sm btn-primary" onclick="openTab('assets')">
+                                View All
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-container">
+                            <table class="data-table" id="recentAssetsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Category</th>
+                                        <th>Value</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Assets will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="noAssets" style="display: none;">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h3 class="empty-state-title">No Digital Assets Added</h3>
+                            <p class="empty-state-description">
+                                Start by documenting your most important digital assets. This could include accounts, files, cryptocurrencies, or other digital property.
+                            </p>
+                            <button class="btn btn-primary" onclick="openTab('assets')">
+                                <i class="fas fa-plus"></i>
+                                Add Your First Asset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assets Tab -->
+            <div id="assets" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Digital Assets</h1>
+                    <p class="page-subtitle">Document and manage your digital legacy assets</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-database"></i>
+                            Digital Asset Inventory
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="showAddAssetModal()">
+                                <i class="fas fa-plus"></i>
+                                Add Asset
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-container">
+                            <table class="data-table" id="assetsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Asset Name</th>
+                                        <th>Type</th>
+                                        <th>Category</th>
+                                        <th>Value</th>
+                                        <th>Beneficiaries</th>
+                                        <th>Status</th>
+                                        <th>Last Updated</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Assets will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="noAssetsList">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <h3 class="empty-state-title">No Digital Assets Documented</h3>
+                            <p class="empty-state-description">
+                                Document your digital assets to ensure they are properly managed and transferred according to your wishes. 
+                                This could include online accounts, digital files, cryptocurrencies, intellectual property, and more.
+                            </p>
+                            <button class="btn btn-primary" onclick="showAddAssetModal()">
+                                <i class="fas fa-plus"></i>
+                                Document Your First Asset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Beneficiaries Tab -->
+            <div id="beneficiaries" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Beneficiaries</h1>
+                    <p class="page-subtitle">Designate individuals to receive your digital assets</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">
                             <i class="fas fa-users"></i>
+                            Beneficiary Management
                         </div>
-                        <span class="stat-trend trend-up">+12%</span>
-                    </div>
-                    <div class="stat-value" id="totalClients">--</div>
-                    <div class="stat-label">Total Clients</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon green">
-                            <i class="fas fa-file-contract"></i>
-                        </div>
-                        <span class="stat-trend trend-up">+8%</span>
-                    </div>
-                    <div class="stat-value" id="activePlans">--</div>
-                    <div class="stat-label">Active Plans</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon purple">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <span class="stat-trend trend-up">+15%</span>
-                    </div>
-                    <div class="stat-value" id="monthlyRevenue">--</div>
-                    <div class="stat-label">Monthly Revenue</div>
-                </div>
-                
-                <div class="stat-card">
-                    <div class="stat-header">
-                        <div class="stat-icon orange">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <span class="stat-trend trend-down">-2%</span>
-                    </div>
-                    <div class="stat-value" id="pendingTasks">--</div>
-                    <div class="stat-label">Pending Tasks</div>
-                </div>
-            </div>
-
-            <!-- Main Grid -->
-            <div class="main-grid">
-                <!-- Recent Activity -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fas fa-history"></i>
-                            Recent Activity
-                        </div>
-                        <button class="btn btn-sm btn-secondary" onclick="refreshActivity()">
-                            <i class="fas fa-sync"></i> Refresh
-                        </button>
-                    </div>
-                    <div class="card-content">
-                        <ul class="activity-feed" id="activityFeed">
-                            <!-- Activity items will be loaded here -->
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <i class="fas fa-bolt"></i>
-                            Quick Actions
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="showAddBeneficiaryModal()">
+                                <i class="fas fa-user-plus"></i>
+                                Add Beneficiary
+                            </button>
                         </div>
                     </div>
                     <div class="card-content">
-                        <div class="btn-group" style="flex-direction: column;">
-                            <button class="btn btn-secondary" onclick="openCreateModal('plan')">
-                                <i class="fas fa-plus-circle"></i> Create Legacy Plan
-                            </button>
-                            <button class="btn btn-secondary" onclick="openCreateModal('invoice')">
-                                <i class="fas fa-file-invoice-dollar"></i> Generate Invoice
-                            </button>
-                            <button class="btn btn-secondary" onclick="runAuditReport()">
-                                <i class="fas fa-shield-alt"></i> Security Audit
-                            </button>
-                            <button class="btn btn-secondary" onclick="exportDashboardData()">
-                                <i class="fas fa-download"></i> Export Data
+                        <div class="table-container">
+                            <table class="data-table" id="beneficiariesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Relationship</th>
+                                        <th>Contact</th>
+                                        <th>Assets Assigned</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Beneficiaries will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="empty-state" id="noBeneficiaries">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="empty-state-title">No Beneficiaries Designated</h3>
+                            <p class="empty-state-description">
+                                Designate individuals who will receive your digital assets. Each beneficiary can be assigned specific assets and access instructions.
+                            </p>
+                            <button class="btn btn-primary" onclick="showAddBeneficiaryModal()">
+                                <i class="fas fa-user-plus"></i>
+                                Add Your First Beneficiary
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Plans -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-file-contract"></i>
-                        Recent Legacy Plans
-                    </div>
-                    <button class="btn btn-sm btn-primary" onclick="openTab('plans')">
-                        View All <i class="fas fa-arrow-right"></i>
-                    </button>
+            
+            <!-- Profile Settings Tab -->
+            <div id="profile" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Profile Settings</h1>
+                    <p class="page-subtitle">Manage your account profile and preferences</p>
                 </div>
-                <div class="card-content">
-                    <div class="table-responsive">
-                        <table class="data-table" id="recentPlansTable">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Plan Type</th>
-                                    <th>Status</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Plans will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Clients Tab -->
-        <div id="clients" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-users"></i>
-                        Client Management
-                    </div>
-                    <button class="btn btn-primary" onclick="openCreateModal('client')">
-                        <i class="fas fa-plus"></i> Add Client
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="table-responsive">
-                        <table class="data-table" id="clientsTable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Status</th>
-                                    <th>Plans</th>
-                                    <th>Last Active</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Clients will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Plans Tab -->
-        <div id="plans" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-file-contract"></i>
-                        Legacy Plans
-                    </div>
-                    <button class="btn btn-primary" onclick="openCreateModal('plan')">
-                        <i class="fas fa-plus"></i> Create Plan
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="table-responsive">
-                        <table class="data-table" id="plansTable">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Plan Name</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Value</th>
-                                    <th>Beneficiaries</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Plans will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Invoices Tab -->
-        <div id="invoices" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-receipt"></i>
-                        Invoice Management
-                    </div>
-                    <button class="btn btn-primary" onclick="openCreateModal('invoice')">
-                        <i class="fas fa-plus"></i> Create Invoice
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="tabs">
-                        <button class="tab active" data-invoice-tab="all">All Invoices</button>
-                        <button class="tab" data-invoice-tab="pending">Pending</button>
-                        <button class="tab" data-invoice-tab="paid">Paid</button>
-                        <button class="tab" data-invoice-tab="overdue">Overdue</button>
+                
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <div class="avatar-placeholder" id="avatarPlaceholder">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                            <div class="avatar-upload" onclick="document.getElementById('avatarUpload').click()">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <img src="" alt="" class="avatar-image" id="avatarImage" style="display: none;">
+                        </div>
+                        
+                        <div class="profile-info">
+                            <h2 id="profileUserName">Loading...</h2>
+                            <p id="profileUserEmail">Loading...</p>
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <span class="profile-stat-value" id="profileAssetCount">0</span>
+                                    <span class="profile-stat-label">Assets</span>
+                                </div>
+                                <div class="profile-stat">
+                                    <span class="profile-stat-value" id="profileBeneficiaryCount">0</span>
+                                    <span class="profile-stat-label">Beneficiaries</span>
+                                </div>
+                                <div class="profile-stat">
+                                    <span class="profile-stat-value" id="profileDocumentCount">0</span>
+                                    <span class="profile-stat-label">Documents</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="table-responsive">
-                        <table class="data-table" id="invoicesTable">
-                            <thead>
-                                <tr>
-                                    <th>Invoice #</th>
-                                    <th>Client</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Due Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Invoices will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <form id="profileForm" onsubmit="updateProfile(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="profileName" required>
+                                <div class="form-hint">Your full name as it should appear on legal documents</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" class="form-control" id="profileEmail" required disabled>
+                                <div class="form-hint">Contact your administrator to change your email address</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="profilePhone">
+                                <div class="form-hint">Optional contact number</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Preferred Language</label>
+                                <select class="form-control" id="profileLanguage">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="zh">Chinese</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Profile Photo</label>
+                            <div class="alert alert-info">
+                                <div class="alert-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">Profile Photo Information</div>
+                                    <div class="alert-description">
+                                        Profile photos are stored securely and used only for account identification within the platform. 
+                                        They are not used for biometric identification or shared with third parties.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Notification Preferences</label>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyEmail" checked>
+                                    <span>Email notifications</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyImportant" checked>
+                                    <span>Important updates only</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="notifyWeekly">
+                                    <span>Weekly summary reports</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Changes
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="resetProfileForm()">
+                                <i class="fas fa-undo"></i>
+                                Reset
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </div>
-
-        <!-- Documents Tab -->
-        <div id="documents" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-folder"></i>
-                        Document Vault
+                
+                <!-- Security Section -->
+                <div class="card" style="margin-top: 32px;">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Security Settings
+                        </div>
                     </div>
-                    <button class="btn btn-primary" onclick="uploadDocument()">
-                        <i class="fas fa-upload"></i> Upload Document
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="table-responsive">
-                        <table class="data-table" id="documentsTable">
-                            <thead>
-                                <tr>
-                                    <th>Document Name</th>
-                                    <th>Type</th>
-                                    <th>Client</th>
-                                    <th>Uploaded</th>
-                                    <th>Size</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Documents will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Audit Tab -->
-        <div id="audit" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-clipboard-list"></i>
-                        Audit Trail
-                    </div>
-                    <button class="btn btn-secondary" onclick="exportAuditLog()">
-                        <i class="fas fa-download"></i> Export Log
-                    </button>
-                </div>
-                <div class="card-content">
-                    <div class="table-responsive">
-                        <table class="data-table" id="auditTable">
-                            <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                    <th>IP Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Audit logs will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Reports Tab -->
-        <div id="reports" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-chart-bar"></i>
-                        Reports & Analytics
-                    </div>
-                </div>
-                <div class="card-content">
-                    <div class="btn-group">
-                        <button class="btn btn-secondary" onclick="generateReport('revenue')">
-                            <i class="fas fa-chart-line"></i> Revenue Report
-                        </button>
-                        <button class="btn btn-secondary" onclick="generateReport('clients')">
-                            <i class="fas fa-users"></i> Client Growth
-                        </button>
-                        <button class="btn btn-secondary" onclick="generateReport('plans')">
-                            <i class="fas fa-file-contract"></i> Plan Analysis
-                        </button>
-                        <button class="btn btn-secondary" onclick="generateReport('audit')">
-                            <i class="fas fa-shield-alt"></i> Security Report
+                    <div class="card-content">
+                        <div class="form-group">
+                            <label class="form-label">Two-Factor Authentication</label>
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; background: var(--gray-50); border-radius: 12px; border: 1px solid var(--border);">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Enhanced Security</div>
+                                    <div style="color: var(--text-secondary); font-size: 14px;">Add an extra layer of security to your account</div>
+                                </div>
+                                <button class="btn btn-outline" onclick="enableTwoFactorAuth()">
+                                    <i class="fas fa-lock"></i>
+                                    Enable 2FA
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Active Sessions</label>
+                            <div id="activeSessions" style="margin-top: 8px;">
+                                <!-- Sessions will be listed here -->
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-danger" onclick="showLogoutAllModal()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Log Out From All Devices
                         </button>
                     </div>
-                    
-                    <div id="reportContainer" style="margin-top: 24px;">
-                        <!-- Reports will be displayed here -->
-                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Settings Tab -->
-        <div id="settings" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">
-                        <i class="fas fa-cog"></i>
-                        System Settings
-                    </div>
+            
+            <!-- Other tabs (simplified for brevity) -->
+            <div id="clients" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Client Management</h1>
+                    <p class="page-subtitle">Manage client accounts and permissions</p>
                 </div>
-                <div class="card-content">
-                    <div class="form-group">
-                        <label class="form-label">Company Name</label>
-                        <input type="text" class="form-control" id="companyName" value="LegacyShield Inc.">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Default Currency</label>
-                        <select class="form-control" id="defaultCurrency">
-                            <option value="USD">USD ($)</option>
-                            <option value="EUR">EUR (â‚¬)</option>
-                            <option value="GBP">GBP (Â£)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="form-label">Invoice Terms (days)</label>
-                        <input type="number" class="form-control" id="invoiceTerms" value="30">
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="saveSettings()">
-                        <i class="fas fa-save"></i> Save Settings
-                    </button>
+                <!-- Client management content -->
+            </div>
+            
+            <div id="invoices" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Invoice Management</h1>
+                    <p class="page-subtitle">View and manage subscription invoices</p>
                 </div>
+                <!-- Invoice management content -->
+            </div>
+            
+            <div id="admin" class="tab-content">
+                <div class="page-header">
+                    <h1 class="page-title">Administration</h1>
+                    <p class="page-subtitle">System configuration and user management</p>
+                </div>
+                <!-- Administration content -->
             </div>
         </div>
-
+        
         <!-- Footer -->
         <div class="footer">
-            <p>Â© 2024 LegacyShield Enterprise Platform. All rights reserved. | v3.2.1</p>
-            <p>System Status: <span class="status-badge status-active">Operational</span></p>
+            <div class="footer-content">
+                <div class="footer-copyright">
+                    © 2024 LegacyShield Enterprise Platform. All rights reserved. | v3.2.1
+                    <div style="margin-top: 8px; font-size: 13px; color: var(--text-secondary);">
+                        System Status: <span class="status-badge status-active" style="margin-left: 8px;">Operational</span>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="#" onclick="openTab('profile')">Privacy & Security</a>
+                    <a href="#" onclick="showTermsModal()">Terms of Service</a>
+                    <a href="#" onclick="showSupportModal()">Support</a>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Modals -->
-    <div id="createModal" class="modal">
+    <div id="addAssetModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Create New</h3>
-                <button class="close-modal" onclick="closeModal('createModal')">&times;</button>
+                <h3 class="modal-title">Add Digital Asset</h3>
+                <button class="modal-close" onclick="closeModal('addAssetModal')">&times;</button>
             </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Modal content will be loaded here -->
+            <div class="modal-body">
+                <form id="assetForm" onsubmit="saveAsset(event)">
+                    <div class="form-group">
+                        <label class="form-label">Asset Name *</label>
+                        <input type="text" class="form-control" id="assetName" required placeholder="e.g., Bitcoin Wallet, Google Account, GitHub Repository">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Asset Type *</label>
+                            <select class="form-control" id="assetType" required>
+                                <option value="">Select Type</option>
+                                <option value="crypto">Cryptocurrency</option>
+                                <option value="account">Online Account</option>
+                                <option value="file">Digital File</option>
+                                <option value="domain">Domain Name</option>
+                                <option value="ip">Intellectual Property</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Category *</label>
+                            <select class="form-control" id="assetCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="financial">Financial</option>
+                                <option value="social">Social Media</option>
+                                <option value="storage">Cloud Storage</option>
+                                <option value="business">Business</option>
+                                <option value="personal">Personal</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Estimated Value</label>
+                        <div style="display: flex; gap: 12px;">
+                            <select class="form-control" id="assetCurrency" style="width: 120px;">
+                                <option value="USD">USD ($)</option>
+                                <option value="EUR">EUR (€)</option>
+                                <option value="GBP">GBP (£)</option>
+                                <option value="BTC">BTC</option>
+                                <option value="ETH">ETH</option>
+                            </select>
+                            <input type="number" class="form-control" id="assetValue" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Access Information</label>
+                        <textarea class="form-control" id="assetAccess" rows="3" placeholder="How to access this asset (keep sensitive information secure)"></textarea>
+                        <div class="form-hint">Note: Sensitive access information is encrypted and stored securely</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Beneficiaries</label>
+                        <select class="form-control" id="assetBeneficiaries" multiple style="height: 120px;">
+                            <!-- Beneficiaries will be populated dynamically -->
+                        </select>
+                        <div class="form-hint">Hold Ctrl/Cmd to select multiple beneficiaries</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Instructions for Beneficiaries</label>
+                        <textarea class="form-control" id="assetInstructions" rows="4" placeholder="Specific instructions for beneficiaries regarding this asset"></textarea>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
-                <button class="btn btn-primary" id="modalSubmitBtn">Create</button>
+                <button class="btn btn-secondary" onclick="closeModal('addAssetModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="document.getElementById('assetForm').requestSubmit()">
+                    <i class="fas fa-save"></i>
+                    Save Asset
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Action Modal -->
+    <div id="quickActionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Actions</h3>
+                <button class="modal-close" onclick="closeModal('quickActionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <button class="btn btn-secondary" style="flex-direction: column; height: 100px; padding: 20px;" onclick="showAddAssetModal()">
+                        <i class="fas fa-database" style="font-size: 24px; margin-bottom: 12px;"></i>
+                        <span>Add Digital Asset</span>
+                    </button>
+                    <button class="btn btn-secondary" style="flex-direction: column; height: 100px; padding: 20px;" onclick="showAddBeneficiaryModal()">
+                        <i class="fas fa-user-plus" style="font-size: 24px; margin-bottom: 12px;"></i>
+                        <span>Add Beneficiary</span>
+                    </button>
+                    <button class="btn btn-secondary" style="flex-direction: column; height: 100px; padding: 20px;" onclick="openTab('documents')">
+                        <i class="fas fa-file-upload" style="font-size: 24px; margin-bottom: 12px;"></i>
+                        <span>Upload Document</span>
+                    </button>
+                    <button class="btn btn-secondary" style="flex-direction: column; height: 100px; padding: 20px;" onclick="generateAuditReport()">
+                        <i class="fas fa-file-pdf" style="font-size: 24px; margin-bottom: 12px;"></i>
+                        <span>Generate Report</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
     // ============================================
-    // ENTERPRISE API INTEGRATION
+    // LEGACYSHIELD ENTERPRISE PLATFORM
     // ============================================
-
-    // API Configuration
-    const API_BASE = '/api';
-    let currentUser = null;
-
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('ðŸš€ LegacyShield Enterprise Platform Initializing...');
-        
-        // Initialize dashboard
-        initializeDashboard();
-        
-        // Set up event listeners
-        setupEventListeners();
-        
-        // Load initial data
-        loadDashboardData();
-        
-        // Log initial activity
-        logActivity('Dashboard accessed', 'login');
-    });
-
-    // Fixed Loading Function
-    function showLoading(show) {
-        const loadingEl = document.getElementById('globalLoading');
-        if (loadingEl) {
-            loadingEl.style.display = show ? 'flex' : 'none';
+    
+    class LegacyShieldPlatform {
+        constructor() {
+            this.API_BASE = '/api';
+            this.currentUser = null;
+            this.userProfile = {
+                name: '',
+                email: '',
+                phone: '',
+                language: 'en',
+                profilePhoto: null,
+                notifications: {
+                    email: true,
+                    important: true,
+                    weekly: false
+                }
+            };
+            this.assets = [];
+            this.beneficiaries = [];
+            this.activity = [];
+            this.settings = {
+                theme: localStorage.getItem('theme') || 'light'
+            };
         }
-    }
-
-    // API Functions
-    async function apiRequest(endpoint, method = 'GET', data = null) {
-        const url = `${API_BASE}${endpoint}`;
-        const headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        };
-
-        const options = {
-            method: method,
-            headers: headers,
-            credentials: 'include' // Important for cookies
-        };
-
-        if (data && (method === 'POST' || method === 'PUT')) {
-            options.body = JSON.stringify(data);
-        }
-
-        try {
-            showLoading(true);
-            const response = await fetch(url, options);
+        
+        async initialize() {
+            console.log('🚀 LegacyShield Enterprise Platform Initializing...');
             
-            // Handle 401 Unauthorized
-            if (response.status === 401) {
-                showAlert('error', 'Session expired. Please log in again.');
-                setTimeout(() => {
-                    window.location.href = '/login.html';
-                }, 2000);
+            // Apply theme
+            this.applyTheme();
+            
+            // Initialize UI
+            this.setupEventListeners();
+            this.setupGlobalHandlers();
+            
+            // Load user data
+            await this.loadUserProfile();
+            
+            // Load initial data
+            await this.loadDashboardData();
+            
+            // Update UI
+            this.updateNavigation();
+            this.updateBreadcrumb('dashboard');
+            
+            // Hide loading screen
+            setTimeout(() => {
+                this.hideLoading();
+            }, 500);
+            
+            // Log activity
+            this.logActivity('Dashboard accessed', 'login');
+        }
+        
+        async loadUserProfile() {
+            try {
+                const response = await this.apiRequest('/user/profile');
+                if (response && response.ok) {
+                    this.currentUser = response.user;
+                    this.userProfile = {
+                        ...this.userProfile,
+                        ...response.user
+                    };
+                    
+                    // Update UI
+                    document.getElementById('sidebarUserName').textContent = this.currentUser.name || 'Administrator';
+                    document.getElementById('sidebarUserRole').textContent = this.currentUser.role || 'Administrator';
+                    document.getElementById('profileUserName').textContent = this.currentUser.name || 'Administrator';
+                    document.getElementById('profileUserEmail').textContent = this.currentUser.email || '';
+                    
+                    // Update avatar
+                    this.updateAvatar(this.currentUser.profilePhoto);
+                    
+                    // Update form values
+                    document.getElementById('profileName').value = this.currentUser.name || '';
+                    document.getElementById('profileEmail').value = this.currentUser.email || '';
+                    document.getElementById('profilePhone').value = this.currentUser.phone || '';
+                    
+                    if (this.currentUser.language) {
+                        document.getElementById('profileLanguage').value = this.currentUser.language;
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to load user profile:', error);
+            }
+        }
+        
+        async loadDashboardData() {
+            try {
+                // Load assets
+                const assetsResponse = await this.apiRequest('/assets');
+                if (assetsResponse && assetsResponse.ok) {
+                    this.assets = assetsResponse.data || [];
+                    this.updateAssetStats();
+                    this.renderRecentAssets();
+                    this.renderAssetsTable();
+                }
+                
+                // Load beneficiaries
+                const beneficiariesResponse = await this.apiRequest('/beneficiaries');
+                if (beneficiariesResponse && beneficiariesResponse.ok) {
+                    this.beneficiaries = beneficiariesResponse.data || [];
+                    this.updateBeneficiaryStats();
+                    this.renderBeneficiariesTable();
+                }
+                
+                // Load activity
+                const activityResponse = await this.apiRequest('/activity/recent');
+                if (activityResponse && activityResponse.ok) {
+                    this.activity = activityResponse.data || [];
+                    this.renderActivityFeed();
+                }
+                
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                this.showAlert('error', 'Failed to load dashboard data. Please try again.');
+            }
+        }
+        
+        updateAssetStats() {
+            const totalAssets = this.assets.length;
+            const totalValue = this.assets.reduce((sum, asset) => sum + (parseFloat(asset.value) || 0), 0);
+            
+            document.getElementById('totalAssets').textContent = totalAssets;
+            document.getElementById('assetCount').textContent = totalAssets;
+            document.getElementById('profileAssetCount').textContent = totalAssets;
+            
+            // Show/hide empty states
+            const noAssets = document.getElementById('noAssets');
+            const noAssetsList = document.getElementById('noAssetsList');
+            const assetsTable = document.querySelector('#assetsTable tbody');
+            
+            if (totalAssets === 0) {
+                if (noAssets) noAssets.style.display = 'block';
+                if (noAssetsList) noAssetsList.style.display = 'block';
+                if (assetsTable) assetsTable.style.display = 'none';
+            } else {
+                if (noAssets) noAssets.style.display = 'none';
+                if (noAssetsList) noAssetsList.style.display = 'none';
+                if (assetsTable) assetsTable.style.display = '';
+            }
+        }
+        
+        updateBeneficiaryStats() {
+            const totalBeneficiaries = this.beneficiaries.length;
+            
+            document.getElementById('totalBeneficiaries').textContent = totalBeneficiaries;
+            document.getElementById('beneficiaryCount').textContent = totalBeneficiaries;
+            document.getElementById('profileBeneficiaryCount').textContent = totalBeneficiaries;
+            
+            // Show/hide empty state
+            const noBeneficiaries = document.getElementById('noBeneficiaries');
+            const beneficiariesTable = document.querySelector('#beneficiariesTable tbody');
+            
+            if (totalBeneficiaries === 0) {
+                if (noBeneficiaries) noBeneficiaries.style.display = 'block';
+                if (beneficiariesTable) beneficiariesTable.style.display = 'none';
+            } else {
+                if (noBeneficiaries) noBeneficiaries.style.display = 'none';
+                if (beneficiariesTable) beneficiariesTable.style.display = '';
+            }
+        }
+        
+        renderRecentAssets() {
+            const tbody = document.querySelector('#recentAssetsTable tbody');
+            if (!tbody) return;
+            
+            const recentAssets = this.assets.slice(0, 5);
+            
+            if (recentAssets.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            No assets added yet
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            recentAssets.forEach(asset => {
+                html += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">${asset.name}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${asset.description || ''}</div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-active" style="background: var(--gray-100); color: var(--gray-600);">
+                                ${asset.type}
+                            </span>
+                        </td>
+                        <td>${asset.category}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                ${asset.currency || 'USD'} ${this.formatNumber(asset.value || 0)}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${asset.status === 'active' ? 'status-active' : 'status-pending'}">
+                                ${asset.status || 'active'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="legacyShield.viewAsset('${asset.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary" onclick="legacyShield.editAsset('${asset.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        renderAssetsTable() {
+            const tbody = document.querySelector('#assetsTable tbody');
+            if (!tbody) return;
+            
+            if (this.assets.length === 0) {
+                return; // Empty state handled elsewhere
+            }
+            
+            let html = '';
+            this.assets.forEach(asset => {
+                html += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">${asset.name}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${asset.description || ''}</div>
+                        </td>
+                        <td>${asset.type}</td>
+                        <td>${asset.category}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">
+                                ${asset.currency || 'USD'} ${this.formatNumber(asset.value || 0)}
+                            </div>
+                        </td>
+                        <td>${asset.beneficiaries ? asset.beneficiaries.length : 0}</td>
+                        <td>
+                            <span class="status-badge ${asset.status === 'active' ? 'status-active' : 'status-pending'}">
+                                ${asset.status || 'active'}
+                            </span>
+                        </td>
+                        <td>${this.formatDate(asset.updatedAt)}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-sm btn-secondary" onclick="legacyShield.viewAsset('${asset.id}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="legacyShield.editAsset('${asset.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="legacyShield.deleteAsset('${asset.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        renderBeneficiariesTable() {
+            const tbody = document.querySelector('#beneficiariesTable tbody');
+            if (!tbody) return;
+            
+            if (this.beneficiaries.length === 0) {
+                return; // Empty state handled elsewhere
+            }
+            
+            let html = '';
+            this.beneficiaries.forEach(beneficiary => {
+                html += `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--text-primary);">${beneficiary.name}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${beneficiary.relationship || ''}</div>
+                        </td>
+                        <td>${beneficiary.relationship || 'Not specified'}</td>
+                        <td>
+                            <div style="color: var(--text-primary);">${beneficiary.email || ''}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">${beneficiary.phone || ''}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--primary);">
+                                ${beneficiary.assetCount || 0}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${beneficiary.status === 'active' ? 'status-active' : 'status-pending'}">
+                                ${beneficiary.status || 'active'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-sm btn-secondary" onclick="legacyShield.viewBeneficiary('${beneficiary.id}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="legacyShield.editBeneficiary('${beneficiary.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+        
+        renderActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            const noActivity = document.getElementById('noActivity');
+            
+            if (!feed || !noActivity) return;
+            
+            if (this.activity.length === 0) {
+                feed.style.display = 'none';
+                noActivity.style.display = 'block';
+                return;
+            }
+            
+            feed.style.display = 'block';
+            noActivity.style.display = 'none';
+            
+            let html = '';
+            this.activity.slice(0, 10).forEach(activity => {
+                html += `
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-${this.getActivityIcon(activity.type)}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-message">
+                                ${activity.message}
+                            </div>
+                            <div class="activity-meta">
+                                <span class="activity-time">
+                                    <i class="far fa-clock"></i>
+                                    ${this.formatTime(activity.timestamp)}
+                                </span>
+                                <span>•</span>
+                                <span>${activity.user || 'System'}</span>
+                            </div>
+                        </div>
+                    </li>
+                `;
+            });
+            
+            feed.innerHTML = html;
+        }
+        
+        async saveAsset(event) {
+            event.preventDefault();
+            
+            const assetData = {
+                name: document.getElementById('assetName').value,
+                type: document.getElementById('assetType').value,
+                category: document.getElementById('assetCategory').value,
+                currency: document.getElementById('assetCurrency').value,
+                value: document.getElementById('assetValue').value,
+                access: document.getElementById('assetAccess').value,
+                instructions: document.getElementById('assetInstructions').value
+            };
+            
+            if (!assetData.name || !assetData.type || !assetData.category) {
+                this.showAlert('error', 'Please fill in all required fields');
+                return;
+            }
+            
+            try {
+                const response = await this.apiRequest('/assets', 'POST', assetData);
+                if (response && response.ok) {
+                    this.showAlert('success', 'Asset saved successfully');
+                    this.closeModal('addAssetModal');
+                    await this.loadDashboardData();
+                    this.logActivity(`Added asset: ${assetData.name}`, 'create');
+                }
+            } catch (error) {
+                this.showAlert('error', 'Failed to save asset');
+            }
+        }
+        
+        async updateProfile(event) {
+            event.preventDefault();
+            
+            const profileData = {
+                name: document.getElementById('profileName').value,
+                phone: document.getElementById('profilePhone').value,
+                language: document.getElementById('profileLanguage').value,
+                notifications: {
+                    email: document.getElementById('notifyEmail').checked,
+                    important: document.getElementById('notifyImportant').checked,
+                    weekly: document.getElementById('notifyWeekly').checked
+                }
+            };
+            
+            try {
+                const response = await this.apiRequest('/user/profile', 'PUT', profileData);
+                if (response && response.ok) {
+                    this.showAlert('success', 'Profile updated successfully');
+                    await this.loadUserProfile();
+                    this.logActivity('Updated profile information', 'update');
+                }
+            } catch (error) {
+                this.showAlert('error', 'Failed to update profile');
+            }
+        }
+        
+        async handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file
+            if (!file.type.startsWith('image/')) {
+                this.showAlert('error', 'Please select an image file');
+                return;
+            }
+            
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                this.showAlert('error', 'Image size must be less than 5MB');
+                return;
+            }
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const imageData = e.target.result;
+                
+                // Update preview
+                this.updateAvatar(imageData);
+                
+                // Upload to server
+                try {
+                    const response = await this.apiRequest('/user/profile/photo', 'POST', {
+                        photo: imageData
+                    });
+                    
+                    if (response && response.ok) {
+                        this.showAlert('success', 'Profile photo updated successfully');
+                        this.logActivity('Updated profile photo', 'update');
+                    }
+                } catch (error) {
+                    this.showAlert('error', 'Failed to upload profile photo');
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        updateAvatar(imageData) {
+            const avatarPlaceholder = document.getElementById('avatarPlaceholder');
+            const avatarImage = document.getElementById('avatarImage');
+            const sidebarAvatar = document.getElementById('sidebarAvatar');
+            
+            if (imageData) {
+                avatarPlaceholder.style.display = 'none';
+                avatarImage.src = imageData;
+                avatarImage.style.display = 'block';
+                
+                // Update sidebar avatar
+                sidebarAvatar.innerHTML = `<img src="${imageData}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">`;
+            } else {
+                avatarPlaceholder.style.display = 'flex';
+                avatarImage.style.display = 'none';
+                sidebarAvatar.innerHTML = `<i class="fas fa-user-tie"></i>`;
+            }
+        }
+        
+        // Utility Methods
+        async apiRequest(endpoint, method = 'GET', data = null) {
+            const url = `${this.API_BASE}${endpoint}`;
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            };
+            
+            const options = {
+                method: method,
+                headers: headers,
+                credentials: 'include'
+            };
+            
+            if (data && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                this.showLoading(true);
+                const response = await fetch(url, options);
+                
+                // Handle 401 Unauthorized
+                if (response.status === 401) {
+                    this.showAlert('error', 'Session expired. Please log in again.');
+                    setTimeout(() => {
+                        window.location.href = '/login.html';
+                    }, 2000);
+                    return null;
+                }
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error || `API Error: ${response.status}`);
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('API Request Failed:', error);
+                this.showAlert('error', `API Error: ${error.message}`);
                 return null;
+            } finally {
+                this.showLoading(false);
             }
-            
-            const result = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(result.error || `API Error: ${response.status}`);
-            }
-            
-            return result;
-        } catch (error) {
-            console.error('API Request Failed:', error);
-            showAlert('error', `API Error: ${error.message}`);
-            return null;
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    // Legacy API Integration
-    async function getLegacyPlan() {
-        try {
-            const response = await apiRequest('/legacy/get');
-            if (response && response.ok) {
-                return response.plan;
-            }
-            return null;
-        } catch (error) {
-            console.error('Failed to fetch legacy plan:', error);
-            return null;
-        }
-    }
-
-    // Dashboard Functions
-    async function initializeDashboard() {
-        // Get user info
-        const userResponse = await apiRequest('/user/profile');
-        if (userResponse && userResponse.ok) {
-            currentUser = userResponse.user;
-            document.getElementById('userName').textContent = currentUser.name || 'Admin User';
-            document.getElementById('userRole').textContent = currentUser.role || 'Administrator';
-        }
-    }
-
-    async function loadDashboardData() {
-        try {
-            // Load multiple data sources in parallel
-            const [clients, plans, invoices, activity] = await Promise.allSettled([
-                apiRequest('/clients'),
-                apiRequest('/plans'),
-                apiRequest('/invoices?recent=true'),
-                apiRequest('/activity/recent')
-            ]);
-            
-            // Update stats
-            if (clients.value && clients.value.ok) {
-                updateStats('clients', clients.value);
-            }
-            
-            if (plans.value && plans.value.ok) {
-                updateStats('plans', plans.value);
-            }
-            
-            if (invoices.value && invoices.value.ok) {
-                updateStats('invoices', invoices.value);
-            }
-            
-            if (activity.value && activity.value.ok) {
-                updateActivityFeed(activity.value.data);
-            }
-            
-            // Load legacy plan
-            const legacyPlan = await getLegacyPlan();
-            if (legacyPlan) {
-                updateLegacyPlanDisplay(legacyPlan);
-            }
-            
-            // Load recent plans for dashboard
-            await loadRecentPlans();
-            
-        } catch (error) {
-            console.error('Failed to load dashboard data:', error);
-            showAlert('error', 'Failed to load dashboard data');
-        }
-    }
-
-    function updateStats(type, response) {
-        switch(type) {
-            case 'clients':
-                document.getElementById('totalClients').textContent = response.total || 0;
-                document.getElementById('clientCount').textContent = response.total || '--';
-                break;
-            case 'plans':
-                document.getElementById('activePlans').textContent = response.active || 0;
-                document.getElementById('planCount').textContent = response.total || '--';
-                break;
-            case 'invoices':
-                const revenue = response.revenue || 0;
-                document.getElementById('monthlyRevenue').textContent = `$${formatNumber(revenue)}`;
-                document.getElementById('invoiceCount').textContent = response.total || '--';
-                break;
-        }
-    }
-
-    async function loadRecentPlans() {
-        const response = await apiRequest('/plans?limit=5');
-        if (response && response.ok) {
-            const tbody = document.querySelector('#recentPlansTable tbody');
-            let html = '';
-            
-            response.data.slice(0, 5).forEach(plan => {
-                html += `
-                    <tr>
-                        <td>${plan.clientName || 'Unknown Client'}</td>
-                        <td>${plan.type}</td>
-                        <td>
-                            <span class="status-badge ${plan.status === 'active' ? 'status-active' : 'status-pending'}">
-                                ${plan.status}
-                            </span>
-                        </td>
-                        <td>${formatDate(plan.createdAt)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" onclick="viewPlan('${plan.id}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html || '<tr><td colspan="5">No plans found</td></tr>';
-        }
-    }
-
-    function updateActivityFeed(activities) {
-        const feed = document.getElementById('activityFeed');
-        if (!activities || activities.length === 0) {
-            feed.innerHTML = '<li class="activity-item"><p>No recent activity</p></li>';
-            return;
         }
         
-        let html = '';
-        activities.slice(0, 5).forEach(activity => {
-            html += `
-                <li class="activity-item">
-                    <div class="activity-icon" style="background: ${getActivityColor(activity.type)}">
-                        <i class="fas fa-${getActivityIcon(activity.type)}"></i>
-                    </div>
-                    <div class="activity-details">
-                        <p><strong>${activity.user}</strong> ${activity.action}</p>
-                        <small class="activity-time">${formatTime(activity.timestamp)}</small>
-                    </div>
-                </li>
+        showLoading(show) {
+            const loadingEl = document.getElementById('globalLoading');
+            if (loadingEl) {
+                loadingEl.style.display = show ? 'flex' : 'none';
+                if (!show) {
+                    setTimeout(() => {
+                        loadingEl.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingEl.style.display = 'none';
+                            loadingEl.style.opacity = '1';
+                        }, 300);
+                    }, 100);
+                }
+            }
+        }
+        
+        hideLoading() {
+            this.showLoading(false);
+        }
+        
+        showAlert(type, message) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <div class="alert-icon">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 
+                                     type === 'error' ? 'exclamation-circle' : 
+                                     type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-description">${message}</div>
+                </div>
+                <button class="modal-close" onclick="this.parentElement.remove()" style="margin: 0;">
+                    &times;
+                </button>
             `;
-        });
-        
-        feed.innerHTML = html;
-    }
-
-    // Tab Management
-    function openTab(tabName) {
-        // Hide all tabs
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        
-        // Show selected tab
-        document.getElementById(tabName).classList.add('active');
-        
-        // Update navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.dataset.tab === tabName) {
-                item.classList.add('active');
-            }
-        });
-        
-        // Update page title
-        updatePageTitle(tabName);
-        
-        // Load tab data
-        loadTabData(tabName);
-    }
-
-    async function loadTabData(tabName) {
-        switch(tabName) {
-            case 'clients':
-                await loadClients();
-                break;
-            case 'plans':
-                await loadPlans();
-                break;
-            case 'invoices':
-                await loadInvoices('all');
-                break;
-            case 'documents':
-                await loadDocuments();
-                break;
-            case 'audit':
-                await loadAuditLog();
-                break;
-        }
-    }
-
-    // Client Management
-    async function loadClients() {
-        const response = await apiRequest('/clients');
-        if (response && response.ok) {
-            const clients = response.data;
-            const tbody = document.querySelector('#clientsTable tbody');
             
-            let html = '';
-            clients.forEach(client => {
-                html += `
-                    <tr>
-                        <td>
-                            <strong>${client.name}</strong><br>
-                            <small>${client.company || ''}</small>
-                        </td>
-                        <td>${client.email}</td>
-                        <td>${client.phone || 'N/A'}</td>
-                        <td>
-                            <span class="status-badge ${client.status === 'active' ? 'status-active' : 'status-pending'}">
-                                ${client.status}
-                            </span>
-                        </td>
-                        <td>${client.planCount || 0}</td>
-                        <td>${formatDate(client.lastActive)}</td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" onclick="viewClient('${client.id}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-primary" onclick="editClient('${client.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html || '<tr><td colspan="7">No clients found</td></tr>';
-        }
-    }
-
-    async function createClient(clientData) {
-        const response = await apiRequest('/clients', 'POST', clientData);
-        if (response && response.ok) {
-            showAlert('success', 'Client created successfully');
-            loadClients();
-            loadDashboardData();
-            closeModal('createModal');
-            return true;
-        }
-        return false;
-    }
-
-    // Plan Management
-    async function loadPlans() {
-        const response = await apiRequest('/plans');
-        if (response && response.ok) {
-            const plans = response.data;
-            const tbody = document.querySelector('#plansTable tbody');
-            
-            let html = '';
-            plans.forEach(plan => {
-                html += `
-                    <tr>
-                        <td>${plan.clientName || 'Unknown'}</td>
-                        <td>${plan.name}</td>
-                        <td>${plan.type}</td>
-                        <td>
-                            <span class="status-badge ${plan.status === 'active' ? 'status-active' : 
-                                                       plan.status === 'pending' ? 'status-pending' : 'status-expired'}">
-                                ${plan.status}
-                            </span>
-                        </td>
-                        <td>$${formatNumber(plan.value)}</td>
-                        <td>${plan.beneficiaries?.length || 0}</td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" onclick="viewPlan('${plan.id}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-primary" onclick="editPlan('${plan.id}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html || '<tr><td colspan="7">No plans found</td></tr>';
-        }
-    }
-
-    // Invoice Management
-    async function loadInvoices(filter = 'all') {
-        const response = await apiRequest('/invoices');
-        if (response && response.ok) {
-            let invoices = response.data;
-            
-            // Apply filter
-            if (filter !== 'all') {
-                invoices = invoices.filter(inv => inv.status === filter);
-            }
-            
-            const tbody = document.querySelector('#invoicesTable tbody');
-            
-            let html = '';
-            invoices.forEach(invoice => {
-                html += `
-                    <tr>
-                        <td>INV-${String(invoice.id).padStart(5, '0')}</td>
-                        <td>${invoice.clientName}</td>
-                        <td>$${formatNumber(invoice.amount)}</td>
-                        <td>${formatDate(invoice.date)}</td>
-                        <td class="${invoice.status === 'overdue' ? 'text-danger' : ''}">
-                            ${formatDate(invoice.dueDate)}
-                        </td>
-                        <td>
-                            <span class="status-badge ${invoice.status === 'paid' ? 'status-active' : 
-                                                       invoice.status === 'pending' ? 'status-pending' : 'status-expired'}">
-                                ${invoice.status}
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" onclick="viewInvoice('${invoice.id}')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm btn-primary" onclick="downloadInvoice('${invoice.id}')">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html || '<tr><td colspan="7">No invoices found</td></tr>';
-        }
-    }
-
-    // Modal Management
-    function openCreateModal(type) {
-        const modal = document.getElementById('createModal');
-        const title = document.getElementById('modalTitle');
-        const body = document.getElementById('modalBody');
-        const submitBtn = document.getElementById('modalSubmitBtn');
-        
-        switch(type) {
-            case 'client':
-                title.textContent = 'Create New Client';
-                body.innerHTML = getClientForm();
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Client';
-                submitBtn.onclick = () => submitClientForm();
-                break;
+            // Add to page
+            const contentWrapper = document.querySelector('.content-wrapper');
+            if (contentWrapper) {
+                contentWrapper.insertBefore(alert, contentWrapper.firstChild);
                 
-            case 'plan':
-                title.textContent = 'Create Legacy Plan';
-                body.innerHTML = getPlanForm();
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Plan';
-                submitBtn.onclick = () => submitPlanForm();
-                break;
-                
-            case 'invoice':
-                title.textContent = 'Create Invoice';
-                body.innerHTML = getInvoiceForm();
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Create Invoice';
-                submitBtn.onclick = () => submitInvoiceForm();
-                break;
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    if (alert.parentElement) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
         }
         
-        modal.classList.add('active');
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('active');
-    }
-
-    // Form Templates
-    function getClientForm() {
-        return `
-            <div class="form-group">
-                <label class="form-label">Full Name *</label>
-                <input type="text" class="form-control" id="clientName" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Email Address *</label>
-                <input type="email" class="form-control" id="clientEmail" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="clientPhone">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Company</label>
-                <input type="text" class="form-control" id="clientCompany">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Address</label>
-                <textarea class="form-control" id="clientAddress" rows="2"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Notes</label>
-                <textarea class="form-control" id="clientNotes" rows="3"></textarea>
-            </div>
-        `;
-    }
-
-    function getPlanForm() {
-        return `
-            <div class="form-group">
-                <label class="form-label">Client *</label>
-                <select class="form-control" id="planClientId" required>
-                    <option value="">Select Client...</option>
-                    <!-- Clients will be loaded dynamically -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Plan Name *</label>
-                <input type="text" class="form-control" id="planName" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Plan Type *</label>
-                <select class="form-control" id="planType" required>
-                    <option value="basic">Basic Legacy Plan</option>
-                    <option value="premium">Premium Legacy Plan</option>
-                    <option value="enterprise">Enterprise Legacy Plan</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Estimated Value ($)</label>
-                <input type="number" class="form-control" id="planValue" min="0" step="0.01">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Beneficiaries</label>
-                <textarea class="form-control" id="planBeneficiaries" rows="3" 
-                          placeholder="Enter beneficiary names, one per line"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Special Instructions</label>
-                <textarea class="form-control" id="planInstructions" rows="4"></textarea>
-            </div>
-        `;
-    }
-
-    function getInvoiceForm() {
-        return `
-            <div class="form-group">
-                <label class="form-label">Client *</label>
-                <select class="form-control" id="invoiceClientId" required>
-                    <option value="">Select Client...</option>
-                    <!-- Clients will be loaded dynamically -->
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Invoice Amount *</label>
-                <input type="number" class="form-control" id="invoiceAmount" min="0" step="0.01" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <textarea class="form-control" id="invoiceDescription" rows="3"></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Due Date *</label>
-                <input type="date" class="form-control" id="invoiceDueDate" required>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Payment Terms</label>
-                <select class="form-control" id="invoiceTerms">
-                    <option value="net30">Net 30</option>
-                    <option value="net15">Net 15</option>
-                    <option value="due_on_receipt">Due on Receipt</option>
-                </select>
-            </div>
-        `;
-    }
-
-    // Form Submission
-    async function submitClientForm() {
-        const clientData = {
-            name: document.getElementById('clientName').value,
-            email: document.getElementById('clientEmail').value,
-            phone: document.getElementById('clientPhone').value,
-            company: document.getElementById('clientCompany').value,
-            address: document.getElementById('clientAddress').value,
-            notes: document.getElementById('clientNotes').value
-        };
-        
-        if (!clientData.name || !clientData.email) {
-            showAlert('error', 'Name and email are required');
-            return;
-        }
-        
-        await createClient(clientData);
-    }
-
-    async function submitPlanForm() {
-        const planData = {
-            clientId: document.getElementById('planClientId').value,
-            name: document.getElementById('planName').value,
-            type: document.getElementById('planType').value,
-            value: document.getElementById('planValue').value,
-            beneficiaries: document.getElementById('planBeneficiaries').value.split('\n').filter(b => b.trim()),
-            instructions: document.getElementById('planInstructions').value
-        };
-        
-        if (!planData.clientId || !planData.name || !planData.type) {
-            showAlert('error', 'Client, name, and type are required');
-            return;
-        }
-        
-        const response = await apiRequest('/plans', 'POST', planData);
-        if (response && response.ok) {
-            showAlert('success', 'Plan created successfully');
-            loadPlans();
-            closeModal('createModal');
-        }
-    }
-
-    async function submitInvoiceForm() {
-        const invoiceData = {
-            clientId: document.getElementById('invoiceClientId').value,
-            amount: document.getElementById('invoiceAmount').value,
-            description: document.getElementById('invoiceDescription').value,
-            dueDate: document.getElementById('invoiceDueDate').value,
-            terms: document.getElementById('invoiceTerms').value
-        };
-        
-        if (!invoiceData.clientId || !invoiceData.amount || !invoiceData.dueDate) {
-            showAlert('error', 'Client, amount, and due date are required');
-            return;
-        }
-        
-        const response = await apiRequest('/invoices', 'POST', invoiceData);
-        if (response && response.ok) {
-            showAlert('success', 'Invoice created successfully');
-            loadInvoices();
-            closeModal('createModal');
-        }
-    }
-
-    // Missing Functions (Stubs to prevent errors)
-    function uploadDocument() { 
-        showAlert('info', 'Document upload feature coming soon'); 
-    }
-    
-    async function loadDocuments() { 
-        showAlert('info', 'Loading documents...'); 
-        // TODO: Implement document loading
-    }
-    
-    async function loadAuditLog() { 
-        const response = await apiRequest('/audit');
-        if (response && response.ok) {
-            const tbody = document.querySelector('#auditTable tbody');
-            let html = '';
-            
-            response.data.forEach(log => {
-                html += `
-                    <tr>
-                        <td>${formatDate(log.timestamp)}</td>
-                        <td>${log.user}</td>
-                        <td>${log.action}</td>
-                        <td>${log.details || ''}</td>
-                        <td>${log.ip || 'N/A'}</td>
-                    </tr>
-                `;
+        openTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            tbody.innerHTML = html || '<tr><td colspan="5">No audit logs found</td></tr>';
-        }
-    }
-    
-    function exportAuditLog() { 
-        showAlert('info', 'Export feature coming soon'); 
-    }
-    
-    function generateReport(type) { 
-        showAlert('info', `Generating ${type} report...`); 
-    }
-    
-    function saveSettings() { 
-        showAlert('success', 'Settings saved successfully'); 
-    }
-    
-    function downloadInvoice(id) { 
-        showAlert('info', `Downloading invoice ${id}...`); 
-    }
-    
-    function updateLegacyPlanDisplay(plan) {
-        // Optional: Display legacy plan details somewhere
-        console.log('Legacy Plan:', plan);
-    }
-
-    // Utility Functions
-    function showAlert(type, message) {
-        // Create alert element
-        const alert = document.createElement('div');
-        alert.className = `alert alert-${type}`;
-        alert.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 
-                               type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-            ${message}
-        `;
-        
-        // Add to page
-        document.querySelector('.main-content').prepend(alert);
-        
-        // Remove after 5 seconds
-        setTimeout(() => alert.remove(), 5000);
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        });
-    }
-
-    function formatTime(timestamp) {
-        const date = new Date(timestamp);
-        const now = new Date();
-        const diff = now - date;
-        
-        if (diff < 60000) return 'Just now';
-        if (diff < 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
-        if (diff < 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
-        return formatDate(timestamp);
-    }
-
-    function formatNumber(num) {
-        return Number(num).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
-
-    function getActivityColor(type) {
-        switch(type) {
-            case 'login': return '#dbeafe';
-            case 'create': return '#d1fae5';
-            case 'update': return '#fef3c7';
-            case 'delete': return '#fee2e2';
-            default: return '#e2e8f0';
-        }
-    }
-
-    function getActivityIcon(type) {
-        switch(type) {
-            case 'login': return 'sign-in-alt';
-            case 'create': return 'plus-circle';
-            case 'update': return 'edit';
-            case 'delete': return 'trash';
-            default: return 'info-circle';
-        }
-    }
-
-    function setupEventListeners() {
-        // Navigation
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const tab = item.dataset.tab;
-                openTab(tab);
-            });
-        });
-        
-        // Invoice tabs
-        document.querySelectorAll('[data-invoice-tab]').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('[data-invoice-tab]').forEach(t => {
-                    t.classList.remove('active');
-                });
+            // Show selected tab
+            const tab = document.getElementById(tabName);
+            if (tab) {
                 tab.classList.add('active');
-                loadInvoices(tab.dataset.invoiceTab);
-            });
-        });
-        
-        // Global search
-        document.getElementById('globalSearch').addEventListener('input', (e) => {
-            performGlobalSearch(e.target.value);
-        });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + K for search
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('globalSearch').focus();
+                
+                // Update navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.dataset.tab === tabName) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // Update breadcrumb
+                this.updateBreadcrumb(tabName);
+                
+                // Load tab data if needed
+                this.loadTabData(tabName);
             }
             
-            // Escape to close modals
-            if (e.key === 'Escape') {
-                closeModal('createModal');
+            // Close sidebar on mobile
+            if (window.innerWidth <= 1200) {
+                this.toggleSidebar(false);
             }
-        });
-    }
-
-    async function performGlobalSearch(query) {
-        if (query.length < 2) return;
-        
-        const response = await apiRequest(`/search?q=${encodeURIComponent(query)}`);
-        if (response && response.ok) {
-            showAlert('info', `Found ${response.data.clients.length} clients, ${response.data.plans.length} plans, ${response.data.invoices.length} invoices`);
         }
-    }
-
-    // Initialize
-    function updatePageTitle(tab) {
-        const titles = {
-            dashboard: 'Dashboard',
-            clients: 'Client Management',
-            plans: 'Legacy Plans',
-            invoices: 'Invoice Management',
-            documents: 'Document Vault',
-            audit: 'Audit Trail',
-            reports: 'Reports & Analytics',
-            settings: 'System Settings'
-        };
         
-        document.getElementById('pageTitle').textContent = titles[tab] || 'Dashboard';
-        document.getElementById('pageSubtitle').textContent = `LegacyShield ${titles[tab] || 'Dashboard'} â€¢ ${new Date().toLocaleDateString()}`;
-    }
-
-    function toggleNotifications() {
-        showAlert('info', 'Notifications panel would open here');
-    }
-
-    // Additional Business Functions
-    async function runAuditReport() {
-        const response = await apiRequest('/audit/run', 'POST');
-        if (response && response.ok) {
-            showAlert('success', 'Security audit completed successfully');
-            logActivity('Security audit completed', 'success');
-        }
-    }
-
-    async function exportDashboardData() {
-        const response = await apiRequest('/export/dashboard');
-        if (response && response.ok) {
-            // Create download link
-            const blob = new Blob([JSON.stringify(response.data, null, 2)], {
-                type: 'application/json'
-            });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `legacyshield-export-${new Date().toISOString().split('T')[0]}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        updateBreadcrumb(tab) {
+            const breadcrumbMap = {
+                dashboard: { label: 'Dashboard', path: ['Dashboard'] },
+                assets: { label: 'Digital Assets', path: ['Dashboard', 'Digital Assets'] },
+                beneficiaries: { label: 'Beneficiaries', path: ['Dashboard', 'Beneficiaries'] },
+                profile: { label: 'Profile Settings', path: ['Dashboard', 'Profile Settings'] },
+                clients: { label: 'Client Management', path: ['Dashboard', 'Clients'] },
+                invoices: { label: 'Invoice Management', path: ['Dashboard', 'Invoices'] },
+                admin: { label: 'Administration', path: ['Dashboard', 'Administration'] }
+            };
             
-            showAlert('success', 'Data exported successfully');
+            const info = breadcrumbMap[tab] || breadcrumbMap.dashboard;
+            const breadcrumb = document.getElementById('breadcrumb');
+            
+            if (breadcrumb) {
+                let html = '';
+                info.path.forEach((segment, index) => {
+                    if (index === info.path.length - 1) {
+                        html += `<span class="current">${segment}</span>`;
+                    } else {
+                        html += `<a href="#" onclick="legacyShield.openTab('${tab}')">${segment}</a>`;
+                        if (index < info.path.length - 1) {
+                            html += `<span class="separator">/</span>`;
+                        }
+                    }
+                });
+                breadcrumb.innerHTML = html;
+            }
+        }
+        
+        toggleSidebar(force) {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                if (force !== undefined) {
+                    sidebar.classList.toggle('active', force);
+                } else {
+                    sidebar.classList.toggle('active');
+                }
+            }
+        }
+        
+        toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) {
+                icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+        
+        applyTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const icon = document.querySelector('#themeToggle i');
+            if (icon) {
+                icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+        
+        showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+        
+        closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+        
+        showAddAssetModal() {
+            // Populate beneficiaries dropdown
+            const select = document.getElementById('assetBeneficiaries');
+            if (select) {
+                select.innerHTML = '<option value="">Select beneficiaries...</option>';
+                this.beneficiaries.forEach(beneficiary => {
+                    select.innerHTML += `<option value="${beneficiary.id}">${beneficiary.name}</option>`;
+                });
+            }
+            
+            this.showModal('addAssetModal');
+        }
+        
+        showQuickActionModal() {
+            this.showModal('quickActionModal');
+        }
+        
+        resetProfileForm() {
+            document.getElementById('profileForm').reset();
+        }
+        
+        async logActivity(action, type = 'info') {
+            try {
+                await this.apiRequest('/activity/log', 'POST', {
+                    action: action,
+                    type: type
+                });
+            } catch (error) {
+                console.error('Failed to log activity:', error);
+            }
+        }
+        
+        // Formatting utilities
+        formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+            if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+            return this.formatDate(timestamp);
+        }
+        
+        formatNumber(num) {
+            return Number(num).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+        
+        getActivityIcon(type) {
+            const icons = {
+                login: 'sign-in-alt',
+                create: 'plus-circle',
+                update: 'edit',
+                delete: 'trash',
+                upload: 'upload',
+                download: 'download',
+                security: 'shield-alt',
+                default: 'info-circle'
+            };
+            return icons[type] || icons.default;
+        }
+        
+        setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const tab = item.dataset.tab;
+                    if (tab) {
+                        this.openTab(tab);
+                    }
+                });
+            });
+            
+            // Global search
+            const searchInput = document.getElementById('globalSearch');
+            if (searchInput) {
+                let searchTimeout;
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        this.performGlobalSearch(e.target.value);
+                    }, 300);
+                });
+            }
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + K for search
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    const searchInput = document.getElementById('globalSearch');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }
+                
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal.active').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+            
+            // Profile form submission
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', (e) => this.updateProfile(e));
+            }
+            
+            // Asset form submission
+            const assetForm = document.getElementById('assetForm');
+            if (assetForm) {
+                assetForm.addEventListener('submit', (e) => this.saveAsset(e));
+            }
+        }
+        
+        setupGlobalHandlers() {
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1200) {
+                    this.toggleSidebar(true);
+                }
+            });
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.classList.remove('active');
+                }
+            });
+        }
+        
+        updateNavigation() {
+            // Update notification count
+            const notificationCount = document.getElementById('notificationCount');
+            if (notificationCount) {
+                // This would come from API in production
+                notificationCount.textContent = '3';
+            }
+        }
+        
+        async loadTabData(tabName) {
+            switch(tabName) {
+                case 'assets':
+                    await this.loadDashboardData();
+                    break;
+                case 'beneficiaries':
+                    await this.loadDashboardData();
+                    break;
+                case 'profile':
+                    await this.loadUserProfile();
+                    break;
+            }
+        }
+        
+        async performGlobalSearch(query) {
+            if (query.length < 2) return;
+            
+            try {
+                const response = await this.apiRequest(`/search?q=${encodeURIComponent(query)}`);
+                if (response && response.ok) {
+                    this.showAlert('info', `Found ${response.data.assets || 0} assets, ${response.data.beneficiaries || 0} beneficiaries`);
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+            }
+        }
+        
+        // Business Methods
+        viewAsset(assetId) {
+            this.showAlert('info', `Viewing asset ${assetId}...`);
+        }
+        
+        editAsset(assetId) {
+            this.showAlert('info', `Editing asset ${assetId}...`);
+        }
+        
+        deleteAsset(assetId) {
+            if (confirm('Are you sure you want to delete this asset?')) {
+                this.showAlert('info', `Deleting asset ${assetId}...`);
+                this.logActivity(`Deleted asset: ${assetId}`, 'delete');
+            }
+        }
+        
+        viewBeneficiary(beneficiaryId) {
+            this.showAlert('info', `Viewing beneficiary ${beneficiaryId}...`);
+        }
+        
+        editBeneficiary(beneficiaryId) {
+            this.showAlert('info', `Editing beneficiary ${beneficiaryId}...`);
+        }
+        
+        showAddBeneficiaryModal() {
+            this.showAlert('info', 'Add beneficiary modal would open here');
+        }
+        
+        refreshActivity() {
+            this.loadDashboardData();
+            this.showAlert('success', 'Activity feed refreshed');
+        }
+        
+        generateAuditReport() {
+            this.showAlert('info', 'Generating audit report...');
+            this.logActivity('Generated audit report', 'security');
+        }
+        
+        enableTwoFactorAuth() {
+            this.showAlert('info', 'Two-factor authentication setup would begin here');
+        }
+        
+        showLogoutAllModal() {
+            if (confirm('Are you sure you want to log out from all devices?')) {
+                this.showAlert('info', 'Logging out from all devices...');
+            }
+        }
+        
+        showTermsModal() {
+            this.showAlert('info', 'Terms of Service modal would open here');
+        }
+        
+        showSupportModal() {
+            this.showAlert('info', 'Support modal would open here');
+        }
+        
+        showNotifications() {
+            this.showAlert('info', 'Notifications panel would open here');
         }
     }
-
-    function refreshActivity() {
-        apiRequest('/activity/recent').then(response => {
-            if (response && response.ok) {
-                updateActivityFeed(response.data);
-                showAlert('success', 'Activity feed refreshed');
-            }
-        });
-    }
-
-    // Log user activity
-    async function logActivity(action, type = 'info') {
-        // Send to API
-        await apiRequest('/activity/log', 'POST', {
-            action: action,
-            type: type
-        });
-    }
-
-    // View functions
-    function viewClient(id) {
-        showAlert('info', `Viewing client ${id}...`);
-    }
     
-    function editClient(id) {
-        showAlert('info', `Editing client ${id}...`);
-    }
+    // Initialize the platform
+    const legacyShield = new LegacyShieldPlatform();
     
-    function viewPlan(id) {
-        showAlert('info', `Viewing plan ${id}...`);
-    }
+    // Global functions for onclick handlers
+    window.toggleSidebar = () => legacyShield.toggleSidebar();
+    window.openTab = (tab) => legacyShield.openTab(tab);
+    window.toggleTheme = () => legacyShield.toggleTheme();
+    window.closeModal = (modalId) => legacyShield.closeModal(modalId);
+    window.showQuickActionModal = () => legacyShield.showQuickActionModal();
+    window.showAddAssetModal = () => legacyShield.showAddAssetModal();
+    window.showAddBeneficiaryModal = () => legacyShield.showAddBeneficiaryModal();
+    window.refreshActivity = () => legacyShield.refreshActivity();
+    window.generateAuditReport = () => legacyShield.generateAuditReport();
+    window.enableTwoFactorAuth = () => legacyShield.enableTwoFactorAuth();
+    window.resetProfileForm = () => legacyShield.resetProfileForm();
+    window.showLogoutAllModal = () => legacyShield.showLogoutAllModal();
+    window.showTermsModal = () => legacyShield.showTermsModal();
+    window.showSupportModal = () => legacyShield.showSupportModal();
+    window.showNotifications = () => legacyShield.showNotifications();
+    window.handleAvatarUpload = (e) => legacyShield.handleAvatarUpload(e);
     
-    function editPlan(id) {
-        showAlert('info', `Editing plan ${id}...`);
-    }
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        legacyShield.initialize();
+    });
     
-    function viewInvoice(id) {
-        showAlert('info', `Viewing invoice ${id}...`);
-    }
-
+    // Expose to window for debugging
+    window.legacyShield = legacyShield;
     </script>
 </body>
 </html>
-
-
-
-
