@@ -1,8 +1,8 @@
-// api/login.js - COMPLETE PRODUCTION VERSION
-const { applyCors } = require("./_lib/cors.js");
-const { createSession } = require("./_lib/auth.js");
-const { generateJwt, verifyJwt } = require("./_lib/jwt.js");
-const { getJson, setJson } = require("./_lib/store.js");
+﻿// api/login.js - COMPLETE PRODUCTION VERSION
+const { applyCors } = require('../_lib/cors.js');
+const { createSession } = require('../_lib/auth.js');
+const { generateJwt, verifyJwt } = require('../_lib/jwt.js');
+const { getJson, setJson } = require('../_lib/store.js');
 
 // Mock user database - REPLACE with your actual user database
 const users = {
