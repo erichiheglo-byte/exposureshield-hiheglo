@@ -266,10 +266,15 @@
         var email = (emailEl && emailEl.value ? String(emailEl.value) : "").trim();
         var password = (passEl && passEl.value ? String(passEl.value) : "");
 
-        if (!email || !password) {
-          alert("Please enter email and password.");
-          return;
-        }
+        if (!email) {
+  alert("Please enter your email.");
+  return;
+}
+
+// Demo mode: password optional
+if (!password) {
+  password = "demo";
+}
 
         // Cookie-based session support + token support
         var res = await fetch("/api/auth/login", {
@@ -308,6 +313,7 @@
 </script>
 </body>
 </html>
+
 
 
 
