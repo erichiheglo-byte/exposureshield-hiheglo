@@ -156,13 +156,13 @@
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
                     <input type="email" class="form-input" id="email" 
-                           placeholder="you@example.com" required autocomplete="email">
+                           placeholder="you@example.com" required>
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label">Password</label>
                     <input type="password" class="form-input" id="password" 
-                           placeholder="••••••••" minlength="6" autocomplete="current-password">
+                           placeholder="••••••••" minlength="6">
                     <div style="font-size: 0.8rem; color: var(--gray); margin-top: 5px;">
                         Demo: Any password works
                     </div>
@@ -179,7 +179,8 @@
             </div>
         </div>
     </div>
-<script src="/shared-auth.js"></script>
+    <script src="/shared-auth.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('loginForm');
@@ -234,8 +235,4 @@
     </script>
 </body>
 </html>
-
-
-
-
 
