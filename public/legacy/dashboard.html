@@ -733,25 +733,74 @@
 /* __ES_DEMO_DASH__ */
 (function () {
   "use strict";
-  // If demo token, prevent noisy API calls by stubbing fetch for /api/* endpoints.
-  try {
-    var t = localStorage.getItem("ES_TOKEN");
-    if (t !== "demo") return;
 
-    var origFetch = window.fetch;
-    window.fetch = function (input, init) {
-      var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
-      if (url && url.startsWith("/api/")) {
-        return Promise.resolve(new Response(JSON.stringify({ ok: true, demo: true }), {
-          status: 200,
-          headers: { "Content-Type": "application/json" }
-        }));
+  // Only activate in demo mode
+  var t = "";
+  try { t = localStorage.getItem("ES_TOKEN") || ""; } catch (e) {}
+  if (t !== "demo") return;
+
+  // Minimal, safe demo payloads that match typical dashboard expectations
+  function jsonResponse(obj, status) {
+    return Promise.resolve(new Response(JSON.stringify(obj), {
+      status: status || 200,
+      headers: { "Content-Type": "application/json" }
+    }));
+  }
+
+  function nowIso() { return new Date().toISOString(); }
+
+  var demoUser = {
+    id: "demo-user",
+    name: "Demo User",
+    email: (function(){ try { return localStorage.getItem("ES_EMAIL") || "demo@exposureshield.com"; } catch(e){ return "demo@exposureshield.com"; } })(),
+    plan: "demo"
+  };
+
+  // Return arrays so code using .slice() / .forEach() won't crash
+  var demoClients  = [];
+  var demoPlans    = [];
+  var demoInvoices = [];
+  var demoLegacy   = { items: [], updatedAt: nowIso() };
+
+  var origFetch = window.fetch;
+  window.fetch = function (input, init) {
+    var url = (typeof input === "string") ? input : (input && input.url ? input.url : "");
+
+    // Only stub your API routes
+    if (url && url.startsWith("/api/")) {
+
+      // Auth/profile endpoints
+      if (url.startsWith("/api/user/profile")) {
+        return jsonResponse({ ok: true, user: demoUser, profile: demoUser }, 200);
       }
-      return origFetch(input, init);
-    };
 
-    console.log("✅ Demo mode: API calls stubbed");
-  } catch (e) {}
+      // LegacyShield endpoints used on dashboard
+      if (url.startsWith("/api/clients")) {
+        // Common shapes: {clients:[]}, or {data:[]}
+        return jsonResponse({ ok: true, clients: demoClients, data: demoClients }, 200);
+      }
+
+      if (url.startsWith("/api/plans") || url.startsWith("/api/recent-plans")) {
+        return jsonResponse({ ok: true, plans: demoPlans, recentPlans: demoPlans, data: demoPlans }, 200);
+      }
+
+      if (url.startsWith("/api/invoices")) {
+        return jsonResponse({ ok: true, invoices: demoInvoices, data: demoInvoices }, 200);
+      }
+
+      if (url.startsWith("/api/legacy/get")) {
+        return jsonResponse({ ok: true, legacy: demoLegacy, data: demoLegacy }, 200);
+      }
+
+      // Default stub for any other /api route
+      return jsonResponse({ ok: true, demo: true }, 200);
+    }
+
+    // Non-API requests go through normally
+    return origFetch(input, init);
+  };
+
+  console.log("✅ Demo mode: smart API stubs enabled (clients/plans/invoices/profile/legacy)");
 })();
 </script>
 </head>
@@ -2117,6 +2166,7 @@
     </script>
 </body>
 </html>
+
 
 
 
