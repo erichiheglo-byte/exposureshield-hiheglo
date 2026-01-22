@@ -670,9 +670,10 @@ module.exports = (req, res) => {
     qs.delete("__path");
 
     const queryString = qs.toString();
-    req.url = "/api" + original + (queryString ? ? : "");
+    req.url = "/api" + original + (queryString ? queryString : "");
   }
 
   return app(req, res);
 };
+
 
