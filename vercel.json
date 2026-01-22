@@ -49,7 +49,7 @@
                      },
                      {
                          "source":  "/dashboard",
-                         "destination":  "/public/legacy/dashboard.html"
+                         "destination":  "/public/legacy/dashboard"
                      }
                  ]
 }
