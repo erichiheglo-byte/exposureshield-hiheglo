@@ -72,7 +72,27 @@
     clearToken,
     apiFetch,
 
-    async requireAuthOrRedirect(redirectTo = "/login") {
+    // Login helper (keeps login.html compatible)
+    async login(email, password) {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password })
+      });
+
+      let data = null;
+      try { data = await res.json(); } catch (_) { data = null; }
+
+      // Save token if backend returns it
+      const token = (data && (data.token || data.access_token)) ? (data.token || data.access_token) : "";
+      if (token) {
+        try { localStorage.setItem("ES_TOKEN", token); } catch (_) {}
+      }
+
+      return { ok: res.ok, status: res.status, data };
+    },
+async requireAuthOrRedirect(redirectTo = "/login") {
       const token = getToken();
 
       // If you rely on cookie-only auth, remove this token check
@@ -94,3 +114,4 @@
 
   console.log("✅ shared-auth.js loaded (ExposureShieldAuth ready)");
 })();
+
