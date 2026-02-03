@@ -3,31 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExposureShield | See Your Digital Risk. Take Control. Stay Secure.</title>
+    <title>ExposureShield | See Your Digital Risk. Take Control.</title>
     <meta name="description" content="Check your digital exposure, get a free security report, and protect your identity with privacy-first technology.">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
     <style>
         :root {
             --primary: #2563eb;
-            --primary-dark: #1d4ed8;
             --secondary: #0f172a;
-            --accent: #3b82f6;
             --light: #f8fafc;
             --gray: #64748b;
-            --gray-light: #e2e8f0;
             --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
-            --shadow-light: 0 8px 30px rgba(0, 0, 0, 0.05);
-            --radius: 16px;
-            --radius-sm: 12px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -36,21 +24,13 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
-            line-height: 1.7;
             color: var(--secondary);
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
+            background: var(--light);
         }
 
         .container {
-            width: 100%;
             max-width: 1280px;
             margin: 0 auto;
             padding: 0 24px;
@@ -58,18 +38,11 @@
 
         /* Header */
         header {
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+            background: white;
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: var(--transition);
-        }
-
-        header.scrolled {
-            box-shadow: var(--shadow-light);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .header-content {
@@ -77,7 +50,6 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            gap: 30px;
         }
 
         .logo {
@@ -85,24 +57,12 @@
             font-size: 1.9rem;
             font-weight: 800;
             color: var(--primary);
+            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 12px;
-            text-decoration: none;
-            letter-spacing: -0.02em;
-            transition: var(--transition);
         }
 
-        .logo:hover {
-            transform: translateY(-1px);
-        }
-
-        .logo i {
-            color: var(--accent);
-            font-size: 1.8rem;
-        }
-
-        /* Navigation */
         nav ul {
             display: flex;
             list-style: none;
@@ -114,150 +74,44 @@
             text-decoration: none;
             color: var(--secondary);
             font-weight: 600;
-            font-size: 1.02rem;
-            transition: var(--transition);
-            position: relative;
-            opacity: 0.85;
+            transition: color 0.3s;
         }
 
         nav a:hover {
             color: var(--primary);
-            opacity: 1;
         }
 
-        nav a.active {
-            color: var(--primary);
-            font-weight: 700;
-            opacity: 1;
-        }
-
-        nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            border-radius: 2px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        /* Buttons */
         .cta-button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background: var(--primary);
             color: white;
             border: none;
             padding: 14px 28px;
-            border-radius: var(--radius-sm);
-            font-family: 'Inter', sans-serif;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 1.05rem;
             cursor: pointer;
-            transition: var(--transition);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .cta-button:hover::before {
-            left: 100%;
+            transition: transform 0.3s;
         }
 
         .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-        }
-
-        .secondary-button {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--gray-light);
-            padding: 14px 28px;
-            border-radius: var(--radius-sm);
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .secondary-button:hover {
-            border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: var(--shadow-light);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.6rem;
-            color: var(--secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: var(--transition);
-        }
-
-        .mobile-menu-btn:hover {
-            background: var(--gray-light);
         }
 
         /* Hero Section - UPDATED */
         .hero {
-            padding: 100px 0 80px;
+            padding: 100px 0;
             text-align: center;
-            background: 
-                radial-gradient(800px 300px at 15% 20%, rgba(37, 99, 235, 0.08), transparent 60%),
-                radial-gradient(800px 300px at 85% 25%, rgba(59, 130, 246, 0.06), transparent 55%),
-                linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--gray-light), transparent);
         }
 
         .hero h1 {
             font-family: 'Poppins', sans-serif;
-            font-size: 3.8rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            line-height: 1.15;
             margin-bottom: 20px;
             color: var(--secondary);
-            letter-spacing: -0.03em;
         }
 
         .hero p {
@@ -268,19 +122,47 @@
             line-height: 1.6;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
+        /* Email Check Section - UPDATED */
+        .email-check-section {
+            background: white;
+            padding: 60px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin: 80px auto;
+            text-align: center;
+            max-width: 900px;
         }
 
-        /* How It Works Section - NEW */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: var(--secondary);
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 40px;
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .email-input {
+            width: 100%;
+            padding: 20px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* How It Works - NEW */
         .how-it-works {
             padding: 80px 0;
-            background: var(--light);
-            border-radius: var(--radius);
+            background: white;
             margin: 60px 0;
         }
 
@@ -292,24 +174,16 @@
         }
 
         .step-card {
-            background: white;
+            background: var(--light);
             padding: 40px 30px;
-            border-radius: var(--radius);
+            border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .step-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
         }
 
         .step-number {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: var(--primary);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -320,250 +194,9 @@
             margin: 0 auto 20px;
         }
 
-        .step-card h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-
-        .step-card p {
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        .trust-row {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-
-        .trust-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            padding: 14px 20px;
-            border-radius: 50px;
-            font-size: 1rem;
-            color: var(--gray);
-            backdrop-filter: blur(10px);
-            transition: var(--transition);
-        }
-
-        .trust-badge:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-            box-shadow: var(--shadow-light);
-        }
-
-        .trust-badge i {
-            color: var(--success);
-            font-size: 1.1rem;
-        }
-
-        /* Email Check - UPDATED */
-        .email-check-section {
-            background: white;
-            padding: 70px 60px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin: 80px auto;
-            text-align: center;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            position: relative;
-            overflow: hidden;
-            max-width: 900px;
-        }
-
-        .email-check-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-
-        .section-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 16px;
-            color: var(--secondary);
-            letter-spacing: -0.02em;
-        }
-
-        .section-subtitle {
-            color: var(--gray);
-            margin-bottom: 40px;
-            font-size: 1.15rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        .email-check-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .email-input-wrapper {
-            width: 100%;
-            position: relative;
-        }
-
-        .email-input {
-            width: 100%;
-            padding: 20px 24px;
-            border: 2px solid var(--gray-light);
-            border-radius: var(--radius-sm);
-            font-size: 1.1rem;
-            font-family: 'Inter', sans-serif;
-            transition: var(--transition);
-            background: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .email-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-        }
-
-        .form-buttons {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .form-buttons button {
-            flex: 1;
-            padding: 20px;
-            font-size: 1.1rem;
-        }
-
-        .security-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--light);
-            padding: 14px 24px;
-            border-radius: 50px;
-            margin-top: 30px;
-            font-size: 1rem;
-            color: var(--gray);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
-        .security-badge i {
-            color: var(--success);
-            font-size: 1.2rem;
-        }
-
-        /* Results Container */
-        #resultsContainer {
-            display: none;
-            margin-top: 30px;
-            padding: 30px;
-            border-radius: var(--radius);
-            background: var(--light);
-            text-align: left;
-            width: 100%;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .risk-badge {
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-        }
-
-        .risk-low { 
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #166534;
-            border: 1px solid #86efac;
-        }
-        .risk-medium { 
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #92400e;
-            border: 1px solid #fcd34d;
-        }
-        .risk-high { 
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            color: #991b1b;
-            border: 1px solid #fca5a5;
-        }
-
-        .breach-item {
-            background: white;
-            padding: 20px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            border: 1px solid var(--gray-light);
-            transition: var(--transition);
-        }
-
-        .breach-item:hover {
-            transform: translateX(4px);
-            border-color: var(--primary);
-        }
-
-        /* PDF Section - UPDATED (Now FREE) */
-        .pdf-section {
-            margin-top: 30px;
-            padding: 30px;
-            border: 1px solid #e2e8f0;
-            border-radius: var(--radius);
-            background: white;
-            box-shadow: var(--shadow-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pdf-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-
-        /* Services Section - UPDATED */
+        /* Services - UPDATED */
         .services {
-            margin: 100px 0;
+            padding: 100px 0;
         }
 
         .services-grid {
@@ -576,149 +209,23 @@
         .service-card {
             background: white;
             padding: 40px 32px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            height: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-        }
-
-        .service-icon {
-            font-size: 2.8rem;
-            color: var(--primary);
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(59, 130, 246, 0.1));
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .service-card h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--secondary);
-            letter-spacing: -0.01em;
-        }
-
-        .service-card p {
-            color: var(--gray);
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .service-features {
-            list-style: none;
-            margin-top: 20px;
-        }
-
-        .service-features li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 14px;
-            color: var(--gray);
-            line-height: 1.5;
-        }
-
-        .service-features i {
-            color: var(--success);
-            font-size: 1.1rem;
-            margin-top: 4px;
-            flex-shrink: 0;
-        }
-
-        /* LegacyShield Section - UPDATED */
+        /* LegacyShield - UPDATED */
         .legacy-section {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: var(--secondary);
             padding: 80px 0;
-            border-radius: var(--radius);
-            position: relative;
-            overflow: hidden;
+            border-radius: 16px;
             margin: 100px 0;
-        }
-
-        .legacy-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-        }
-
-        .legacy-benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-        }
-
-        .legacy-benefit {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            padding: 40px 32px;
-            border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .legacy-benefit:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .legacy-benefit-icon {
-            font-size: 3rem;
-            color: #8b5cf6;
-            margin-bottom: 25px;
-        }
-
-        .legacy-benefit h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
             color: white;
-        }
-
-        .legacy-benefit p {
-            color: #cbd5e1;
-            line-height: 1.6;
-        }
-
-        .legacy-cta {
             text-align: center;
-            margin-top: 40px;
         }
 
-        /* Pricing Section - UPDATED */
+        /* Pricing - UPDATED */
         .pricing {
-            margin: 100px 0;
+            padding: 100px 0;
         }
 
         .pricing-grid {
@@ -731,37 +238,9 @@
         .pricing-card {
             background: white;
             padding: 40px 32px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        .pricing-card.popular {
-            border: 2px solid var(--primary);
-            transform: scale(1.02);
-        }
-
-        .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 6px 20px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
         }
 
         .price {
@@ -770,94 +249,28 @@
             font-size: 3rem;
             margin: 20px 0 8px;
             color: var(--secondary);
-            letter-spacing: -0.02em;
         }
 
-        .price-period {
-            font-size: 1.1rem;
-            color: var(--gray);
-            font-weight: 500;
-            margin-bottom: 20px;
+        .popular-badge {
+            background: var(--primary);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
         }
 
-        .pricing-card h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-bottom: 12px;
-        }
-
-        .pricing-card p {
-            color: var(--gray);
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        /* Donation Card - NEW (Single Card) */
+        /* Donation Card - NEW */
         .donation-card {
             background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-            border-radius: var(--radius);
+            border-radius: 16px;
             padding: 40px;
             text-align: center;
             color: white;
             margin: 60px auto;
             max-width: 600px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
-        }
-
-        .donation-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-        }
-
-        .donation-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Contact Preview */
-        .contact-preview {
-            background: white;
-            padding: 70px 60px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin: 100px 0;
-            text-align: center;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
-        .contact-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .contact-method {
-            padding: 40px 32px;
-            background: var(--light);
-            border-radius: var(--radius);
-            transition: var(--transition);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-
-        .contact-method:hover {
-            transform: translateY(-5px);
-            background: white;
-            box-shadow: var(--shadow);
-        }
-
-        .contact-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 20px;
         }
 
         /* Footer */
@@ -865,18 +278,6 @@
             background: var(--secondary);
             color: white;
             padding: 80px 0 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
         }
 
         .footer-content {
@@ -886,193 +287,22 @@
             margin-bottom: 50px;
         }
 
-        .footer-logo {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.9rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .footer-desc {
-            color: #cbd5e1;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .footer-links h4 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #e2e8f0;
-            font-weight: 600;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: #94a3b8;
-            text-decoration: none;
-            transition: var(--transition);
-            font-size: 1.02rem;
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 40px;
-            border-top: 1px solid #334155;
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-
-        /* Loading Animation */
-        .loader {
-            display: none;
-            text-align: center;
-            margin: 30px 0;
-        }
-
-        .loader-spinner {
-            border: 3px solid var(--gray-light);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .hero h1 {
-                font-size: 3.2rem;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 0 20px;
-            }
-            
-            .header-content {
-                padding: 16px 0;
-            }
-            
-            nav {
-                display: none;
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: white;
-                padding: 20px;
-                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid var(--gray-light);
-                z-index: 999;
-            }
-            
-            nav.active {
-                display: block;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .hero {
-                padding: 80px 0 60px;
-            }
-            
             .hero h1 {
                 font-size: 2.5rem;
             }
             
-            .hero p {
-                font-size: 1.15rem;
-            }
-            
             .email-check-section {
                 padding: 40px 24px;
-                margin: 60px auto;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .form-buttons {
-                flex-direction: column;
-            }
-            
-            .services-grid,
-            .legacy-benefits,
-            .pricing-grid,
-            .steps-grid,
-            .contact-methods {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            
-            .contact-preview {
-                padding: 40px 24px;
-                margin: 60px 0;
             }
             
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 30px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2.2rem;
             }
             
-            .hero-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .hero-buttons a {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .trust-row {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .trust-badge {
-                width: 100%;
-                justify-content: center;
+            nav {
+                display: none;
             }
         }
     </style>
@@ -1086,11 +316,7 @@
                 ExposureShield
             </a>
             
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open navigation menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav id="mainNav" aria-label="Primary navigation">
+            <nav>
                 <ul>
                     <li><a href="index.html" class="active">Home</a></li>
                     <li><a href="services.html">Services</a></li>
@@ -1115,28 +341,28 @@
             <h1>See Your Digital Risk. Take Control. Stay Secure.</h1>
             <p>Scan your email for data breaches, get a free security report, and protect your digital life — with privacy-first technology.</p>
             
-            <div class="hero-buttons">
+            <div style="display: flex; gap: 16px; justify-content: center; margin-top: 30px;">
                 <a href="#emailCheck" class="cta-button">
                     <i class="fas fa-shield-alt"></i>
                     Check Your Exposure – Free
                 </a>
-                <a href="pricing.html" class="secondary-button">
+                <a href="pricing.html" class="cta-button" style="background: white; color: var(--primary); border: 2px solid var(--primary);">
                     <i class="fas fa-tag"></i>
                     View Plans
                 </a>
             </div>
             
-            <div class="trust-row">
-                <div class="trust-badge">
-                    <i class="fas fa-lock"></i>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 40px;">
+                <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e2e8f0; padding: 14px 20px; border-radius: 50px; color: var(--gray);">
+                    <i class="fas fa-lock" style="color: var(--success);"></i>
                     Free scan + PDF report
                 </div>
-                <div class="trust-badge">
-                    <i class="fas fa-shield-check"></i>
+                <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e2e8f0; padding: 14px 20px; border-radius: 50px; color: var(--gray);">
+                    <i class="fas fa-shield-check" style="color: var(--success);"></i>
                     Privacy-first design
                 </div>
-                <div class="trust-badge">
-                    <i class="fas fa-user-clock"></i>
+                <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(255, 255, 255, 0.8); border: 1px solid #e2e8f0; padding: 14px 20px; border-radius: 50px; color: var(--gray);">
+                    <i class="fas fa-user-clock" style="color: var(--success);"></i>
                     No credit card required
                 </div>
             </div>
@@ -1177,46 +403,21 @@
             <h2 class="section-title">Check Your Email Security Status</h2>
             <p class="section-subtitle">Get your free security scan and PDF report instantly. No credit card required.</p>
             
-            <div class="email-check-form">
-                <div class="email-input-wrapper">
-                    <input 
-                        type="email" 
-                        id="emailInput" 
-                        class="email-input" 
-                        placeholder="you@example.com" 
-                        required
-                        aria-label="Email address to check for security exposure"
-                    >
-                </div>
-                
-                <div class="form-buttons">
-                    <button id="checkEmailBtn" class="cta-button" type="button">
-                        <i class="fas fa-search"></i>
-                        Start Free Scan
-                    </button>
-                    <button id="resetBtn" class="secondary-button" type="button">
-                        <i class="fas fa-rotate-left"></i>
-                        Clear
-                    </button>
-                </div>
-                
-                <div id="defaultMessage" style="color: var(--gray); font-size: 1.05rem;">
-                    Your free scan includes a professional PDF security report. No credit card required.
-                </div>
-                
-                <div class="loader" id="loader">
-                    <div class="loader-spinner"></div>
-                    <p style="margin-top: 16px; color: var(--gray); font-size: 1.05rem;">
-                        Scanning breach databases securely...
-                    </p>
-                </div>
-                
-                <div id="resultsContainer"></div>
-                
-                <div class="security-badge">
-                    <i class="fas fa-lock"></i>
-                    Free scan • Free PDF report • Privacy-first processing
-                </div>
+            <input type="email" id="emailInput" class="email-input" placeholder="you@example.com">
+            
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="cta-button" style="flex: 1;">
+                    <i class="fas fa-search"></i>
+                    Start Free Scan
+                </button>
+                <button class="cta-button" style="flex: 1; background: white; color: var(--primary); border: 2px solid #e2e8f0;">
+                    <i class="fas fa-rotate-left"></i>
+                    Clear
+                </button>
+            </div>
+            
+            <div style="color: var(--gray); margin-top: 30px; font-size: 1.05rem;">
+                Your free scan includes a professional PDF security report. No credit card required.
             </div>
         </div>
     </section>
@@ -1229,44 +430,56 @@
             
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div style="font-size: 2.8rem; color: var(--primary); margin-bottom: 24px;">
                         <i class="fas fa-bell"></i>
                     </div>
                     <h3>Exposure Monitoring</h3>
                     <p>Continuous surveillance of breach databases with instant security alerts.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Email breach detection</li>
-                        <li><i class="fas fa-check"></i> Credential exposure alerts</li>
-                        <li><i class="fas fa-check"></i> Risk level classification</li>
-                        <li><i class="fas fa-check"></i> Multi-platform checking</li>
+                    <ul style="list-style: none; margin-top: 20px;">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Email breach detection</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Credential exposure alerts</span>
+                        </li>
                     </ul>
                 </div>
                 
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div style="font-size: 2.8rem; color: var(--primary); margin-bottom: 24px;">
                         <i class="fas fa-file-shield"></i>
                     </div>
                     <h3>Security Guidance</h3>
                     <p>Clear, actionable steps to secure your accounts and data.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Free professional PDF report</li>
-                        <li><i class="fas fa-check"></i> Step-by-step remediation</li>
-                        <li><i class="fas fa-check"></i> Password and 2FA guidance</li>
-                        <li><i class="fas fa-check"></i> Account hygiene recommendations</li>
+                    <ul style="list-style: none; margin-top: 20px;">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Free professional PDF report</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Step-by-step remediation</span>
+                        </li>
                     </ul>
                 </div>
                 
                 <div class="service-card">
-                    <div class="service-icon">
+                    <div style="font-size: 2.8rem; color: var(--primary); margin-bottom: 24px;">
                         <i class="fas fa-history"></i>
                     </div>
                     <h3>Ongoing Protection</h3>
                     <p>Continuous monitoring and alerts for complete peace of mind.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Continuous exposure monitoring</li>
-                        <li><i class="fas fa-check"></i> New breach alerts</li>
-                        <li><i class="fas fa-check"></i> Security history tracking</li>
-                        <li><i class="fas fa-check"></i> Proactive recommendations</li>
+                    <ul style="list-style: none; margin-top: 20px;">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Continuous exposure monitoring</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>New breach alerts</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -1275,50 +488,42 @@
 
     <!-- LegacyShield Section - UPDATED -->
     <section class="legacy-section">
-        <div class="container" style="position: relative; z-index: 1;">
-            <div style="text-align: center; margin-bottom: 50px;">
-                <h2 style="font-family: 'Poppins', sans-serif; font-size: 2.8rem; font-weight: 800; margin-bottom: 16px; color: white; letter-spacing: -0.02em;">
-                    LegacyShield — Protect What Matters Beyond Your Lifetime
-                </h2>
-                <p style="font-size: 1.3rem; color: #cbd5e1; max-width: 800px; margin: 0 auto; line-height: 1.6;">
-                    Decide who can access your digital life, documents, and instructions — when it truly matters.
-                </p>
-            </div>
+        <div class="container">
+            <h2 style="font-size: 2.8rem; margin-bottom: 20px;">LegacyShield — Protect What Matters Beyond Your Lifetime</h2>
+            <p style="font-size: 1.3rem; margin-bottom: 50px; opacity: 0.9;">
+                Decide who can access your digital life, documents, and instructions — when it truly matters.
+            </p>
             
-            <div class="legacy-benefits">
-                <div class="legacy-benefit">
-                    <div class="legacy-benefit-icon">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 50px;">
+                <div style="background: rgba(255, 255, 255, 0.08); padding: 40px 32px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 3rem; color: #8b5cf6; margin-bottom: 25px;">
                         <i class="fas fa-user-friends"></i>
                     </div>
-                    <h3>Trusted Beneficiary Access</h3>
-                    <p>Designate trusted contacts to access your accounts when needed.</p>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Trusted Beneficiary Access</h3>
+                    <p style="opacity: 0.9;">Designate trusted contacts to access your accounts when needed.</p>
                 </div>
                 
-                <div class="legacy-benefit">
-                    <div class="legacy-benefit-icon">
+                <div style="background: rgba(255, 255, 255, 0.08); padding: 40px 32px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 3rem; color: #8b5cf6; margin-bottom: 25px;">
                         <i class="fas fa-file-shield"></i>
                     </div>
-                    <h3>Secure Document Storage</h3>
-                    <p>Store important documents with privacy-first encryption.</p>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Secure Document Storage</h3>
+                    <p style="opacity: 0.9;">Store important documents with privacy-first encryption.</p>
                 </div>
                 
-                <div class="legacy-benefit">
-                    <div class="legacy-benefit-icon">
+                <div style="background: rgba(255, 255, 255, 0.08); padding: 40px 32px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 3rem; color: #8b5cf6; margin-bottom: 25px;">
                         <i class="fas fa-key"></i>
                     </div>
-                    <h3>Clear Access Rules</h3>
-                    <p>Control exactly who can access what information and when.</p>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Clear Access Rules</h3>
+                    <p style="opacity: 0.9;">Control exactly who can access what information and when.</p>
                 </div>
             </div>
             
-            <div class="legacy-cta">
-                <a href="legacyshield.html" class="cta-button" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 16px 45px; font-size: 1.2rem; margin-right: 16px;">
+            <div>
+                <a href="legacyshield.html" class="cta-button" style="background: #8b5cf6; padding: 16px 45px; font-size: 1.2rem;">
                     <i class="fas fa-shield-alt"></i>
                     Subscribe to LegacyShield – $9.99/month
-                </a>
-                <a href="legacyshield.html" class="secondary-button" style="background: rgba(255, 255, 255, 0.15); color: white; border: 2px solid rgba(255, 255, 255, 0.3); padding: 16px 45px; font-size: 1.2rem; backdrop-filter: blur(10px);">
-                    <i class="fas fa-info-circle"></i>
-                    See How It Works
                 </a>
             </div>
         </div>
@@ -1334,47 +539,73 @@
                 <div class="pricing-card">
                     <h3>Starter</h3>
                     <div class="price">$0</div>
-                    <p class="price-period">forever free</p>
+                    <p style="color: var(--gray); margin-bottom: 20px;">forever free</p>
                     <p>Free security scan with PDF report included.</p>
-                    <ul class="service-features" style="color: var(--gray);">
-                        <li><i class="fas fa-check"></i> Email exposure scan</li>
-                        <li><i class="fas fa-check"></i> Risk level analysis</li>
-                        <li><i class="fas fa-check"></i> Free PDF security report</li>
-                        <li><i class="fas fa-check"></i> Basic recommendations</li>
+                    <ul style="list-style: none; margin: 20px 0; color: var(--gray);">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Email exposure scan</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Risk level analysis</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Free PDF security report</span>
+                        </li>
                     </ul>
-                    <a href="#emailCheck" class="cta-button" style="width: 100%; margin-top: 30px; justify-content: center;">
+                    <a href="#emailCheck" class="cta-button" style="width: 100%; justify-content: center;">
                         <i class="fas fa-search"></i>
                         Start Free Scan
                     </a>
                 </div>
                 
-                <div class="pricing-card popular">
+                <div class="pricing-card" style="border: 2px solid var(--primary);">
                     <div class="popular-badge">Most Popular</div>
                     <h3>Essential</h3>
                     <div class="price">$7.99</div>
-                    <p class="price-period">per month</p>
+                    <p style="color: var(--gray); margin-bottom: 20px;">per month</p>
                     <p>Continuous monitoring and alert protection.</p>
-                    <ul class="service-features" style="color: var(--gray);">
-                        <li><i class="fas fa-check"></i> Everything in Starter</li>
-                        <li><i class="fas fa-check"></i> Continuous exposure monitoring</li>
-                        <li><i class="fas fa-check"></i> New breach alerts</li>
-                        <li><i class="fas fa-check"></i> Security history tracking</li>
+                    <ul style="list-style: none; margin: 20px 0; color: var(--gray);">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Everything in Starter</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Continuous exposure monitoring</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>New breach alerts</span>
+                        </li>
                     </ul>
-                    <div id="paypal-button-container-essential" style="margin-top: 30px;"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <span style="color: var(--gray); font-size: 0.9rem;">PayPal subscription button here</span>
+                    </div>
                 </div>
                 
                 <div class="pricing-card">
                     <h3>LegacyShield</h3>
                     <div class="price">$9.99</div>
-                    <p class="price-period">per month</p>
+                    <p style="color: var(--gray); margin-bottom: 20px;">per month</p>
                     <p>Secure your digital legacy and important documents.</p>
-                    <ul class="service-features" style="color: var(--gray);">
-                        <li><i class="fas fa-check"></i> Digital legacy planning</li>
-                        <li><i class="fas fa-check"></i> Beneficiaries & access rules</li>
-                        <li><i class="fas fa-check"></i> Secure document storage</li>
-                        <li><i class="fas fa-check"></i> Emergency access logic</li>
+                    <ul style="list-style: none; margin: 20px 0; color: var(--gray);">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Digital legacy planning</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Beneficiaries & access rules</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>Secure document storage</span>
+                        </li>
                     </ul>
-                    <a href="legacyshield.html" class="cta-button" style="width: 100%; margin-top: 30px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); justify-content: center;">
+                    <a href="legacyshield.html" class="cta-button" style="width: 100%; background: #8b5cf6; justify-content: center;">
                         <i class="fas fa-shield-alt"></i>
                         Subscribe to LegacyShield
                     </a>
@@ -1383,619 +614,93 @@
                 <div class="pricing-card">
                     <h3>Complete Protection</h3>
                     <div class="price">$14.99</div>
-                    <p class="price-period">per month</p>
+                    <p style="color: var(--gray); margin-bottom: 20px;">per month</p>
                     <p>Full security monitoring plus digital legacy protection.</p>
-                    <ul class="service-features" style="color: var(--gray);">
-                        <li><i class="fas fa-check"></i> ExposureShield Essential</li>
-                        <li><i class="fas fa-check"></i> LegacyShield included</li>
-                        <li><i class="fas fa-check"></i> One account, full protection</li>
-                        <li><i class="fas fa-check"></i> Priority support</li>
+                    <ul style="list-style: none; margin: 20px 0; color: var(--gray);">
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>ExposureShield Essential</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>LegacyShield included</span>
+                        </li>
+                        <li style="margin-bottom: 14px; display: flex; align-items: flex-start; gap: 12px;">
+                            <i class="fas fa-check" style="color: var(--success);"></i>
+                            <span>One account, full protection</span>
+                        </li>
                     </ul>
-                    <div id="paypal-button-container-complete" style="margin-top: 30px;"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <span style="color: var(--gray); font-size: 0.9rem;">PayPal subscription button here</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Donation Card - NEW (Single Card) -->
+    <!-- Donation Card - NEW -->
     <div class="donation-card">
-        <div class="donation-content">
-            <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; margin-bottom: 15px;">
-                Support Digital Security for Everyone
-            </h2>
-            <p style="font-size: 1.1rem; margin-bottom: 25px; opacity: 0.95; max-width: 500px; margin-left: auto; margin-right: auto;">
-                Your optional donation helps us keep free security scans available for people who need them most.
-            </p>
-            <a href="donate.html" class="cta-button" style="background: white; color: #10b981; padding: 15px 35px; font-weight: 700;">
-                <i class="fas fa-heart"></i>
-                Support the Mission
-            </a>
-        </div>
+        <h2 style="font-family: 'Poppins', sans-serif; font-size: 1.8rem; margin-bottom: 15px;">
+            Support Digital Security for Everyone
+        </h2>
+        <p style="font-size: 1.1rem; margin-bottom: 25px; opacity: 0.95; max-width: 500px; margin-left: auto; margin-right: auto;">
+            Your optional donation helps us keep free security scans available for people who need them most.
+        </p>
+        <a href="donate.html" class="cta-button" style="background: white; color: #10b981; padding: 15px 35px; font-weight: 700;">
+            <i class="fas fa-heart"></i>
+            Support the Mission
+        </a>
     </div>
-
-    <!-- Contact Preview -->
-    <section class="contact-preview">
-        <div class="container">
-            <h2 class="section-title">Talk to the ExposureShield Team</h2>
-            <p class="section-subtitle">We respond within 24 hours on business days.</p>
-            
-            <div class="contact-methods">
-                <div class="contact-method">
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-                    <h3>General Inquiries</h3>
-                    <p>contact@exposureshield.com</p>
-                </div>
-                
-                <div class="contact-method">
-                    <div class="contact-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h3>Support</h3>
-                    <p>support@exposureshield.com</p>
-                </div>
-                
-                <div class="contact-method">
-                    <div class="contact-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3>Business & Partnerships</h3>
-                    <p>enterprise@exposureshield.com</p>
-                </div>
-            </div>
-            
-            <a href="contact.html" class="cta-button" style="margin-top: 50px; padding: 16px 40px;">
-                <i class="fas fa-envelope"></i>
-                Contact Our Team
-            </a>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
+                <div>
                     <div class="footer-logo">ExposureShield</div>
-                    <p class="footer-desc">
+                    <p style="color: #cbd5e1; line-height: 1.6; margin-bottom: 20px;">
                         Built to protect people, not just data. Privacy-first digital security designed for real people.
                     </p>
                 </div>
                 
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="services.html">Services</a></li>
-                        <li><a href="pricing.html">Pricing</a></li>
-                        <li><a href="contact.html">Contact</a></li>
+                <div>
+                    <h4 style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; margin-bottom: 20px;">Company</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 12px;"><a href="about.html" style="color: #94a3b8; text-decoration: none;">About Us</a></li>
+                        <li style="margin-bottom: 12px;"><a href="services.html" style="color: #94a3b8; text-decoration: none;">Services</a></li>
+                        <li style="margin-bottom: 12px;"><a href="pricing.html" style="color: #94a3b8; text-decoration: none;">Pricing</a></li>
+                        <li style="margin-bottom: 12px;"><a href="contact.html" style="color: #94a3b8; text-decoration: none;">Contact</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-links">
-                    <h4>Legal & Compliance</h4>
-                    <ul>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="refund.html">Refund Policy</a></li>
-                        <li><a href="cookies.html">Cookie Policy</a></li>
+                <div>
+                    <h4 style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; margin-bottom: 20px;">Legal</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 12px;"><a href="privacy.html" style="color: #94a3b8; text-decoration: none;">Privacy Policy</a></li>
+                        <li style="margin-bottom: 12px;"><a href="terms.html" style="color: #94a3b8; text-decoration: none;">Terms of Service</a></li>
+                        <li style="margin-bottom: 12px;"><a href="refund.html" style="color: #94a3b8; text-decoration: none;">Refund Policy</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-links">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="faq.html">FAQ & Help Center</a></li>
-                        <li><a href="guides.html">Security Guides</a></li>
-                        <li><a href="blog.html">Security Blog</a></li>
-                        <li><a href="status.html">System Status</a></li>
+                <div>
+                    <h4 style="font-family: 'Poppins', sans-serif; font-size: 1.2rem; margin-bottom: 20px;">Resources</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 12px;"><a href="faq.html" style="color: #94a3b8; text-decoration: none;">FAQ & Help</a></li>
+                        <li style="margin-bottom: 12px;"><a href="guides.html" style="color: #94a3b8; text-decoration: none;">Security Guides</a></li>
+                        <li style="margin-bottom: 12px;"><a href="blog.html" style="color: #94a3b8; text-decoration: none;">Security Blog</a></li>
                     </ul>
                 </div>
             </div>
             
-            <div class="footer-bottom">
+            <div style="text-align: center; padding-top: 40px; border-top: 1px solid #334155; color: #94a3b8;">
                 <p>© <span id="currentYear"></span> ExposureShield Security Solutions. All rights reserved.</p>
-                <p style="margin-top: 12px; color: #94a3b8; font-size: 0.9rem;">
-                    <i class="fas fa-shield-alt"></i>
-                    Privacy-first • Simple • Transparent • Professional
-                </p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        // Global state
-        const state = {
-            currentEmail: '',
-            currentBreaches: [],
-            currentStatus: 'low'
-        };
-
         // Set current year
         document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // Header scroll effect
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mainNav = document.getElementById('mainNav');
-
-        mobileMenuBtn.addEventListener('click', function() {
-            mainNav.classList.toggle('active');
-            const icon = mobileMenuBtn.querySelector('i');
-            if (mainNav.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!mobileMenuBtn.contains(event.target) && !mainNav.contains(event.target)) {
-                mainNav.classList.remove('active');
-                const icon = mobileMenuBtn.querySelector('i');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
-            }
-        });
-
-        // Navigation active state
-        function setActiveNav() {
-            const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('nav a');
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === currentPath || 
-                    (currentPath === '/' && link.getAttribute('href') === 'index.html')) {
-                    link.classList.add('active');
-                }
-            });
-        }
-        
-        setActiveNav();
-
-        // Email check functionality
-        document.getElementById('checkEmailBtn').addEventListener('click', checkEmailSecurity);
-        document.getElementById('resetBtn').addEventListener('click', resetForm);
-        
-        document.getElementById('emailInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                checkEmailSecurity();
-            }
-        });
-
-        async function checkEmailSecurity() {
-            const email = document.getElementById('emailInput').value.trim();
-            const loader = document.getElementById('loader');
-            const defaultMessage = document.getElementById('defaultMessage');
-            const resultsContainer = document.getElementById('resultsContainer');
-            
-            if (!email || !validateEmail(email)) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
-            // Show loader, hide default message
-            loader.style.display = 'block';
-            defaultMessage.style.display = 'none';
-            resultsContainer.style.display = 'none';
-            
-            try {
-                // Call real backend API
-                const res = await fetch(`/api/check-email?email=${encodeURIComponent(email)}`, {
-                    method: "GET",
-                    headers: { "Accept": "application/json" },
-                    cache: "no-store"
-                });
-
-                const data = await res.json().catch(() => null);
-
-                if (!res.ok) {
-                    const msg = (data && (data.error || data.message)) 
-                        ? (data.error || data.message) 
-                        : `API error: ${res.status}`;
-                    throw new Error(msg);
-                }
-
-                // Store in global state
-                state.currentEmail = email;
-                state.currentBreaches = Array.isArray(data?.breaches) ? data.breaches : [];
-                state.currentStatus = data?.status || 'low';
-
-                // Display results
-                displayResults(email, state.currentBreaches, state.currentStatus);
-                
-            } catch (error) {
-                showError("Unable to check email security. Please try again. Error: " + error.message);
-            } finally {
-                loader.style.display = 'none';
-            }
-        }
-
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        function displayResults(email, breaches, apiStatus) {
-            const resultsContainer = document.getElementById('resultsContainer');
-            
-            // Use API status for risk calculation
-            const count = breaches.length;
-            let riskLevel, riskClass;
-            
-            // Map API status to display values
-            if (apiStatus === 'low') {
-                riskLevel = 'Low';
-                riskClass = 'risk-low';
-            } else if (apiStatus === 'medium') {
-                riskLevel = 'Medium';
-                riskClass = 'risk-medium';
-            } else {
-                riskLevel = 'High';
-                riskClass = 'risk-high';
-            }
-            
-            let breachesHTML = '';
-            if (count > 0) {
-                breachesHTML = `
-                    <div class="result-header">
-                        <h3 style="font-size: 1.4rem; color: var(--secondary);">Security Alert: Email Exposure Found</h3>
-                        <span class="risk-badge ${riskClass}">Risk Level: ${riskLevel}</span>
-                    </div>
-                    <p style="font-size: 1.1rem; margin-bottom: 20px;">Your email <strong>${escapeHtml(email)}</strong> was found in <strong>${count}</strong> breach${count !== 1 ? 'es' : ''}.</p>
-                    <div style="margin: 20px 0;">
-                        ${breaches.map(breach => `
-                            <div class="breach-item">
-                                <div style="min-width: 0; flex: 1;">
-                                    <strong style="font-size: 1.1rem; color: var(--secondary);">${escapeHtml(breach?.Title || breach?.Name || 'Unknown')}</strong>
-                                    <div style="font-size: 0.95rem; color: #64748b; margin-top: 6px;">
-                                        <i class="fas fa-calendar"></i> ${escapeHtml(breach?.BreachDate || 'Unknown date')} • 
-                                        <i class="fas fa-globe"></i> ${escapeHtml(breach?.Domain || 'Unknown domain')}
-                                    </div>
-                                    <div style="font-size: 0.9rem; color: #94a3b8; margin-top: 8px; line-height: 1.5;">
-                                        <i class="fas fa-database"></i> ${escapeHtml(Array.isArray(breach?.DataClasses) ? breach.DataClasses.slice(0, 3).join(', ') : 'Data exposed')}
-                                    </div>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div style="margin-top: 25px; padding: 24px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: var(--radius-sm); border: 1px solid rgba(226, 232, 240, 0.8);">
-                        <h4 style="margin-bottom: 16px; color: var(--secondary); font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-clipboard-list" style="color: var(--primary);"></i>
-                            Recommended Actions
-                        </h4>
-                        <ul style="list-style: none;">
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Change passwords for affected accounts immediately</span>
-                            </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Enable two-factor authentication (2FA) on all important accounts</span>
-                            </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Use a password manager to create and store unique passwords</span>
-                            </li>
-                        </ul>
-                    </div>
-                `;
-            } else {
-                breachesHTML = `
-                    <div class="result-header">
-                        <h3 style="font-size: 1.4rem; color: #10b981;">
-                            <i class="fas fa-check-circle"></i> No Breaches Found
-                        </h3>
-                        <span class="risk-badge risk-low">Risk Level: Low</span>
-                    </div>
-                    <p style="font-size: 1.1rem; margin-bottom: 20px;">Your email <strong>${escapeHtml(email)}</strong> was not found in any known breaches.</p>
-                    <div style="margin-top: 25px; padding: 24px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: var(--radius-sm); border: 1px solid rgba(226, 232, 240, 0.8);">
-                        <h4 style="margin-bottom: 16px; color: var(--secondary); font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-shield-alt" style="color: var(--primary);"></i>
-                            Keep Your Security Strong
-                        </h4>
-                        <ul style="list-style: none;">
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-shield-alt" style="color: var(--accent); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Continue using strong, unique passwords for every account</span>
-                            </li>
-                            <li style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-shield-alt" style="color: var(--accent); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Enable 2FA (two-factor authentication) wherever available</span>
-                            </li>
-                            <li style="display: flex; align-items: flex-start; gap: 12px;">
-                                <i class="fas fa-shield-alt" style="color: var(--accent); font-size: 1.1rem; margin-top: 2px;"></i>
-                                <span>Regularly update passwords and monitor account activity</span>
-                            </li>
-                        </ul>
-                    </div>
-                `;
-            }
-            
-            // PDF Section - NOW FREE
-            const pdfSectionHTML = `
-                <div class="pdf-section" id="pdfSection">
-                    <h4 style="margin-bottom: 16px; color: var(--secondary); font-size: 1.3rem; display: flex; align-items: center; gap: 12px;">
-                        <i class="fas fa-file-pdf" style="color: var(--primary); font-size: 1.4rem;"></i>
-                        Your Professional Security Report is Ready
-                    </h4>
-                    <p style="color: var(--gray); margin-bottom: 20px; font-size: 1.05rem; line-height: 1.6;">
-                        Download your comprehensive PDF security report for free. Includes detailed remediation steps, breach timeline analysis, and a printable security checklist.
-                    </p>
-                    
-                    <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 20px; border-radius: var(--radius-sm); margin-bottom: 20px; border: 1px solid rgba(226, 232, 240, 0.8);">
-                        <div style="font-weight: 700; color: var(--secondary); margin-bottom: 12px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
-                            <i class="fas fa-star" style="color: var(--warning);"></i>
-                            Your Free Report Includes:
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; font-size: 1rem; margin: 10px 0; color: var(--secondary);">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-check" style="color: var(--success);"></i>
-                                <span>Professional cover page</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-check" style="color: var(--success);"></i>
-                                <span>Detailed breach timeline</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-check" style="color: var(--success);"></i>
-                                <span>Step-by-step remediation plan</span>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <i class="fas fa-check" style="color: var(--success);"></i>
-                                <span>Printable security checklist</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button id="downloadPdfBtn" class="cta-button" style="width: 100%; justify-content: center;">
-                        <i class="fas fa-download"></i>
-                        Download Free PDF Report
-                    </button>
-                    
-                    <div style="margin-top: 20px; font-size: 0.9rem; color: #94a3b8; text-align: center; line-height: 1.5;">
-                        <i class="fas fa-shield-alt"></i>
-                        Free security report included with every scan • Privacy-first processing
-                    </div>
-                </div>
-            `;
-            
-            resultsContainer.innerHTML = breachesHTML + pdfSectionHTML;
-            resultsContainer.style.display = 'block';
-            
-            // Set up PDF download button
-            const downloadBtn = document.getElementById('downloadPdfBtn');
-            if (downloadBtn) {
-                downloadBtn.onclick = () => generateFreePdfReport(email, breaches, apiStatus);
-            }
-            
-            // Scroll to results with offset for fixed header
-            setTimeout(() => {
-                resultsContainer.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            }, 100);
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function showError(message) {
-            const resultsContainer = document.getElementById('resultsContainer');
-            resultsContainer.innerHTML = `
-                <div style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); color: #991b1b; padding: 24px; border-radius: var(--radius-sm); text-align: center; border: 1px solid #fca5a5;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; margin-bottom: 16px;"></i>
-                    <h3 style="margin-bottom: 12px; font-size: 1.3rem;">Security Check Error</h3>
-                    <p style="font-size: 1.05rem; line-height: 1.5;">${escapeHtml(message)}</p>
-                    <button onclick="resetForm()" class="secondary-button" style="margin-top: 20px; background: white;">
-                        <i class="fas fa-rotate-left"></i>
-                        Try Again
-                    </button>
-                </div>
-            `;
-            resultsContainer.style.display = 'block';
-        }
-
-        function resetForm() {
-            document.getElementById('emailInput').value = '';
-            document.getElementById('resultsContainer').style.display = 'none';
-            document.getElementById('defaultMessage').style.display = 'block';
-            document.getElementById('loader').style.display = 'none';
-            state.currentEmail = '';
-            state.currentBreaches = [];
-            state.currentStatus = 'low';
-        }
-
-        // Free PDF Report Generation
-        function generateFreePdfReport(email, breaches, status) {
-            const { jsPDF } = window.jspdf;
-            if (!jsPDF) {
-                alert("PDF library not loaded. Please refresh the page.");
-                return;
-            }
-
-            const doc = new jsPDF();
-            const pageWidth = doc.internal.pageSize.width;
-            const now = new Date();
-            const reportId = `ES-FREE-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-            
-            // Cover Page
-            doc.setFillColor(37, 99, 235);
-            doc.rect(0, 0, pageWidth, 50, 'F');
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(28);
-            doc.setTextColor(255, 255, 255);
-            doc.text("ExposureShield", pageWidth/2, 30, { align: "center" });
-            
-            doc.setFontSize(22);
-            doc.text("Security Exposure Report", pageWidth/2, 45, { align: "center" });
-            
-            const maskedEmail = email.replace(/(.{1,3})(.*)(@.*)/, (match, p1, p2, p3) => 
-                p1 + '*'.repeat(p2.length) + p3
-            );
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(14);
-            doc.setTextColor(100, 116, 139);
-            doc.text(`Email scanned: ${maskedEmail}`, pageWidth/2, 80, { align: "center" });
-            
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(16);
-            doc.setTextColor(37, 99, 235);
-            doc.text("FREE SECURITY REPORT", pageWidth/2, 100, { align: "center" });
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(12);
-            doc.setTextColor(100, 116, 139);
-            doc.text(`Scan date: ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, pageWidth/2, 130, { align: "center" });
-            doc.text(`Report ID: ${reportId}`, pageWidth/2, 140, { align: "center" });
-            doc.text(`Generated by: ExposureShield Security Solutions`, pageWidth/2, 150, { align: "center" });
-            
-            // Results Page
-            doc.addPage();
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(18);
-            doc.setTextColor(15, 23, 42);
-            doc.text("Security Scan Results", 14, 20);
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(12);
-            const count = breaches.length;
-            const resultText = count > 0 
-                ? `Your email address was found in ${count} data breach${count !== 1 ? 'es' : ''}. This exposure increases your risk of identity theft, account takeover, and other security threats.`
-                : `No security breaches were found for your email address. This is a positive result, but maintaining good security practices is still essential.`;
-            
-            const splitText = doc.splitTextToSize(resultText, pageWidth - 28);
-            doc.text(splitText, 14, 35);
-            
-            // Recommendations Page
-            doc.addPage();
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(18);
-            doc.text("Security Recommendations", 14, 20);
-            
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(12);
-            const recommendations = `
-1. IMMEDIATE ACTIONS:
-   • Change passwords for all important accounts
-   • Enable two-factor authentication (2FA)
-   • Review account activity for suspicious behavior
-
-2. PASSWORD SECURITY:
-   • Use a password manager
-   • Create unique passwords for every account
-   • Use long, complex passwords
-
-3. ONGOING PROTECTION:
-   • Consider upgrading to Essential ($7.99/month)
-   • Get continuous monitoring and alerts
-   • Regular security checkups every 3 months
-
-4. LEGACY PROTECTION:
-   • Secure your digital legacy with LegacyShield ($9.99/month)
-   • Store important documents securely
-   • Designate trusted beneficiaries
-            `;
-            
-            const splitRecs = doc.splitTextToSize(recommendations, pageWidth - 28);
-            doc.text(splitRecs, 14, 35);
-            
-            // Save the PDF
-            doc.save(`ExposureShield-Free-Security-Report-${reportId}.pdf`);
-        }
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#') return;
-                
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    e.preventDefault();
-                    
-                    // Close mobile menu if open
-                    mainNav.classList.remove('active');
-                    const icon = mobileMenuBtn.querySelector('i');
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                    
-                    // Calculate header offset
-                    const headerOffset = 80;
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                    
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
-    <!-- PayPal SDK for Essential and Complete plans -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AUAc3W4RxfuN-04c8Cla4J7lv_WqpspCtx6rK8PtBdj3WBAJdVO79PDrlacB14QHLfcIxclv2DioD_Sg&vault=true&intent=subscription"></script>
-    <script>
-        // PayPal for Essential Plan
-        paypal.Buttons({
-            style: {
-                shape: 'rect',
-                color: 'blue',
-                layout: 'vertical',
-                label: 'subscribe'
-            },
-            createSubscription: function (data, actions) {
-                return actions.subscription.create({
-                    plan_id: 'P-0KD687013E312715HNFUOUEY' // Essential plan ID
-                });
-            },
-            onApprove: function (data) {
-                console.log("Essential subscription approved:", data.subscriptionID);
-                window.location.href = "success-essential.html?sub_id=" + data.subscriptionID;
-            }
-        }).render('#paypal-button-container-essential');
-
-        // PayPal for Complete Plan
-        paypal.Buttons({
-            style: {
-                shape: 'rect',
-                color: 'gold',
-                layout: 'vertical',
-                label: 'subscribe'
-            },
-            createSubscription: function (data, actions) {
-                return actions.subscription.create({
-                    plan_id: 'P-XXXXXXXXXXXXXX' // Complete plan ID (replace with actual)
-                });
-            },
-            onApprove: function (data) {
-                console.log("Complete subscription approved:", data.subscriptionID);
-                window.location.href = "success-complete.html?sub_id=" + data.subscriptionID;
-            }
-        }).render('#paypal-button-container-complete');
     </script>
 </body>
 </html>
